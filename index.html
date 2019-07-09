@@ -1,0 +1,303 @@
+<!doctype html>
+<html>
+<head>
+    <title>Entiteiten editor</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        html,body {
+            padding: 0;
+            margin: 0;
+        }
+        html {
+            height: 100%;
+        }
+        body {
+            min-height: 100%;
+        }
+        .slo-commit {
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="slo-main-page">
+    <header class="slo-navbar">
+        <nav class="slo-navbar-left slo-logo bg-brand-gradient">
+            <a href="/"><img src="/assets/img/slo.png"></a>
+        </nav>
+        <div class="slo-navbar-left">
+            OpenData Portal: Entiteit toevoegen
+        </div>
+    </header>
+    <div class="slo-navbar slo-navbar-side bg-gray">
+        <div class="slo-space">
+            <p>
+                Aangepaste Entiteiten
+                <textarea placeholder="Commit message"></textarea>
+            </p>
+            <p>
+                5 aanpassingen
+                <button class="slo-button slo-commit">Verwerken</button>
+            </p>
+        </div>
+        <div class="slo-space slo-entiteit-changes" data-simply-list="changes">
+            <div class="slo-entiteit-change">
+                <input type="checkbox" checked="">
+                <span class="slo-title" data-simply-field="title" title="Burgerschap">Burgerschap</span><br>
+                <span class="slo-uuid" data-simply-field="id" title="cff7c64e-d3d3-4421-824a-7b1297759468">cff7c64e-d3d3-4421-824a-7b1297759468</span>
+            </div>            
+            <div class="slo-entiteit-change">
+                <input type="checkbox" checked="">
+                <span class="slo-title" data-simply-field="title" title="Bevolking en ruimte">Bevolking en ruimte</span><br>
+                <span class="slo-uuid" data-simply-field="id" title="cff7c64e-d3d3-4421-824a-7b1297759468">cff7c64e-d3d3-4421-824a-7b1297759468</span>
+            </div>            
+            <div class="slo-entiteit-change">
+                <input type="checkbox" checked="">
+                <span class="slo-title" data-simply-field="title" title="Deze heeft nu en hele lange titel">Deze heeft nu en hele lange titel</span><br>
+                <span class="slo-uuid" data-simply-field="id" title="cff7c64e-d3d3-4421-824a-7b1297759468">cff7c64e-d3d3-4421-824a-7b1297759468</span>
+            </div>            
+            <template>
+                <div class="slo-entiteit-change">
+                    <input type="checkbox" checked="">
+                    <span class="slo-title" data-simply-field="title">Burgerschap</span><br>
+                    <span class="slo-uuid" data-simply-field="id" title="cff7c64e-d3d3-4421-824a-7b1297759468">cff7c64e-d3d3-4421-824a-7b1297759468</span>
+                </div>
+            </template>            
+        </div>
+    </div>
+    <template id="relatie">
+        <div class="slo-entiteit-relatie">
+            <button data-simply-command="delete-relation" class="slo-button slo-right">
+                <svg class="slo-icon slo-icon-feather">
+                    <use xlink:href="/files/feather-sprite.svg#trash">
+                    </use>
+                </svg>
+            </button>
+            <span data-simply-field="relatie.id" data-simply-transformer="idToTitle"></span><br>
+            <span data-simply-field="relatie.id"></span>
+        </div>
+    </template>
+    <main class="slo-main slo-space-vertical">
+        <div class="slo-grid slo-grid-2">
+            <div class="slo-grid slo-grid-3 slo-space">
+                <input class="slo-grid-span-2" type="text" name="search" placeholder="Entiteit UUID / tekst">
+                <button data-simply-action="search" class="slo-button slo-button-nomargin" data-simply-command="search">Toon entiteit</button>
+            </div>
+            <div class="slo-grid slo-grid-3 slo-space">
+                <span></span><span></span><button class="slo-button slo-right" data-simply-command="save">Bewaar</button>
+            </div>
+        </div>
+        
+        <div class="slo-grid slo-grid-2">
+            <article class="slo-card">
+                <header class="slo-card-header slo-space">
+                    <span class="slo-tag">
+                        <label class="slo-tag-label">
+                            <svg class="slo-icon slo-icon-feather">
+                                <use xlink:href="/files/feather-sprite.svg#link">
+                            </use></svg>
+                        </label>
+                        <span class="slo-id" data-simply-field="entity.id"></span>
+                    </span>
+                    <span class="slo-tag">
+                        <label class="slo-tag-label">Type</label>
+                        <span data-simply-field="entity.section"></span>
+                    </span>
+                    <button class="slo-button slo-right slo-button-nomargin">
+                        <svg class="slo-icon slo-icon-feather">
+                            <use xlink:href="/files/feather-sprite.svg#trash">
+                            </use>
+                        </svg>
+                    </button>
+                </header>
+                <div class="slo-card-body">
+                    <div class="slo-entity">
+                        <label>Title
+                            <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                        </label>
+                        <label>Description
+                            <textarea data-simply-field="entity.description" placeholder="Entiteit description"></textarea>
+                        </label>
+                        <label>Vakkernen</label>
+                        <div class="slo-entiteit-relaties" data-simply-list="entity.vakkern_id" data-simply-entry="relatie">
+                            <template rel="relatie"></template>
+                            <div class="slo-entiteit-relatie">
+                                <button data-simply-command="delete-relation" class="slo-button slo-right">
+                                    <svg class="slo-icon slo-icon-feather">
+                                        <use xlink:href="/files/feather-sprite.svg#trash">
+                                        </use>
+                                    </svg>
+                                </button>
+                                <span data-simply-field="title">Bevolking en ruimte</span><br>
+                                <span data-simply-field="id">cff7c64e-d3d3-4421-824a-7b1297759468</span>
+                            </div>
+                            <div class="slo-entiteit-relatie">
+                                <button data-simply-command="delete-relation" class="slo-button slo-right">
+                                    <svg class="slo-icon slo-icon-feather">
+                                        <use xlink:href="/files/feather-sprite.svg#trash">
+                                        </use>
+                                    </svg>
+                                </button>
+                                <span data-simply-field="title">Globalisering</span><br>
+                                <span data-simply-field="id">cff7c64e-d3d3-4421-824a-7b1297759468</span>
+                            </div>
+                        </div>
+                        <div class="slo-search slo-grid slo-grid-3">
+                            <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
+                            <button class="slo-button-nomargin slo-button">Toevoegen</button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </main>
+
+<script src="https://cdn.simplyedit.io/1/simply-edit.js" data-simply-storage="none"></script>
+<script src="/assets/simplyview/dist/simply.everything.js"></script>
+<script>
+    simply.bind = false;
+//    document.body.dataset.loading = "true";
+
+    var idIndex = {};
+    function makeIndex(list) {
+        list.forEach(function(entry) {
+            idIndex[entry.id] = entry;
+        });
+    }
+
+
+    var reverseDoelIndex = {};
+    var hierarchies = {
+        'doel': {
+            'vak':['vakkern_id','doelniveau_id'],
+            'vakkern':['vaksubkern_id','doelniveau_id'],
+            'vaksubkern':['vakinhoud_id','doelniveau_id'],
+            'vakinhoud':['doelniveau_id'],
+            'doelniveau':['doel_id','niveau_id']
+        }
+    };
+    function walk(hierarchy, node, parents, callback) {
+        var hier = hierarchies[hierarchy];
+        var type = node.section;
+        callback(node, parents);
+        var childParents = parents.slice();
+        childParents.push(node);
+        if (hier[type]) {
+            hier[type].forEach(function(prop) {
+                if (node[prop]) {
+                    node[prop].forEach(function(childId) {
+                        walk(hierarchy, idIndex[childId], childParents, callback);
+                    });
+                }
+            });
+        }
+    }
+
+
+
+    var sources = {
+        // curriculum-doelen
+        //    use revision below instead of master: revision does not contain leerdoelenkaart doelen
+        'doel': "https://raw.githubusercontent.com/slonl/curriculum-doelen/34e13907a97095c1e2a763ced8f3c009098c9ad3/data/doelen.json",
+        'doelniveau': 'https://raw.githubusercontent.com/slonl/curriculum-doelen/34e13907a97095c1e2a763ced8f3c009098c9ad3/data/doelniveaus.json',
+        'niveau': 'https://raw.githubusercontent.com/slonl/curriculum-doelen/34e13907a97095c1e2a763ced8f3c009098c9ad3/data/niveaus.json',
+
+        // curriculum-inhouden
+        'vakinhoud': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vakinhouden.json',
+        'vaksubkern': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vaksubkernen.json',
+        'vakkern': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vakkernen.json',
+        'vak': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vakken.json',        
+    };
+
+    var dataset = {};
+    var fetching = [];
+    Object.keys(sources).forEach(function(source) {
+        fetching.push(fetch(sources[source]).then(function(response) { return response.json(); }));
+    });
+
+    Promise.all(fetching)
+    .then(function(data) {
+        Object.keys(sources).forEach(function(source, index) {
+            dataset[source] = data[index];
+        });
+        Object.keys(sources).forEach(function(source) {
+            dataset[source].forEach(function(entity) {
+                entity.section = source;
+            });
+            makeIndex(dataset[source]);
+        });
+
+        dataset['vak'].forEach(function(vakEntity) {
+            walk('doel', vakEntity, [], function(entity, parents) {
+                if (entity.section=='doel') {
+                    entity.parents = parents.map(function(parent) {
+                        return clone(parent.title);
+                    }).filter(Boolean).map(function(title) {
+                        return { title: title }
+                    });
+                }
+            });
+        });
+
+        document.body.dataset.loading = "false";
+    });
+
+
+    editor.transformers = {
+        "round" : {
+            "render" : function(data) {
+                return Math.round(100 * (1-data),2) + "%";
+            }
+        },
+        "opendatalink" : {
+            "render" : function(data) {
+                this.href="https://opendata.slo.nl/curriculum/uuid/"+data;
+                this.innerHTML = data;
+                return data;
+            }
+        },
+        "uuid": {
+            "render": function(data) {
+                this.id = data;
+                return data;
+            }
+        },
+        "idToTitle": {
+            "render" : function(data) {
+                this.sloId = data;
+                return idIndex[data].title;
+            },
+            "extract" : function(data) {
+                return this.sloId;
+            }
+        }
+    };
+    
+    var entityEditor = simply.app({
+        container: document.body,
+        routes : {
+            '/#edit/:id' : function(params) {
+                editor.pageData.entity = idIndex[params.id];
+                editor.pageData.page = "edit";
+            },
+        },
+        commands: {
+            'search': function(el, values) {
+                return entityEditor.actions.search(values.search);
+            }
+        },
+        actions: {
+            'search': function(searchText) {
+                simply.route.goto("/#edit/cff7c64e-d3d3-4421-824a-7b1297759468");
+            }
+        }
+    });
+
+    function clone(ob) {
+        if (typeof ob == 'undefined' || ob == null) {
+            return null;
+        }
+        return JSON.parse(JSON.stringify(ob));
+    }
+</script>
+</body>
+</html>
