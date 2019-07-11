@@ -479,7 +479,7 @@
             "render" : function(data) {
                 return {
                     innerHTML : data,
-                    href : "#edit/" + data
+                    href : document.location.pathname + "#edit/" + data
                 };
             },
             "extract" : function(el) {
@@ -553,29 +553,29 @@
         container: document.body,
         routes : {
             '/#edit/:id' : function(params) {
-		// reset page;
-		editor.pageData.entity = {
-			vakkern_id : null,
-			vaksubkern_id : null,
-			vakinhoud_id : null,
-			doelniveau_id : null,
-			doel_id : null,
-			niveau_id : null
-		};
+                // reset page;
+                editor.pageData.entity = {
+                        vakkern_id : null,
+                        vaksubkern_id : null,
+                        vakinhoud_id : null,
+                        doelniveau_id : null,
+                        doel_id : null,
+                        niveau_id : null
+                };
                 editor.pageData.entity = clone(idIndex[params.id]);
                 editor.pageData.page = "edit";
-		window.scrollTo(0,0);
+                window.scrollTo(0,0);
             },
             '/#edit/' : function(params) {
-		// reset page;
-		editor.pageData.entity = {
-			vakkern_id : null,
-			vaksubkern_id : null,
-			vakinhoud_id : null,
-			doelniveau_id : null,
-			doel_id : null,
-			niveau_id : null
-		};
+                // reset page;
+                editor.pageData.entity = {
+                        vakkern_id : null,
+                        vaksubkern_id : null,
+                        vakinhoud_id : null,
+                        doelniveau_id : null,
+                        doel_id : null,
+                        niveau_id : null
+                };
                 editor.pageData.page = "edit";
                 window.scrollTo(0,0);
             }
@@ -610,7 +610,7 @@
         actions: {
             'search': function(searchText) {
                   if (idIndex[searchText]) {
-                      simply.route.goto("/#edit/" + searchText);
+                      simply.route.goto(document.location.pathname + "#edit/" + searchText);
                   }
             }
         }
