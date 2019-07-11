@@ -2,11 +2,15 @@
 <html>
 <head>
     <title>Entiteiten editor</title>
+    <meta charset="utf-8">
     <link rel="stylesheet" href="css/styles.css">
     <style>
         html,body {
             padding: 0;
             margin: 0;
+        }
+        body[data-loading="true"] {
+            opacity: 0.3;
         }
         html {
             height: 100%;
@@ -16,6 +20,23 @@
         }
         .slo-commit {
             width: 100%;
+        }
+        .slo-right { 
+            margin-left: 0;
+        }
+        .slo-entiteit-changes {
+            overflow-y: auto;
+        }
+        .slo-title:empty:before {
+            content: "(Geen titel)";
+        }
+        .slo-entiteit-changes a {
+            color: inherit;
+            padding: inherit;
+        }
+        .slo-entiteit-change .slo-type {
+            margin-left: 5px;
+            max-width: 170px;
         }
     </style>
 </head>
@@ -35,33 +56,19 @@
                 <textarea placeholder="Commit message"></textarea>
             </p>
             <p>
-                5 aanpassingen
+                <span data-simply-field="changeCount">0</span> aanpassingen
                 <button class="slo-button slo-commit">Verwerken</button>
             </p>
-        </div>
-        <div class="slo-space slo-entiteit-changes" data-simply-list="changes">
-            <div class="slo-entiteit-change">
-                <input type="checkbox" checked="">
-                <span class="slo-title" data-simply-field="title" title="Burgerschap">Burgerschap</span><br>
-                <span class="slo-uuid" data-simply-field="id" title="cff7c64e-d3d3-4421-824a-7b1297759468">cff7c64e-d3d3-4421-824a-7b1297759468</span>
-            </div>            
-            <div class="slo-entiteit-change">
-                <input type="checkbox" checked="">
-                <span class="slo-title" data-simply-field="title" title="Bevolking en ruimte">Bevolking en ruimte</span><br>
-                <span class="slo-uuid" data-simply-field="id" title="cff7c64e-d3d3-4421-824a-7b1297759468">cff7c64e-d3d3-4421-824a-7b1297759468</span>
-            </div>            
-            <div class="slo-entiteit-change">
-                <input type="checkbox" checked="">
-                <span class="slo-title" data-simply-field="title" title="Deze heeft nu en hele lange titel">Deze heeft nu en hele lange titel</span><br>
-                <span class="slo-uuid" data-simply-field="id" title="cff7c64e-d3d3-4421-824a-7b1297759468">cff7c64e-d3d3-4421-824a-7b1297759468</span>
-            </div>            
-            <template>
-                <div class="slo-entiteit-change">
-                    <input type="checkbox" checked="">
-                    <span class="slo-title" data-simply-field="title">Burgerschap</span><br>
-                    <span class="slo-uuid" data-simply-field="id" title="cff7c64e-d3d3-4421-824a-7b1297759468">cff7c64e-d3d3-4421-824a-7b1297759468</span>
-                </div>
-            </template>            
+            <div class="slo-entiteit-changes" data-simply-list="changes">
+                <template>
+                    <div class="slo-entiteit-change">
+                        <input type="checkbox" checked>
+                        <span class="slo-title" data-simply-field="title"></span><br>
+                        <span class="slo-type" data-simply-field="section"></span><br>
+                        <a href="#" class="slo-uuid" data-simply-field="id" data-simply-transformer="editlink"></a>
+                    </div>            
+                </template>
+            </div>
         </div>
     </div>
     <template id="relatie">
@@ -72,23 +79,29 @@
                     </use>
                 </svg>
             </button>
-            <span data-simply-field="relatie.id" data-simply-transformer="idToTitle"></span><br>
-            <span data-simply-field="relatie.id"></span>
+            <span data-simply-field="relatie" data-simply-transformer="idToTitle"></span><br>
+            <a href="#" data-simply-field="relatie" data-simply-transformer="editlink"></a>
         </div>
     </template>
+    <datalist id="entities" data-simply-list="dataset.entities" data-simply-data="entities" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="vakkern" data-simply-list="dataset.vakkern" data-simply-data="vakkern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="vaksubkern" data-simply-list="dataset.vaksubkern" data-simply-data="vaksubkern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="vakinhoud" data-simply-list="dataset.vakinhoud" data-simply-data="vakinhoud" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="doelniveau" data-simply-list="dataset.doelniveau" data-simply-data="doelniveau" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="doel" data-simply-list="dataset.doel" data-simply-data="doel" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="niveau" data-simply-list="dataset.niveau" data-simply-data="niveau" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <main class="slo-main slo-space-vertical">
-        <div class="slo-grid slo-grid-2">
-            <div class="slo-grid slo-grid-3 slo-space">
-                <input class="slo-grid-span-2" type="text" name="search" placeholder="Entiteit UUID / tekst">
-                <button data-simply-action="search" class="slo-button slo-button-nomargin" data-simply-command="search">Toon entiteit</button>
-            </div>
+        <div class="slo-grid slo-grid-4">
+            <form data-simply-command="search" class="slo-grid slo-grid-span-3 slo-grid-3 slo-space">
+                <input class="slo-grid-span-2" type="text" name="search" placeholder="Entiteit UUID / tekst" list="entities">
+                <button data-simply-command="search" class="slo-button slo-button-nomargin" data-simply-command="search">Toon entiteit</button>
+            </form>
             <div class="slo-grid slo-grid-3 slo-space">
                 <span></span><span></span><button class="slo-button slo-right" data-simply-command="save">Bewaar</button>
             </div>
-        </div>
-        
-        <div class="slo-grid slo-grid-2">
-            <article class="slo-card">
+        </div>        
+        <div class="slo-grid slo-grid-4">
+            <article class="slo-card slo-grid-span-3">
                 <header class="slo-card-header slo-space">
                     <span class="slo-tag">
                         <label class="slo-tag-label">
@@ -109,53 +122,214 @@
                         </svg>
                     </button>
                 </header>
-                <div class="slo-card-body">
-                    <div class="slo-entity">
-                        <label>Title
-                            <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                        </label>
-                        <label>Description
-                            <textarea data-simply-field="entity.description" placeholder="Entiteit description"></textarea>
-                        </label>
-                        <label>Vakkernen</label>
-                        <div class="slo-entiteit-relaties" data-simply-list="entity.vakkern_id" data-simply-entry="relatie">
-                            <template rel="relatie"></template>
-                            <div class="slo-entiteit-relatie">
-                                <button data-simply-command="delete-relation" class="slo-button slo-right">
-                                    <svg class="slo-icon slo-icon-feather">
-                                        <use xlink:href="/files/feather-sprite.svg#trash">
-                                        </use>
-                                    </svg>
-                                </button>
-                                <span data-simply-field="title">Bevolking en ruimte</span><br>
-                                <span data-simply-field="id">cff7c64e-d3d3-4421-824a-7b1297759468</span>
+                <div class="slo-card-body" data-simply-field="entity.section" data-simply-content="template" data-simply-default-value="default">
+                    <template data-simply-template="vak">
+                        <div class="slo-entity">
+                            <label>Title
+                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                            </label>
+                            <label>Vakkernen</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.vakkern_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
                             </div>
-                            <div class="slo-entiteit-relatie">
-                                <button data-simply-command="delete-relation" class="slo-button slo-right">
-                                    <svg class="slo-icon slo-icon-feather">
-                                        <use xlink:href="/files/feather-sprite.svg#trash">
-                                        </use>
-                                    </svg>
-                                </button>
-                                <span data-simply-field="title">Globalisering</span><br>
-                                <span data-simply-field="id">cff7c64e-d3d3-4421-824a-7b1297759468</span>
+                            <form data-simply-command="add-relation data-slo-relation="vakkern_id" class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakkern">
+                                <button data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </form>
+                            <label>DoelNiveaus</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <div class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
                             </div>
                         </div>
-                        <div class="slo-search slo-grid slo-grid-3">
-                            <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
-                            <button class="slo-button-nomargin slo-button">Toevoegen</button>
+                    </template>
+                    <template data-simply-template="vakkern">
+                        <div class="slo-entity">
+                            <label>Title
+                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                            </label>
+                            <label>Vaksubkernen</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.vaksubkern_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <div class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vaksubkern">
+                                <button data-simply-command="add-relation" data-slo-relation="vaksubkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </div>
+                            <label>DoelNiveaus</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <div class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </div>
                         </div>
-                    </div>
+                    </template>
+                    <template data-simply-template="vaksubkern">
+                        <div class="slo-entity">
+                            <label>Title
+                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                            </label>
+                            <label>Vakinhouden</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.vakinhoud_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <div class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakinhoud">
+                                <button data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </div>
+                            <label>DoelNiveaus</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <div class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </div>
+                        </div>
+                    </template>
+                    <template data-simply-template="vakinhoud">
+                        <div class="slo-entity">
+                            <label>Title
+                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                            </label>
+                            <label>DoelNiveaus</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <div class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </div>
+                        </div>
+                    </template>
+                    <template data-simply-template="doelniveau">
+                        <div class="slo-entity">
+                            <label>Doelen</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.doel_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <div class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doel">
+                                <button data-simply-command="add-relation" data-slo-relation="doel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </div>
+                            <label>Niveaus</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <div class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
+                                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </div>
+                        </div>
+                    </template>
+                    <template data-simply-template="doel">
+                        <div class="slo-entity">
+                            <label>Title
+                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                            </label>
+                        </div>
+                    </template>
+                    <template data-simply-template="niveau">
+                        <div class="slo-entity">
+                            <label>Title
+                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                            </label>
+                            <label>Description
+                                <textarea data-simply-field="entity.description" placeholder="Entiteit description"></textarea>
+                            </label>
+                        </div>
+                    </template>
+                    <template data-simply-template="default">
+                        <div class="slo-entity">
+                            <label>Title
+                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                            </label>
+                            <label>Description
+                                <textarea data-simply-field="entity.description" placeholder="Entiteit description"></textarea>
+                            </label>
+                            <label>Vakkernen</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.vakkern_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <div class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
+                                <button data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </div>
+                            <label>Vaksubkernen</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.vaksubkern_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <div class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
+                                <button data-simply-command="add-relation" data-slo-relation="vaksubkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </div>
+                            <label>Vakinhouden</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.vakinhoud_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <div class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
+                                <button data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </div>
+                            <label>DoelNiveaus</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <div class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
+                                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </div>
+                            <label>Doelen</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.doel_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <div class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
+                                <button data-simply-command="add-relation" data-slo-relation="doel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </div>
+                            <label>Niveaus</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <div class="slo-search slo-grid slo-grid-3">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
+                                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </article>
         </div>
     </main>
 
-<script src="https://cdn.simplyedit.io/1/simply-edit.js" data-simply-storage="none"></script>
+<script src="https://yvo.muze.nl/simply-edit/js/simply-edit.js" xsrc="https://cdn.simplyedit.io/1/simply-edit.js" data-simply-storage="none"></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
 <script>
+    document.addEventListener("simply-content-loaded", function() {
+        // restore changes from localstorage;
+        if (localStorage.changes) {
+            editor.pageData.changes = JSON.parse(localStorage.changes);
+            editor.pageData.changeCount = editor.pageData.changes.length;
+            editor.pageData.changes.forEach(function(entry) {
+                idIndex[entry.id] = clone(entry);
+            });
+        }
+    });
+
+    var gotoHash = function() {
+        var path = document.location.pathname + document.location.hash;
+        path = path.replace(/\/$/, '');
+        simply.route.match(path);
+    };
+    window.addEventListener("hashchange", gotoHash);
+
     simply.bind = false;
-//    document.body.dataset.loading = "true";
+    document.body.dataset.loading = "true";
 
     var idIndex = {};
     function makeIndex(list) {
@@ -192,23 +366,24 @@
         }
     }
 
-
-
     var sources = {
+        // curriculum-inhouden
+        'vak': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vakken.json',        
+        'vakkern': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vakkernen.json',
+        'vaksubkern': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vaksubkernen.json',
+        'vakinhoud': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vakinhouden.json',
+
         // curriculum-doelen
         //    use revision below instead of master: revision does not contain leerdoelenkaart doelen
         'doel': "https://raw.githubusercontent.com/slonl/curriculum-doelen/34e13907a97095c1e2a763ced8f3c009098c9ad3/data/doelen.json",
         'doelniveau': 'https://raw.githubusercontent.com/slonl/curriculum-doelen/34e13907a97095c1e2a763ced8f3c009098c9ad3/data/doelniveaus.json',
         'niveau': 'https://raw.githubusercontent.com/slonl/curriculum-doelen/34e13907a97095c1e2a763ced8f3c009098c9ad3/data/niveaus.json',
 
-        // curriculum-inhouden
-        'vakinhoud': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vakinhouden.json',
-        'vaksubkern': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vaksubkernen.json',
-        'vakkern': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vakkernen.json',
-        'vak': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vakken.json',        
     };
 
-    var dataset = {};
+    var dataset = {
+        'all' : []
+    };
     var fetching = [];
     Object.keys(sources).forEach(function(source) {
         fetching.push(fetch(sources[source]).then(function(response) { return response.json(); }));
@@ -218,10 +393,32 @@
     .then(function(data) {
         Object.keys(sources).forEach(function(source, index) {
             dataset[source] = data[index];
+            editor.addDataSource(source, {
+                load : function(el, callback) {
+                    document.body.dataset.loading = "true";
+                    var options = '';
+                    data[index].forEach(function(data) {
+                        var option = data.title + " " + data.id;
+
+                        if (data.section=="doelniveau") {
+                            var doel = idIndex[data.doel_id[0]];
+                            var niveau = idIndex[data.niveau_id[0]];
+                            option = "[" + niveau.title + "] " + doel.title + " " + data.id;
+                        }
+
+                        options += "<option value='" + data.id + "'>" + option + "</option>";
+                    });
+                    window.setTimeout(function() {
+                        el.innerHTML = options;
+                        document.body.dataset.loading = "false";
+                    });
+                }
+            });
         });
         Object.keys(sources).forEach(function(source) {
             dataset[source].forEach(function(entity) {
                 entity.section = source;
+                dataset['all'].push(entity);
             });
             makeIndex(dataset[source]);
         });
@@ -239,6 +436,29 @@
         });
 
         document.body.dataset.loading = "false";
+        gotoHash();
+
+        editor.addDataSource("entities", {
+            load : function(el, callback) {
+                document.body.dataset.loading = "true";
+                var options = '';
+                dataset['all'].forEach(function(data) {
+                    var option = data.title + " " + data.id;
+
+                    if (data.section=="doelniveau") {
+                        var doel = idIndex[data.doel_id[0]];
+                        var niveau = idIndex[data.niveau_id[0]];
+                        option = "[" + niveau.title + "] " + doel.title + " " + data.id;
+                    }
+
+                    options += "<option value='" + data.id + "'>" + option + "</option>";
+                });
+                window.setTimeout(function() {
+                    el.innerHTML = options;
+                    document.body.dataset.loading = "false";
+                });
+            }
+        });
     });
 
 
@@ -255,6 +475,17 @@
                 return data;
             }
         },
+        "editlink" : {
+            "render" : function(data) {
+                return {
+                    innerHTML : data,
+                    href : "#edit/" + data
+                };
+            },
+            "extract" : function(el) {
+                return el.innerHTML;
+            }
+        },
         "uuid": {
             "render": function(data) {
                 this.id = data;
@@ -264,10 +495,56 @@
         "idToTitle": {
             "render" : function(data) {
                 this.sloId = data;
-                return idIndex[data].title;
+                var entity = idIndex[data];
+                if (entity.section=="doelniveau") {
+                    var doel = idIndex[entity.doel_id[0]];
+                    var niveau = idIndex[entity.niveau_id[0]];
+                    return "[" + niveau.title + "] " + doel.title;
+                } else {
+                    return idIndex[data].title ? idIndex[data].title : "";
+                }
             },
-            "extract" : function(data) {
+            "extract" : function(el) {
                 return this.sloId;
+            }
+        },
+        "hasDescription" : {
+            render : function(data) {
+                return (typeof data.description !== "undefined");
+            }
+        },
+        "hasTitle" : {
+            render : function(data) {
+                return (typeof data.title !== "undefined");
+            }
+        },
+        "isarray" : {
+            render : function(data) {
+                this.data = data;
+                return Array.isArray(data);
+            },
+            extract : function(el) {
+                return this.data;
+            }
+        },
+        "searchoption" : {
+            render : function(data) {
+                this.data = data;
+                var option = data.title + " " + data.id;
+
+                if (data.section=="doelniveau") {
+                    var doel = idIndex[data.doel_id[0]];
+                    var niveau = idIndex[data.niveau_id[0]];
+                    option = "[" + niveau.title + "] " + doel.title + " " + data.id;
+                }
+
+                return {
+                    innerHTML : option,
+                    value : data.id
+                };
+            },
+            extract : function(el) {
+                return this.data;
             }
         }
     };
@@ -276,18 +553,65 @@
         container: document.body,
         routes : {
             '/#edit/:id' : function(params) {
-                editor.pageData.entity = idIndex[params.id];
+		// reset page;
+		editor.pageData.entity = {
+			vakkern_id : null,
+			vaksubkern_id : null,
+			vakinhoud_id : null,
+			doelniveau_id : null,
+			doel_id : null,
+			niveau_id : null
+		};
+                editor.pageData.entity = clone(idIndex[params.id]);
                 editor.pageData.page = "edit";
+		window.scrollTo(0,0);
             },
+            '/#edit/' : function(params) {
+		// reset page;
+		editor.pageData.entity = {
+			vakkern_id : null,
+			vaksubkern_id : null,
+			vakinhoud_id : null,
+			doelniveau_id : null,
+			doel_id : null,
+			niveau_id : null
+		};
+                editor.pageData.page = "edit";
+                window.scrollTo(0,0);
+            }
         },
         commands: {
-            'search': function(el, values) {
-                return entityEditor.actions.search(values.search);
+            'search': function(el) {
+                var searchText = el.parentNode.querySelector("input").value;
+                return entityEditor.actions.search(searchText);
+            },
+            'delete-relation' : function(el) {
+                el.parentNode.parentNode.removeChild(el.parentNode);
+            },
+            'add-relation' : function(el) {
+                var relationId = el.parentNode.querySelector("input").value;
+                var relation = el.getAttribute("data-slo-relation");
+                editor.pageData.entity[relation].push(relationId);
+            },
+            'save' : function() {
+                editor.pageData.changes = editor.pageData.changes.filter(function(entry) {
+                    if (editor.pageData.entity.id == entry.id) {
+                        return false;
+                    }
+                    return true;
+                });
+
+                editor.pageData.changes.push(clone(editor.pageData.entity));
+                idIndex[editor.pageData.entity.id] = clone(editor.pageData.entity);
+                editor.pageData.changeCount = editor.pageData.changes.length;
+                localStorage.changes = JSON.stringify(editor.pageData.changes);
             }
         },
         actions: {
             'search': function(searchText) {
-                simply.route.goto("/#edit/cff7c64e-d3d3-4421-824a-7b1297759468");
+                  if (idIndex[searchText]) {
+                      simply.route.goto("/#edit/" + searchText);
+                  }
             }
         }
     });
@@ -297,6 +621,24 @@
             return null;
         }
         return JSON.parse(JSON.stringify(ob));
+    }
+
+
+    // Yucky code, but chrome handles large datalists very poorly. This is to make it only do autocompletion
+    // when enough characters have been entered. Firefox doesn't even break a sweat with this;
+    if (window.chrome) {
+        document.addEventListener("input", function(evt) {
+            if (evt.target.hasAttribute("list") && !evt.target.hasAttribute("data-list")) {
+                evt.target.setAttribute("data-list", evt.target.getAttribute("list"));
+            }
+            if (evt.target.getAttribute("data-list")) {
+                if (evt.target.value.length > 3) {
+                    evt.target.setAttribute("list", evt.target.getAttribute("data-list"));
+                } else {
+                    evt.target.removeAttribute("list");
+                }
+            }
+        }, true);
     }
 </script>
 </body>
