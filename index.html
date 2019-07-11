@@ -121,6 +121,13 @@
                             </use>
                         </svg>
                     </button>
+                    <ul class="slo-nav-crumbs slo-space" data-simply-list="entity.parents">
+                        <template>
+                            <li>
+                                <a href="#" data-simply-field="id" data-simply-transformer="editlink" data-simply-content="fixed"><span data-simply-field="id" data-simply-transformer="idToTitle"></span></a>
+                            </li>
+                        </template>
+                    </ul>
                 </header>
                 <div class="slo-card-body" data-simply-field="entity.section" data-simply-content="template" data-simply-default-value="default">
                     <template data-simply-template="vak">
@@ -132,7 +139,7 @@
                             <div class="slo-entiteit-relaties" data-simply-list="entity.vakkern_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <form data-simply-command="add-relation data-slo-relation="vakkern_id" class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakkern">
                                 <button data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
                             </form>
@@ -140,10 +147,10 @@
                             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
                                 <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                         </div>
                     </template>
                     <template data-simply-template="vakkern">
@@ -155,18 +162,18 @@
                             <div class="slo-entiteit-relaties" data-simply-list="entity.vaksubkern_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="vaksubkern_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vaksubkern">
                                 <button data-simply-command="add-relation" data-slo-relation="vaksubkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                             <label>DoelNiveaus</label>
                             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
                                 <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                         </div>
                     </template>
                     <template data-simply-template="vaksubkern">
@@ -178,18 +185,18 @@
                             <div class="slo-entiteit-relaties" data-simply-list="entity.vakinhoud_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakinhoud">
                                 <button data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                             <label>DoelNiveaus</label>
                             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
                                 <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                         </div>
                     </template>
                     <template data-simply-template="vakinhoud">
@@ -201,10 +208,10 @@
                             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
                                 <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                         </div>
                     </template>
                     <template data-simply-template="doelniveau">
@@ -213,18 +220,18 @@
                             <div class="slo-entiteit-relaties" data-simply-list="entity.doel_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="doel_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doel">
                                 <button data-simply-command="add-relation" data-slo-relation="doel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                             <label>Niveaus</label>
                             <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
                                 <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                         </div>
                     </template>
                     <template data-simply-template="doel">
@@ -262,50 +269,50 @@
                             <div class="slo-entiteit-relaties" data-simply-list="entity.vakkern_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
                                 <button data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                             <label>Vaksubkernen</label>
                             <div class="slo-entiteit-relaties" data-simply-list="entity.vaksubkern_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="vaksubkern_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
                                 <button data-simply-command="add-relation" data-slo-relation="vaksubkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                             <label>Vakinhouden</label>
                             <div class="slo-entiteit-relaties" data-simply-list="entity.vakinhoud_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
                                 <button data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                             <label>DoelNiveaus</label>
                             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
                                 <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                             <label>Doelen</label>
                             <div class="slo-entiteit-relaties" data-simply-list="entity.doel_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="doel_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
                                 <button data-simply-command="add-relation" data-slo-relation="doel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                             <label>Niveaus</label>
                             <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
                                 <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                         </div>
                     </template>
                 </div>
@@ -431,13 +438,11 @@
 
         dataset['vak'].forEach(function(vakEntity) {
             walk('doel', vakEntity, [], function(entity, parents) {
-                if (entity.section=='doel') {
-                    entity.parents = parents.map(function(parent) {
-                        return clone(parent.title);
-                    }).filter(Boolean).map(function(title) {
-                        return { title: title }
-                    });
-                }
+                entity.parents = parents.map(function(parent) {
+                    return clone(parent.id);
+                }).filter(Boolean).map(function(id) {
+                    return { id: id }
+                });
             });
         });
 
