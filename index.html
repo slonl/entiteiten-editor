@@ -141,10 +141,10 @@
                             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
                                 <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                         </div>
                     </template>
                     <template data-simply-template="vakkern">
@@ -156,18 +156,18 @@
                             <div class="slo-entiteit-relaties" data-simply-list="entity.vaksubkern_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="vaksubkern" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vaksubkern">
                                 <button data-simply-command="add-relation" data-slo-relation="vaksubkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                             <label>DoelNiveaus</label>
                             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
                                 <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                         </div>
                     </template>
                     <template data-simply-template="vaksubkern">
@@ -179,18 +179,18 @@
                             <div class="slo-entiteit-relaties" data-simply-list="entity.vakinhoud_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="vakinhoud" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakinhoud">
                                 <button data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                             <label>DoelNiveaus</label>
                             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
                                 <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                         </div>
                     </template>
                     <template data-simply-template="vakinhoud">
@@ -202,10 +202,10 @@
                             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
                                 <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                         </div>
                     </template>
                     <template data-simply-template="doelniveau">
@@ -214,18 +214,18 @@
                             <div class="slo-entiteit-relaties" data-simply-list="entity.doel_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="doel" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doel">
                                 <button data-simply-command="add-relation" data-slo-relation="doel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                             <label>Niveaus</label>
                             <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
                                 <template rel="relatie"></template>
                             </div>
-                            <div class="slo-search slo-grid slo-grid-3">
+                            <form data-simply-command="add-relation" data-slo-relation="niveau" class="slo-search slo-grid slo-grid-3">
                                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
                                 <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </div>
+                            </form>
                         </div>
                     </template>
                     <template data-simply-template="doel">
@@ -546,6 +546,102 @@
                             </form>
                         </div>
                     </template>
+                    <!-- kerndoelen -->
+                    <template data-simply-template="kerndoel">
+                        <div class="slo-entity">
+                            <label>Prefix
+                                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+                            </label>
+                            <label>Titel
+                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                            </label>
+                            <label>Omschrijving
+                                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                            </label>
+                            <label>Niveau</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="niveau_id">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
+                                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </form>
+                        </div>
+                    </template>
+                    <template data-simply-template="kerndoel_domein">
+                        <div class="slo-entity">
+                            <label>Titel
+                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                            </label>
+                            <label>Kerndoel</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="kerndoel_id">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="kerndoel">
+                                <button data-simply-command="add-relation" data-slo-relation="kerndoel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </form>
+                        </div>
+                    </template>
+                    <template data-simply-template="kerndoel_uitstroomprofiel">
+                        <div class="slo-entity">
+                            <label>Titel
+                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                            </label>
+                            <label>Omschrijving
+                                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                            </label>
+                            <label>Tag</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="tag_id">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="tag">
+                                <button data-simply-command="add-relation" data-slo-relation="tag_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </form>
+                        </div>
+                    </template>
+                    <template data-simply-template="kerndoel_vakleergebied">
+                        <div class="slo-entity">
+                            <label>Titel
+                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                            </label>
+                            <label>Domein</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_domein_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="kerndoel_domein_id">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="kerndoel_domein">
+                                <button data-simply-command="add-relation" data-slo-relation="kerndoel_domein_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </form>
+                            <label>Uitstroomprofiel</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_uitstroomprofiel_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="kerndoel_uitstroomprofiel_id">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="kerndoel_uitstroomprofiel">
+                                <button data-simply-command="add-relation" data-slo-relation="kerndoel_uitstroomprofiel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </form>
+                            <label>Kerndoel</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="kerndoel_id">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="kerndoel">
+                                <button data-simply-command="add-relation" data-slo-relation="kerndoel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </form>
+                            <label>Vak</label>
+                            <div class="slo-entiteit-relaties" data-simply-list="entity.vak_id" data-simply-entry="relatie">
+                                <template rel="relatie"></template>
+                            </div>
+                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="vak_id">
+                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vak">
+                                <button data-simply-command="add-relation" data-slo-relation="vak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+                            </form>
+                        </div>
+                    </template>
+
+                    <!-- default -->
                     <template data-simply-template="default">
                         <div class="slo-entity">
                             <label>Title
@@ -692,7 +788,14 @@
         'examenprogramma_kop3': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/kop3.json',
         'examenprogramma_kop4': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/kop4.json',
         'examenprogramma_subdomein': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/subdomeinen.json',
-        'examenprogramma_vakleergebied': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/vakleergebieden.json'
+        'examenprogramma_vakleergebied': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/vakleergebieden.json',
+
+        // kerndoelen
+        'kerndoel': 'https://raw.githubusercontent.com/slonl/curriculum-kerndoelen/master/data/kerndoelen.json',
+        'kerndoel_domein': 'https://raw.githubusercontent.com/slonl/curriculum-kerndoelen/master/data/domeinen.json',
+        'kerndoel_uitstroomprofiel': 'https://raw.githubusercontent.com/slonl/curriculum-kerndoelen/master/data/uitstroomprofielen.json',
+        'kerndoel_vakleergebied': 'https://raw.githubusercontent.com/slonl/curriculum-kerndoelen/master/data/vakleergebieden.json'
+
     };
 
     var dataset = {
