@@ -57,11 +57,17 @@
             </p>
             <p>
                 <span data-simply-field="changeCount">0</span> aanpassingen
-                <button class="slo-button slo-commit">Verwerken</button>
+                <button data-simply-command="commit-changes" class="slo-button slo-commit">Verwerken</button>
             </p>
             <div class="slo-entiteit-changes" data-simply-list="changes">
                 <template>
                     <div class="slo-entiteit-change">
+                        <button data-simply-command="delete-change" class="slo-button slo-right">
+                            <svg class="slo-icon slo-icon-feather">
+                                <use xlink:href="/files/feather-sprite.svg#trash">
+                                </use>
+                            </svg>
+                        </button>
                         <input type="checkbox" checked>
                         <span class="slo-title" data-simply-field="title"></span><br>
                         <span class="slo-type" data-simply-field="section"></span><br>
@@ -711,21 +717,9 @@
             </article>
         </div>
     </main>
-
 <script src="https://yvo.muze.nl/simply-edit/js/simply-edit.js" xsrc="https://cdn.simplyedit.io/1/simply-edit.js" data-simply-storage="none"></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
 <script>
-    document.addEventListener("simply-content-loaded", function() {
-        // restore changes from localstorage;
-        if (localStorage.changes) {
-            editor.pageData.changes = JSON.parse(localStorage.changes);
-            editor.pageData.changeCount = editor.pageData.changes.length;
-            editor.pageData.changes.forEach(function(entry) {
-                idIndex[entry.id] = clone(entry);
-            });
-        }
-    });
-
     var gotoHash = function() {
         var path = document.location.pathname + document.location.hash;
         path = path.replace(/\/$/, '');
@@ -857,8 +851,6 @@
             });
         });
 
-        document.body.dataset.loading = "false";
-        gotoHash();
 
         editor.addDataSource("entities", {
             load : function(el, callback) {
@@ -881,6 +873,20 @@
                 });
             }
         });
+    })
+    .then(function() {
+        // restore changes from localstorage;
+        if (localStorage.changes) {
+            editor.pageData.changes = JSON.parse(localStorage.changes);
+            editor.pageData.changeCount = editor.pageData.changes.length;
+            editor.pageData.changes.forEach(function(entry) {
+                idIndex[entry.id] = clone(entry);
+            });
+        }
+    })
+    .then(function() {
+        document.body.dataset.loading = "false";
+        gotoHash();
     });
 
 
@@ -1015,6 +1021,45 @@
                 var relation = el.getAttribute("data-slo-relation");
                 editor.pageData.entity[relation].push(relationId);
             },
+            'delete-change' : function(el) {
+                // find the id of the entity;
+                var id = el.parentNode.parentNode.querySelector("a").innerHTML;
+                // find the original entity from the dataset;
+                var original = dataset[idIndex[id].section].find(function(entry) {
+                    if (entry.id == id) {
+                        return true;
+                    }
+                    return false;
+                });
+                idIndex[id] = original; 
+                el.parentNode.parentNode.removeChild(el.parentNode);
+                editor.pageData.changeCount = editor.pageData.changes.length;
+                localStorage.changes = JSON.stringify(editor.pageData.changes);
+
+                // reload the page to show the changes;
+                var entityId = editor.pageData.entity.id;
+                simply.route.goto(document.location.pathname + "#edit/");
+                simply.route.goto(document.location.pathname + "#edit/" + entityId);
+            },
+            'commit-changes' : function() {
+                editor.pageData.changes.forEach(function(change) {
+                    var id = change.id;
+                    var original = dataset[change.section].find(function(entry) {
+                        if (entry.id == id) {
+                            return true;
+                        }
+                        return false;
+                    });
+                    var index = dataset[change.section].indexOf(original);
+                    dataset[change.section][index] = change;
+                });
+                editor.pageData.changes = [];
+                editor.pageData.changeCount = editor.pageData.changes.length;
+                localStorage.changes = JSON.stringify(editor.pageData.changes);
+
+                // FIXME: and actually write the datasets to github;
+                // FIXME: filter out parents, section;
+            },
             'save' : function() {
                 editor.pageData.changes = editor.pageData.changes.filter(function(entry) {
                     if (editor.pageData.entity.id == entry.id) {
@@ -1022,7 +1067,6 @@
                     }
                     return true;
                 });
-
                 editor.pageData.changes.push(clone(editor.pageData.entity));
                 idIndex[editor.pageData.entity.id] = clone(editor.pageData.entity);
                 editor.pageData.changeCount = editor.pageData.changes.length;
