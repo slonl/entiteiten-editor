@@ -757,6 +757,7 @@
 <script src="https://yvo.muze.nl/simply-edit/js/simply-edit.js" xsrc="https://cdn.simplyedit.io/1/simply-edit.js" data-simply-storage="none"></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
 <script src="uuidv4.js"></script>
+<script src="/js/curriculum.js"></script>
 <script>
     var gotoHash = function() {
         var path = document.location.pathname + document.location.hash;
@@ -809,73 +810,50 @@
             hier[type].forEach(function(prop) {
                 if (node[prop]) {
                     node[prop].forEach(function(childId) {
-                        walk(hierarchy, idIndex[childId], childParents, callback);
+                        walk(hierarchy, curriculum.index.id[childId], childParents, callback);
                     });
                 }
             });
         }
     }
 
-    var sources = {
-        // curriculum-inhouden
-        'vak': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vakken.json',
-        'vakkern': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vakkernen.json',
-        'vaksubkern': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vaksubkernen.json',
-        'vakinhoud': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/data/vakinhouden.json',
-
-        // curriculum-doelen
-        //    use revision below instead of master: revision does not contain leerdoelenkaart doelen
-        'doel': "https://raw.githubusercontent.com/slonl/curriculum-doelen/master/data/doelen.json",
-        'doelniveau': 'https://raw.githubusercontent.com/slonl/curriculum-doelen/master/data/doelniveaus.json',
-        'niveau': 'https://raw.githubusercontent.com/slonl/curriculum-doelen/master/data/niveaus.json',
-        'tag': 'https://raw.githubusercontent.com/slonl/curriculum-doelen/master/data/tags.json',
-
-        // examenprogramma
-        'examenprogramma_body': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/body.json',
-        'examenprogramma_domein': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/domeinen.json',
-        'examenprogramma_eindterm': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/eindtermen.json',
-        'examenprogramma': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/examenprogramma.json',
-        'examenprogramma_kop1': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/kop1.json',
-        'examenprogramma_kop2': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/kop2.json',
-        'examenprogramma_kop3': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/kop3.json',
-        'examenprogramma_kop4': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/kop4.json',
-        'examenprogramma_subdomein': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/subdomeinen.json',
-        'examenprogramma_vakleergebied': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/data/vakleergebieden.json',
-
-        // kerndoelen
-        'kerndoel': 'https://raw.githubusercontent.com/slonl/curriculum-kerndoelen/master/data/kerndoelen.json',
-        'kerndoel_domein': 'https://raw.githubusercontent.com/slonl/curriculum-kerndoelen/master/data/domeinen.json',
-        'kerndoel_uitstroomprofiel': 'https://raw.githubusercontent.com/slonl/curriculum-kerndoelen/master/data/uitstroomprofielen.json',
-        'kerndoel_vakleergebied': 'https://raw.githubusercontent.com/slonl/curriculum-kerndoelen/master/data/vakleergebieden.json'
-
+    var schemas = {
+        'curriculum-inhouden': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/context.json',
+        'curriculum-doelen': 'https://raw.githubusercontent.com/slonl/curriculum-doelen/master/context.json',
+        'curriculum-kerndoelen': 'https://raw.githubusercontent.com/slonl/curriculum-kerndoelen/master/context.json',
+        'curriculum-examenprogramma': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/context.json'
     };
-
-    var dataset = {
-        'all' : []
-    };
-    var fetching = [];
-    Object.keys(sources).forEach(function(source) {
-        fetching.push(fetch(sources[source]).then(function(response) { return response.json(); }));
+    var loading = [];
+    Object.keys(schemas).forEach(function(schema) {
+        loading.push(
+            curriculum.loadContextFromURL(schema, schemas[schema])
+            .then(function() {
+                return curriculum.loadData(schema);
+            })
+        );
     });
 
-    Promise.all(fetching)
-    .then(function(data) {
-        Object.keys(sources).forEach(function(source, index) {
-            dataset[source] = data[index];
-            editor.addDataSource(source, {
+    Promise.all(loading)
+    .then(function() {
+        Object.values(curriculum.index.id).forEach(function(entity) {
+            entity.section = curriculum.index.type[entity.id];
+        });
+
+        Object.keys(curriculum.data).forEach(function(dataset) {
+            editor.addDataSource(dataset, {
                 load : function(el, callback) {
                     document.body.dataset.loading = "true";
                     var options = '';
-                    data[index].forEach(function(data) {
-                        var option = data.title + " " + data.id;
+                    curriculum.data[dataset].forEach(function(entity) {
+                        var option = entity.title + " " + entity.id;
 
-                        if (data.section=="doelniveau") {
-                            var doel = idIndex[data.doel_id[0]];
-                            var niveau = idIndex[data.niveau_id[0]];
-                            option = "[" + niveau.title + "] " + doel.title + " " + data.id;
+                        if (curriculum.index.type[entity.id] == "doelniveau") {
+                            var doel = curriculum.index.id[entity.doel_id[0]];
+                            var niveau = curriculum.index.id[entity.niveau_id[0]];
+                            option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
                         }
 
-                        options += "<option value='" + data.id + "'>" + option + "</option>";
+                        options += "<option value='" + entity.id + "'>" + option + "</option>";
                     });
                     window.setTimeout(function() {
                         el.innerHTML = options;
@@ -884,58 +862,38 @@
                 }
             });
         });
-        Object.keys(sources).forEach(function(source) {
-            dataset[source].forEach(function(entity) {
-                entity.section = source;
-                dataset['all'].push(entity);
-            });
-            makeIndex(dataset[source]);
-        });
 
-        dataset['vak'].forEach(function(vakEntity) {
-            walk('doel', vakEntity, [], function(entity, parents) {
-                entity.parents = parents.map(function(parent) {
-                    return clone(parent.id);
-                }).filter(Boolean).map(function(id) {
-                    return { id: id }
-                });
-            });
-        });
-
-        dataset['examenprogramma'].forEach(function(vakEntity) {
-            walk('examenprogramma', vakEntity, [], function(entity, parents) {
-                entity.parents = parents.map(function(parent) {
-                    return clone(parent.id);
-                }).filter(Boolean).map(function(id) {
-                    return { id: id }
-                });
-            });
-        });
-
-        dataset['kerndoel_vakleergebied'].forEach(function(vakEntity) {
-            walk('kerndoelen', vakEntity, [], function(entity, parents) {
-                entity.parents = parents.map(function(parent) {
-                    return clone(parent.id);
-                }).filter(Boolean).map(function(id) {
-                    return { id: id }
-                });
-            });
-        });
+		var parentInfo = {
+			'vak' : 'doel',
+			'examenprogramma' : 'examenprogramma',
+			'kerndoel_vakleergebied': 'kerndoelen'
+		};
+		Object.keys(parentInfo).forEach(function(section) {
+	        curriculum.data[section].forEach(function(vakEntity) {
+    	        walk(parentInfo[section], vakEntity, [], function(entity, parents) {
+        	        entity.parents = parents.map(function(parent) {
+            	        return clone(parent.id);
+                	}).filter(Boolean).map(function(id) {
+                	    return { id: id }
+                	});
+           		});
+	        });
+		});
 
         editor.addDataSource("entities", {
             load : function(el, callback) {
                 document.body.dataset.loading = "true";
                 var options = '';
-                dataset['all'].forEach(function(data) {
-                    var option = data.title + " " + data.id;
+                Object.values(curriculum.index.id).forEach(function(entity) {
+                    var option = entity.title + " " + entity.id;
 
-                    if (data.section=="doelniveau") {
-                        var doel = idIndex[data.doel_id[0]];
-                        var niveau = idIndex[data.niveau_id[0]];
-                        option = "[" + niveau.title + "] " + doel.title + " " + data.id;
+                    if (curriculum.index.type[entity.id] == "doelniveau") {
+                        var doel = curriculum.index.id[entity.doel_id[0]];
+                        var niveau = curriculum.index.id[entity.niveau_id[0]];
+                        option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
                     }
 
-                    options += "<option value='" + data.id + "'>" + option + "</option>";
+                    options += "<option value='" + entity.id + "'>" + option + "</option>";
                 });
                 window.setTimeout(function() {
                     el.innerHTML = options;
@@ -950,7 +908,7 @@
             editor.pageData.changes = JSON.parse(localStorage.changes);
             editor.pageData.changeCount = editor.pageData.changes.length;
             editor.pageData.changes.forEach(function(entry) {
-                idIndex[entry.id] = clone(entry);
+                curriculum.index.id[entry.id] = clone(entry);
             });
         }
     })
@@ -993,13 +951,13 @@
         "idToTitle": {
             "render" : function(data) {
                 this.sloId = data;
-                var entity = idIndex[data];
-                if (entity.section=="doelniveau") {
-                    var doel = idIndex[entity.doel_id[0]];
-                    var niveau = idIndex[entity.niveau_id[0]];
+                var entity = curriculum.index.id[data];
+                if (curriculum.index.type[data] == "doelniveau") {
+                    var doel = curriculum.index.id[entity.doel_id[0]];
+                    var niveau = curriculum.index.id[entity.niveau_id[0]];
                     return "[" + niveau.title + "] " + doel.title;
                 } else {
-                    return idIndex[data].title ? idIndex[data].title : "";
+                    return curriculum.index.id[data].title ? curriculum.index.id[data].title : "";
                 }
             },
             "extract" : function(el) {
@@ -1026,19 +984,19 @@
             }
         },
         "searchoption" : {
-            render : function(data) {
-                this.data = data;
-                var option = data.title + " " + data.id;
+            render : function(entity) {
+                this.data = entity;
+                var option = entity.title + " " + entity.id;
 
-                if (data.section=="doelniveau") {
-                    var doel = idIndex[data.doel_id[0]];
-                    var niveau = idIndex[data.niveau_id[0]];
-                    option = "[" + niveau.title + "] " + doel.title + " " + data.id;
+                if (curriculum.index.type[entity.id]=="doelniveau") {
+                    var doel = curriculum.index.id[entity.doel_id[0]];
+                    var niveau = curriculum.index.id[entity.niveau_id[0]];
+                    option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
                 }
 
                 return {
                     innerHTML : option,
-                    value : data.id
+                    value : entity.id
                 };
             },
             extract : function(el) {
@@ -1062,7 +1020,7 @@
                         section: null,
                         id: null
                 };
-                editor.pageData.entity = clone(idIndex[params.id]);
+                editor.pageData.entity = clone(curriculum.index.id[params.id]);
                 editor.pageData.page = "edit";
                 window.scrollTo(0,0);
             },
@@ -1116,16 +1074,17 @@
             'delete-change' : function(el) {
                 // find the id of the entity;
                 var id = el.parentNode.parentNode.querySelector("a").innerHTML;
-                if (idIndex[id]) {
-                    // find the original entity from the dataset;
-                    var original = dataset[idIndex[id].section].find(function(entry) {
-                        if (entry.id == id) {
-                            return true;
-                        }
-                        return false;
-                    });
-                    idIndex[id] = original;
-                }
+				if (curriculum.index.id[id]) {
+	                // find the original entity from the dataset;
+    	            var original = curriculum.data[curriculum.index.type[id]].find(function(entry) {
+        	            if (entry.id == id) {
+            	            return true;
+                	    }
+                    	return false;
+	                });
+	                curriculum.index.id[id] = original; 
+	            }
+
                 el.parentNode.parentNode.removeChild(el.parentNode);
                 editor.pageData.changeCount = editor.pageData.changes.length;
                 localStorage.changes = JSON.stringify(editor.pageData.changes);
@@ -1136,27 +1095,17 @@
                 simply.route.goto(document.location.pathname + "#edit/" + entityId);
             },
             'commit-changes' : function() {
-                editor.pageData.changes.forEach(function(change) {
-                    var id = change.id;
-                    var original = dataset[change.section].find(function(entry) {
-                        if (entry.id == id) {
-                            return true;
-                        }
-                        return false;
-                    });
-                    if (original) {
-                        var index = dataset[change.section].indexOf(original);
-                        dataset[change.section][index] = change;
-                    } else {
-                        dataset[change.section].push(change);
-                    }
+                entityEditor.actions['commit-changes'](editor.pageData.changes, editor.pageData.commitMessage)
+                .then(function(done) {
+                    done.sort().reverse().forEach(function(changeIndex) {
+                        editor.pageData.changes.splice(changeIndex, 1);
+                    })
+                    editor.pageData.changeCount = editor.pageData.changes.length;
+                    localStorage.changes = JSON.stringify(editor.pageData.changes);
+                })
+                .catch(function(error) {
+                    alert(error);
                 });
-                editor.pageData.changes = [];
-                editor.pageData.changeCount = editor.pageData.changes.length;
-                localStorage.changes = JSON.stringify(editor.pageData.changes);
-
-                // FIXME: and actually write the datasets to github;
-                // FIXME: filter out parents, section;
             },
             'save' : function() {
                 if (editor.pageData.entity.id == null) {
@@ -1170,16 +1119,39 @@
                     return true;
                 });
                 editor.pageData.changes.push(clone(editor.pageData.entity));
-                idIndex[editor.pageData.entity.id] = clone(editor.pageData.entity);
+                curriculum.index.id[editor.pageData.entity.id] = clone(editor.pageData.entity);
                 editor.pageData.changeCount = editor.pageData.changes.length;
                 localStorage.changes = JSON.stringify(editor.pageData.changes);
             }
         },
         actions: {
             'search': function(searchText) {
-                  if (idIndex[searchText]) {
+                  if (curriculum.index.id[searchText]) {
                       simply.route.goto(document.location.pathname + "#edit/" + searchText);
                   }
+            },
+            'commit-changes': function(changes, message) {
+                done = [];
+                changes.forEach(function(change, changeIndex) {
+                    var id = change.id;
+                    var original = curriculum.data[curriculum.index.type[id]].find(function(entry) {
+                        if (entry.id == id) {
+                            return true;
+                        }
+                        return false;
+                    });
+                    delete change.section;
+                    delete change.parents;
+                    if (original) {
+                        var index = curriculum.data[curriculum.index.type[id]].indexOf(original);
+                        curriculum.data[curriculum.index.type[id]][index] = change;
+                    } else {
+                    	curriculum.data[curriculum.index.type[id]].push(change);
+                    }
+                    done.push(changeIndex);
+                });
+                // FIXME: and actually write the datasets to github;
+                return Promise.resolve(done);
             }
         }
     });
@@ -1208,6 +1180,7 @@
             }
         }, true);
     }
+
 </script>
 </body>
 </html>
