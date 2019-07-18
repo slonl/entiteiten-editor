@@ -18,7 +18,8 @@
         body {
             min-height: 100%;
         }
-        .slo-commit {
+        .slo-commit,
+        .slo-new {
             width: 100%;
         }
         .slo-right {
@@ -38,6 +39,17 @@
             margin-left: 5px;
             max-width: 170px;
         }
+        .slo-entity-select {
+            display: inline-flex;
+            max-width: 200px;
+            padding: 0;
+            margin: 0;
+            height: 28px;
+            margin-top: -2px;
+        }
+        .slo-id:empty:before {
+            content: "(Nieuw UUID)";
+        }
     </style>
 </head>
 <body class="slo-main-page">
@@ -51,6 +63,7 @@
     </header>
     <div class="slo-navbar slo-navbar-side bg-gray">
         <div class="slo-space">
+            <button data-simply-command="new" class="slo-button slo-new">Nieuwe entiteit</button>
             <p>
                 Aangepaste Entiteiten
                 <textarea placeholder="Commit message"></textarea>
@@ -89,6 +102,522 @@
             <a href="#" data-simply-field="relatie" data-simply-transformer="editlink"></a>
         </div>
     </template>
+    <template id="entiteit-vak">
+        <div class="slo-entity">
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Vakkernen</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.vakkern_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakkern">
+                <button data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>DoelNiveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-vakkern">
+        <div class="slo-entity">
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Vaksubkernen</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.vaksubkern_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="vaksubkern" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vaksubkern">
+                <button data-simply-command="add-relation" data-slo-relation="vaksubkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>DoelNiveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-vaksubkern">
+        <div class="slo-entity">
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Vakinhouden</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.vakinhoud_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="vakinhoud" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakinhoud">
+                <button data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>DoelNiveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-vakinhoud">
+        <div class="slo-entity">
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>DoelNiveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-doelniveau">
+        <div class="slo-entity">
+            <label>Doelen</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.doel_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="doel" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doel">
+                <button data-simply-command="add-relation" data-slo-relation="doel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Niveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="niveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
+                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-doel">
+        <div class="slo-entity">
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+        </div>
+    </template>
+    <template id="entiteit-niveau">
+        <div class="slo-entity">
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Description
+                <textarea data-simply-field="entity.description" placeholder="Entiteit description"></textarea>
+            </label>
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Type
+                <input type="text" data-simply-field="entity.type" placeholder="Niveau type">
+            </label>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma">
+        <div class="slo-entity">
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <!--- aanwezig volgens context.json maar in praktijk niet
+            <label>Ingangsdatum</label>
+            <label>url</label>
+            <label>versie</label>
+            --->
+            <label>Domein</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_domein_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_domein_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_domein">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_domein_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Vakleergebied</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_vakleergebied_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_vakleergebied_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_vakleergebied">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_vakleergebied_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Kop 1</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop1_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_kop1_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_kop1">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_kop1_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_domein">
+        <div class="slo-entity">
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <!--- aanwezig volgens context.json maar in praktijk niet
+            <label>Ingangsdatum</label>
+            <label>url</label>
+            <label>versie</label>
+            --->
+            <label>Subdomein</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_subdomein_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_subdomein_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_subdomein">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_subdomein_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Eindterm</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_eindterm_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_eindterm_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_eindterm">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_eindterm_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_subdomein">
+        <div class="slo-entity">
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <!--- aanwezig volgens context.json maar in praktijk niet
+            <label>Ingangsdatum</label>
+            <label>url</label>
+            <label>versie</label>
+            --->
+            <label>Eindterm</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_eindterm_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_eindterm_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_eindterm">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_eindterm_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_eindterm">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Description
+                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+            </label>
+            <label>CE
+                <input type="text" data-simply-field="entity.ce" placeholder="Centraal Examen?">
+            </label>
+            <label>SE
+                <input type="text" data-simply-field="entity.se" placeholder="Schriftelijk Examen?">
+            </label>
+            <label>Kern
+                <input type="text" data-simply-field="entity.kern" placeholder="Centraal Examen?">
+            </label>
+            <label>Keuze
+                <input type="text" data-simply-field="entity.keuze" placeholder="Centraal Examen?">
+            </label>
+            <!--- aanwezig volgens context.json maar in praktijk niet
+            <label>Ingangsdatum</label>
+            <label>url</label>
+            <label>versie</label>
+            --->
+            <label>Niveau</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
+                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_vakleergebied">
+        <div class="slo-entity">
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_kop1">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Kop 2</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop2_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop2_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_kop2">
+                <button data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop2_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Body</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_body_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="examenprogramma_body_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_body">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_body_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Tag</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="tag_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="tag">
+                <button data-simply-command="add-relation" data-slo-relation="tag_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_kop2">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Kop 3</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop3_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop3_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_kop3">
+                <button data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop3_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Body</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_body_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="examenprogramma_body_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_body">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_body_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Tag</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="tag_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="tag">
+                <button data-simply-command="add-relation" data-slo-relation="tag_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+
+    <template id="entiteit-examenprogramma_kop3">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Kop 2 (niet volgens context.json)</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop2_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop2_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_kop2">
+                <button data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop2_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Kop 3 (niet volgens context.json)</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop3_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop3_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_kop3">
+                <button data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop3_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Kop 4</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop4_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop4_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_kop4">
+                <button data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop4_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Body</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_body_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="examenprogramma_body_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_body">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_body_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Tag</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="tag_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="tag">
+                <button data-simply-command="add-relation" data-slo-relation="tag_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_kop4">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Body</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_body_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="examenprogramma_body_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_body">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_body_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Tag</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="tag_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="tag">
+                <button data-simply-command="add-relation" data-slo-relation="tag_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_body">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Tag</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="tag_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="tag">
+                <button data-simply-command="add-relation" data-slo-relation="tag_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <!-- kerndoelen -->
+    <template id="entiteit-kerndoel">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Omschrijving
+                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+            </label>
+            <label>Niveau</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="niveau_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
+                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-kerndoel_domein">
+        <div class="slo-entity">
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Kerndoel</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="kerndoel_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="kerndoel">
+                <button data-simply-command="add-relation" data-slo-relation="kerndoel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-kerndoel_uitstroomprofiel">
+        <div class="slo-entity">
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Omschrijving
+                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+            </label>
+            <label>Tag</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="tag_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="tag">
+                <button data-simply-command="add-relation" data-slo-relation="tag_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-kerndoel_vakleergebied">
+        <div class="slo-entity">
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Domein</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_domein_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="kerndoel_domein_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="kerndoel_domein">
+                <button data-simply-command="add-relation" data-slo-relation="kerndoel_domein_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Uitstroomprofiel</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_uitstroomprofiel_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="kerndoel_uitstroomprofiel_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="kerndoel_uitstroomprofiel">
+                <button data-simply-command="add-relation" data-slo-relation="kerndoel_uitstroomprofiel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Kerndoel</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="kerndoel_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="kerndoel">
+                <button data-simply-command="add-relation" data-slo-relation="kerndoel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Vak</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.vak_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="vak_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vak">
+                <button data-simply-command="add-relation" data-slo-relation="vak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
     <datalist id="entities" data-simply-list="dataset.entities" data-simply-data="entities" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="vakkern" data-simply-list="dataset.vakkern" data-simply-data="vakkern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="vaksubkern" data-simply-list="dataset.vaksubkern" data-simply-data="vaksubkern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
@@ -103,622 +632,130 @@
                 <input class="slo-grid-span-2" type="text" name="search" placeholder="Entiteit UUID / tekst" list="entities">
                 <button data-simply-command="search" class="slo-button slo-button-nomargin" data-simply-command="search">Toon entiteit</button>
             </form>
-            <div class="slo-grid slo-grid-3 slo-space">
-                <span></span><span></span><button class="slo-button slo-right" data-simply-command="save">Bewaar</button>
+            <div class="slo-grid slo-grid-2 slo-space">
+                <span></span><button class="slo-button slo-right" data-simply-command="save">Bewaar</button>
             </div>
         </div>
-        <div class="slo-grid slo-grid-4">
-            <article class="slo-card slo-grid-span-3">
-                <header class="slo-card-header slo-space">
-                    <span class="slo-tag">
-                        <label class="slo-tag-label">
+        <div class="slo-grid slo-grid-4" data-simply-field="page" data-simply-content="template" data-simply-default-value="new">
+            <template data-simply-template="edit">
+                <article class="slo-card slo-grid-span-3">
+                    <header class="slo-card-header slo-space">
+                        <span class="slo-tag">
+                            <label class="slo-tag-label">
+                                <svg class="slo-icon slo-icon-feather">
+                                    <use xlink:href="/files/feather-sprite.svg#link">
+                                </use></svg>
+                            </label>
+                            <span class="slo-id" data-simply-field="entity.id"></span>
+                        </span>
+                        <span class="slo-tag">
+                            <label class="slo-tag-label">Type</label>
+                            <span data-simply-field="entity.section"></span>
+                        </span>
+                        <button class="slo-button slo-right slo-button-nomargin">
                             <svg class="slo-icon slo-icon-feather">
-                                <use xlink:href="/files/feather-sprite.svg#link">
-                            </use></svg>
-                        </label>
-                        <span class="slo-id" data-simply-field="entity.id"></span>
-                    </span>
-                    <span class="slo-tag">
-                        <label class="slo-tag-label">Type</label>
-                        <span data-simply-field="entity.section"></span>
-                    </span>
-                    <button class="slo-button slo-right slo-button-nomargin">
-                        <svg class="slo-icon slo-icon-feather">
-                            <use xlink:href="/files/feather-sprite.svg#trash">
-                            </use>
-                        </svg>
-                    </button>
-                    <ul class="slo-nav-crumbs slo-space" data-simply-list="entity.parents">
-                        <template>
-                            <li>
-                                <a href="#" data-simply-field="id" data-simply-transformer="editlink" data-simply-content="fixed"><span data-simply-field="id" data-simply-transformer="idToTitle"></span></a>
-                            </li>
-                        </template>
-                    </ul>
-                </header>
-                <div class="slo-card-body" data-simply-field="entity.section" data-simply-content="template" data-simply-default-value="default">
-                    <template data-simply-template="vak">
-                        <div class="slo-entity">
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                                <use xlink:href="/files/feather-sprite.svg#trash">
+                                </use>
+                            </svg>
+                        </button>
+                        <ul class="slo-nav-crumbs slo-space" data-simply-list="entity.parents">
+                            <template>
+                                <li>
+                                    <a href="#" data-simply-field="id" data-simply-transformer="editlink" data-simply-content="fixed"><span data-simply-field="id" data-simply-transformer="idToTitle"></span></a>
+                                </li>
+                            </template>
+                        </ul>
+                    </header>
+                    <div class="slo-card-body" data-simply-field="entity.section" data-simply-content="template" data-simply-default-value="default">
+                        <template data-simply-template="vak" rel="entiteit-vak"></template>
+                        <template data-simply-template="vakkern" rel="entiteit-vakkern"></template>
+                        <template data-simply-template="vaksubkern" rel="entiteit-vaksubkern"></template>
+                        <template data-simply-template="vakinhoud" rel="entiteit-vakinhoud"></template>
+                        <template data-simply-template="doelniveau" rel="entiteit-doelniveau"></template>
+                        <template data-simply-template="doel" rel="entiteit-doel"></template>
+                        <template data-simply-template="niveau"> rel="entiteit-niveau"></template>
+                        <template data-simply-template="examenprogramma" rel="entiteit-examenprogramma"></template>
+                        <template data-simply-template="examenprogramma_domein" rel="entiteit-examenprogramma_domein"></template>
+                        <template data-simply-template="examenprogramma_subdomein" rel="entiteit-examenprogramma_subdomein"></template>
+                        <template data-simply-template="examenprogramma_eindterm" rel="entiteit-examenprogramma_eindterm"></template>
+                        <template data-simply-template="examenprogramma_kop1" rel="entiteit-examenprogramma_kop1"></template>
+                        <template data-simply-template="examenprogramma_kop2" rel="entiteit-examenprogramma_kop2"></template>
+                        <template data-simply-template="examenprogramma_kop3" rel="entiteit-examenprogramma_kop3"></template>
+                        <template data-simply-template="examenprogramma_kop4" rel="entiteit-examenprogramma_kop4"></template>
+                        <template data-simply-template="examenprogramma_body" rel="entiteit-examenprogramma_body"></template>
+                        <template data-simply-template="kerndoel" rel="entiteit-kerndoel"></template>
+                        <template data-simply-template="kerndoel_domein" rel="entiteit-kerndoel_domein"></template>
+                        <template data-simply-template="kerndoel_uitstroomprofiel" rel="entiteit-kerndoel_uitstroomprofiel"></template>
+                        <template data-simply-template="kerndoel_vakleergebied" rel="entiteit-kerndoel_vakleergebied"></template>
+                    </div>
+                </article>
+            </template>
+            <template data-simply-template="new">
+                <article class="slo-card slo-grid-span-3">
+                    <header class="slo-card-header slo-space">
+                        <span class="slo-tag">
+                            <label class="slo-tag-label">
+                                <svg class="slo-icon slo-icon-feather">
+                                    <use xlink:href="/files/feather-sprite.svg#link">
+                                </use></svg>
                             </label>
-                            <label>Vakkernen</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.vakkern_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakkern">
-                                <button data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>DoelNiveaus</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
-                                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="vakkern">
-                        <div class="slo-entity">
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Vaksubkernen</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.vaksubkern_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="vaksubkern" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vaksubkern">
-                                <button data-simply-command="add-relation" data-slo-relation="vaksubkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>DoelNiveaus</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
-                                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="vaksubkern">
-                        <div class="slo-entity">
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Vakinhouden</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.vakinhoud_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="vakinhoud" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakinhoud">
-                                <button data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>DoelNiveaus</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
-                                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="vakinhoud">
-                        <div class="slo-entity">
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>DoelNiveaus</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
-                                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="doelniveau">
-                        <div class="slo-entity">
-                            <label>Doelen</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.doel_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="doel" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doel">
-                                <button data-simply-command="add-relation" data-slo-relation="doel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Niveaus</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="niveau" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
-                                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="doel">
-                        <div class="slo-entity">
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                        </div>
-                    </template>
-                    <template data-simply-template="niveau">
-                        <div class="slo-entity">
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Description
-                                <textarea data-simply-field="entity.description" placeholder="Entiteit description"></textarea>
-                            </label>
-                            <label>Prefix
-                                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
-                            </label>
-                            <label>Type
-                                <input type="text" data-simply-field="entity.type" placeholder="Niveau type">
-                            </label>
-                        </div>
-                    </template>
-                    <template data-simply-template="examenprogramma">
-                        <div class="slo-entity">
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <!--- aanwezig volgens context.json maar in praktijk niet
-                            <label>Ingangsdatum</label>
-                            <label>url</label>
-                            <label>versie</label>
-                            --->
-                            <label>Domein</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_domein_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_domein_id" class="slo-search slo-grid slo-grid-3">
-                                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_domein">
-                                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_domein_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Vakleergebied</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_vakleergebied_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_vakleergebied_id" class="slo-search slo-grid slo-grid-3">
-                                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_vakleergebied">
-                                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_vakleergebied_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Kop 1</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop1_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_kop1_id" class="slo-search slo-grid slo-grid-3">
-                                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_kop1">
-                                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_kop1_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="examenprogramma_domein">
-                        <div class="slo-entity">
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Prefix
-                                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
-                            </label>
-                            <!--- aanwezig volgens context.json maar in praktijk niet
-                            <label>Ingangsdatum</label>
-                            <label>url</label>
-                            <label>versie</label>
-                            --->
-                            <label>Subdomein</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_subdomein_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_subdomein_id" class="slo-search slo-grid slo-grid-3">
-                                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_subdomein">
-                                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_subdomein_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Eindterm</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_eindterm_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_eindterm_id" class="slo-search slo-grid slo-grid-3">
-                                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_eindterm">
-                                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_eindterm_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="examenprogramma_subdomein">
-                        <div class="slo-entity">
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <!--- aanwezig volgens context.json maar in praktijk niet
-                            <label>Ingangsdatum</label>
-                            <label>url</label>
-                            <label>versie</label>
-                            --->
-                            <label>Eindterm</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_eindterm_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_eindterm_id" class="slo-search slo-grid slo-grid-3">
-                                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_eindterm">
-                                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_eindterm_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="examenprogramma_eindterm">
-                        <div class="slo-entity">
-                            <label>Prefix
-                                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
-                            </label>
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Description
-                                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
-                            </label>
-                            <label>CE
-                                <input type="text" data-simply-field="entity.ce" placeholder="Centraal Examen?">
-                            </label>
-                            <label>SE
-                                <input type="text" data-simply-field="entity.se" placeholder="Schriftelijk Examen?">
-                            </label>
-                            <label>Kern
-                                <input type="text" data-simply-field="entity.kern" placeholder="Centraal Examen?">
-                            </label>
-                            <label>Keuze
-                                <input type="text" data-simply-field="entity.keuze" placeholder="Centraal Examen?">
-                            </label>
-                            <!--- aanwezig volgens context.json maar in praktijk niet
-                            <label>Ingangsdatum</label>
-                            <label>url</label>
-                            <label>versie</label>
-                            --->
-                            <label>Niveau</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-search slo-grid slo-grid-3">
-                                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
-                                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="examenprogramma_vakleergebied">
-                        <div class="slo-entity">
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                        </div>
-                    </template>
-                    <template data-simply-template="examenprogramma_kop1">
-                        <div class="slo-entity">
-                            <label>Prefix
-                                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
-                            </label>
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Kop 2</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop2_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop2_id" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_kop2">
-                                <button data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop2_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Body</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_body_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="examenprogramma_body_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_body">
-                                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_body_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Tag</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="tag_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="tag">
-                                <button data-simply-command="add-relation" data-slo-relation="tag_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="examenprogramma_kop2">
-                        <div class="slo-entity">
-                            <label>Prefix
-                                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
-                            </label>
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Kop 3</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop3_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop3_id" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_kop3">
-                                <button data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop3_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Body</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_body_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="examenprogramma_body_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_body">
-                                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_body_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Tag</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="tag_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="tag">
-                                <button data-simply-command="add-relation" data-slo-relation="tag_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-
-                    <template data-simply-template="examenprogramma_kop3">
-                        <div class="slo-entity">
-                            <label>Prefix
-                                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
-                            </label>
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Kop 2 (niet volgens context.json)</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop2_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop2_id" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_kop2">
-                                <button data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop2_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Kop 3 (niet volgens context.json)</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop3_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop3_id" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_kop3">
-                                <button data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop3_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Kop 4</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop4_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop4_id" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_kop4">
-                                <button data-simply-command="add-relation" data-slo-relation="entity.examenprogramma_kop4_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Body</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_body_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="examenprogramma_body_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_body">
-                                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_body_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Tag</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="tag_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="tag">
-                                <button data-simply-command="add-relation" data-slo-relation="tag_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="examenprogramma_kop4">
-                        <div class="slo-entity">
-                            <label>Prefix
-                                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
-                            </label>
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Body</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_body_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="examenprogramma_body_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_body">
-                                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_body_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Tag</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="tag_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="tag">
-                                <button data-simply-command="add-relation" data-slo-relation="tag_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="examenprogramma_body">
-                        <div class="slo-entity">
-                            <label>Prefix
-                                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
-                            </label>
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Tag</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="tag_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="tag">
-                                <button data-simply-command="add-relation" data-slo-relation="tag_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <!-- kerndoelen -->
-                    <template data-simply-template="kerndoel">
-                        <div class="slo-entity">
-                            <label>Prefix
-                                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
-                            </label>
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Omschrijving
-                                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
-                            </label>
-                            <label>Niveau</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="niveau_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
-                                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="kerndoel_domein">
-                        <div class="slo-entity">
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Kerndoel</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="kerndoel_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="kerndoel">
-                                <button data-simply-command="add-relation" data-slo-relation="kerndoel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="kerndoel_uitstroomprofiel">
-                        <div class="slo-entity">
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Omschrijving
-                                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
-                            </label>
-                            <label>Tag</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="tag_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="tag">
-                                <button data-simply-command="add-relation" data-slo-relation="tag_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                    <template data-simply-template="kerndoel_vakleergebied">
-                        <div class="slo-entity">
-                            <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Domein</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_domein_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="kerndoel_domein_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="kerndoel_domein">
-                                <button data-simply-command="add-relation" data-slo-relation="kerndoel_domein_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Uitstroomprofiel</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_uitstroomprofiel_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="kerndoel_uitstroomprofiel_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="kerndoel_uitstroomprofiel">
-                                <button data-simply-command="add-relation" data-slo-relation="kerndoel_uitstroomprofiel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Kerndoel</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="kerndoel_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="kerndoel">
-                                <button data-simply-command="add-relation" data-slo-relation="kerndoel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Vak</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.vak_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="vak_id">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vak">
-                                <button data-simply-command="add-relation" data-slo-relation="vak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-
-                    <!-- default -->
-                    <template data-simply-template="default">
-                        <div class="slo-entity">
-                            <label>Title
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-                            </label>
-                            <label>Description
-                                <textarea data-simply-field="entity.description" placeholder="Entiteit description"></textarea>
-                            </label>
-                            <label>Vakkernen</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.vakkern_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
-                                <button data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Vaksubkernen</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.vaksubkern_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="vaksubkern_id" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
-                                <button data-simply-command="add-relation" data-slo-relation="vaksubkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Vakinhouden</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.vakinhoud_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
-                                <button data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>DoelNiveaus</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
-                                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Doelen</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.doel_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="doel_id" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
-                                <button data-simply-command="add-relation" data-slo-relation="doel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                            <label>Niveaus</label>
-                            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
-                                <template rel="relatie"></template>
-                            </div>
-                            <form data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-search slo-grid slo-grid-3">
-                                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst">
-                                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
-                            </form>
-                        </div>
-                    </template>
-                </div>
-            </article>
+                            <span class="slo-id" data-simply-field="entity.id"></span>
+                        </span>
+                        <span class="slo-tag">
+                            <label class="slo-tag-label">Type</label>
+                            <select class="slo-entity-select" data-simply-field="entity.section">
+                                <option value="vak">vak</option>
+                                <option value="vakkern">vakkern</option>
+                                <option value="vaksubkern">vaksubkern</option>
+                                <option value="vakinhoud">vakinhoud</option>
+                                <option value="doelniveau">doelniveau</option>
+                                <option value="doel">doel</option>
+                                <option value="niveau">niveau</option>
+                                <option value="examenprogramma">examenprogramma</option>
+                                <option value="examenprogramma_domein">examenprogramma_domein</option>
+                                <option value="examenprogramma_subdomein">examenprogramma_subdomein</option>
+                                <option value="examenprogramma_eindterm">examenprogramma_eindterm</option>
+                                <option value="examenprogramma_kop1">examenprogramma_kop1</option>
+                                <option value="examenprogramma_kop2">examenprogramma_kop2</option>
+                                <option value="examenprogramma_kop3">examenprogramma_kop3</option>
+                                <option value="examenprogramma_kop4">examenprogramma_kop4</option>
+                                <option value="examenprogramma_body">examenprogramma_body</option>
+                                <option value="kerndoel">kerndoel</option>
+                                <option value="kerndoel_domein">kerndoel_domein</option>
+                                <option value="kerndoel_uitstroomprofiel">kerndoel_uitstroomprofiel</option>
+                                <option value="kerndoel_vakleergebied">kerndoel_vakleergebied</option>
+                            </select>
+                        </span>
+                    </header>
+                    <div class="slo-card-body" data-simply-field="entity.section" data-simply-content="template" data-simply-default-value="default">
+                        <template data-simply-template="vak" rel="entiteit-vak"></template>
+                        <template data-simply-template="vakkern" rel="entiteit-vakkern"></template>
+                        <template data-simply-template="vaksubkern" rel="entiteit-vaksubkern"></template>
+                        <template data-simply-template="vakinhoud" rel="entiteit-vakinhoud"></template>
+                        <template data-simply-template="doelniveau" rel="entiteit-doelniveau"></template>
+                        <template data-simply-template="doel" rel="entiteit-doel"></template>
+                        <template data-simply-template="niveau"> rel="entiteit-niveau"></template>
+                        <template data-simply-template="examenprogramma" rel="entiteit-examenprogramma"></template>
+                        <template data-simply-template="examenprogramma_domein" rel="entiteit-examenprogramma_domein"></template>
+                        <template data-simply-template="examenprogramma_subdomein" rel="entiteit-examenprogramma_subdomein"></template>
+                        <template data-simply-template="examenprogramma_eindterm" rel="entiteit-examenprogramma_eindterm"></template>
+                        <template data-simply-template="examenprogramma_kop1" rel="entiteit-examenprogramma_kop1"></template>
+                        <template data-simply-template="examenprogramma_kop2" rel="entiteit-examenprogramma_kop2"></template>
+                        <template data-simply-template="examenprogramma_kop3" rel="entiteit-examenprogramma_kop3"></template>
+                        <template data-simply-template="examenprogramma_kop4" rel="entiteit-examenprogramma_kop4"></template>
+                        <template data-simply-template="examenprogramma_body" rel="entiteit-examenprogramma_body"></template>
+                        <template data-simply-template="kerndoel" rel="entiteit-kerndoel"></template>
+                        <template data-simply-template="kerndoel_domein" rel="entiteit-kerndoel_domein"></template>
+                        <template data-simply-template="kerndoel_uitstroomprofiel" rel="entiteit-kerndoel_uitstroomprofiel"></template>
+                        <template data-simply-template="kerndoel_vakleergebied" rel="entiteit-kerndoel_vakleergebied"></template>
+                    </div>
+                </article>
+            </template>
         </div>
     </main>
 <script src="https://yvo.muze.nl/simply-edit/js/simply-edit.js" xsrc="https://cdn.simplyedit.io/1/simply-edit.js" data-simply-storage="none"></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
+<script src="uuidv4.js"></script>
 <script>
     var gotoHash = function() {
         var path = document.location.pathname + document.location.hash;
@@ -988,7 +1025,9 @@
                         vakinhoud_id : null,
                         doelniveau_id : null,
                         doel_id : null,
-                        niveau_id : null
+                        niveau_id : null,
+                        section: null,
+                        id: null
                 };
                 editor.pageData.entity = clone(idIndex[params.id]);
                 editor.pageData.page = "edit";
@@ -1002,9 +1041,26 @@
                         vakinhoud_id : null,
                         doelniveau_id : null,
                         doel_id : null,
-                        niveau_id : null
+                        niveau_id : null,
+                        section: null,
+                        id: null
                 };
                 editor.pageData.page = "edit";
+                window.scrollTo(0,0);
+            },
+            '/#new/' : function(params) {
+                // reset page;
+                editor.pageData.entity = {
+            section: null,
+            id: null,
+                        vakkern_id : null,
+                        vaksubkern_id : null,
+                        vakinhoud_id : null,
+                        doelniveau_id : null,
+                        doel_id : null,
+                        niveau_id : null
+                };
+                editor.pageData.page = "new";
                 window.scrollTo(0,0);
             }
         },
@@ -1012,6 +1068,9 @@
             'search': function(el) {
                 var searchText = el.parentNode.querySelector("input").value;
                 return entityEditor.actions.search(searchText);
+            },
+            'new': function(el) {
+                simply.route.goto('/#new');
             },
             'delete-relation' : function(el) {
                 el.parentNode.parentNode.removeChild(el.parentNode);
@@ -1024,14 +1083,16 @@
             'delete-change' : function(el) {
                 // find the id of the entity;
                 var id = el.parentNode.parentNode.querySelector("a").innerHTML;
-                // find the original entity from the dataset;
-                var original = dataset[idIndex[id].section].find(function(entry) {
-                    if (entry.id == id) {
-                        return true;
-                    }
-                    return false;
-                });
-                idIndex[id] = original; 
+                if (idIndex[id]) {
+                    // find the original entity from the dataset;
+                    var original = dataset[idIndex[id].section].find(function(entry) {
+                        if (entry.id == id) {
+                            return true;
+                        }
+                        return false;
+                    });
+                    idIndex[id] = original;
+                }
                 el.parentNode.parentNode.removeChild(el.parentNode);
                 editor.pageData.changeCount = editor.pageData.changes.length;
                 localStorage.changes = JSON.stringify(editor.pageData.changes);
@@ -1050,8 +1111,12 @@
                         }
                         return false;
                     });
-                    var index = dataset[change.section].indexOf(original);
-                    dataset[change.section][index] = change;
+                    if (original) {
+                        var index = dataset[change.section].indexOf(original);
+                        dataset[change.section][index] = change;
+                    } else {
+                        dataset[change.section].push(change);
+                    }
                 });
                 editor.pageData.changes = [];
                 editor.pageData.changeCount = editor.pageData.changes.length;
@@ -1061,6 +1126,10 @@
                 // FIXME: filter out parents, section;
             },
             'save' : function() {
+                if (editor.pageData.entity.id == null) {
+                    editor.pageData.entity.id = uuidv4();
+                }
+
                 editor.pageData.changes = editor.pageData.changes.filter(function(entry) {
                     if (editor.pageData.entity.id == entry.id) {
                         return false;
