@@ -244,7 +244,7 @@
                     <template data-simply-template="doel">
                         <div class="slo-entity">
                             <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                                <textarea data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
                             </label>
                         </div>
                     </template>
@@ -357,22 +357,22 @@
                                 <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
                             </label>
                             <label>Titel
-                                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                                <textarea data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
                             </label>
                             <label>Description
-                                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                                <textarea data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
                             </label>
                             <label>CE
-                                <input type="text" data-simply-field="entity.ce" placeholder="Centraal Examen?">
+                                <input type="checkbox" data-simply-field="entity.ce">
                             </label>
                             <label>SE
-                                <input type="text" data-simply-field="entity.se" placeholder="Schriftelijk Examen?">
+                                <input type="checkbox" data-simply-field="entity.se">
                             </label>
                             <label>Kern
-                                <input type="text" data-simply-field="entity.kern" placeholder="Centraal Examen?">
+                                <input type="checkbox" data-simply-field="entity.kern">
                             </label>
                             <label>Keuze
-                                <input type="text" data-simply-field="entity.keuze" placeholder="Centraal Examen?">
+                                <input type="checkbox" data-simply-field="entity.keuze">
                             </label>
                             <!--- aanwezig volgens context.json maar in praktijk niet
                             <label>Ingangsdatum</label>
@@ -745,7 +745,20 @@
             'vakkern':['vaksubkern_id','doelniveau_id'],
             'vaksubkern':['vakinhoud_id','doelniveau_id'],
             'vakinhoud':['doelniveau_id'],
-            'doelniveau':['doel_id','niveau_id']
+            'doelniveau':['doel_id'] // ,'niveau_id']
+        },
+        'examenprogramma': {
+            'examenprogramma':['examenprogramma_domein_id','examenprogramma_kop1_id'],
+            'examenprogramma_domein':['examenprogramma_eindterm_id', 'examenprogramma_subdomein_id'],
+            'examenprogramma_subdomein':['examenprogramma_eindterm_id'],
+            'examenprogramma_kop1':['examenprogramma_kop2_id', 'examenprogramma_body_id'],
+            'examenprogramma_kop2':['examenprogramma_kop3_id', 'examenprogramma_body_id'],
+            'examenprogramma_kop3':['examenprogramma_kop4_id', 'examenprogramma_body_id'],
+            'examenprogramma_kop4':['examenprogramma_body_id']
+        },
+        'kerndoelen': {
+            'kerndoel_domein' : ['kerndoel_id'],
+            'kerndoel_vakleergebied' : ['kerndoel_uitstroomprofiel_id', 'kerndoel_id', 'kerndoel_domein_id']
         }
     };
     function walk(hierarchy, node, parents, callback) {
@@ -851,6 +864,25 @@
             });
         });
 
+        dataset['examenprogramma'].forEach(function(vakEntity) {
+            walk('examenprogramma', vakEntity, [], function(entity, parents) {
+                entity.parents = parents.map(function(parent) {
+                    return clone(parent.id);
+                }).filter(Boolean).map(function(id) {
+                    return { id: id }
+                });
+            });
+        });
+
+        dataset['kerndoel_vakleergebied'].forEach(function(vakEntity) {
+            walk('kerndoelen', vakEntity, [], function(entity, parents) {
+                entity.parents = parents.map(function(parent) {
+                    return clone(parent.id);
+                }).filter(Boolean).map(function(id) {
+                    return { id: id }
+                });
+            });
+        });
 
         editor.addDataSource("entities", {
             load : function(el, callback) {
