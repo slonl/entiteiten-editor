@@ -789,7 +789,6 @@
 <script src="https://yvo.muze.nl/simply-edit/js/simply-edit.js" xsrc="https://cdn.simplyedit.io/1/simply-edit.js" data-simply-storage="none"></script>
 <script src="https://unpkg.com/github-api/dist/GitHub.bundle.js"></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
-<script src="/js/uuidv4.js"></script>
 <script src="/js/curriculum.js"></script>
 <script>
     var gotoHash = function() {
@@ -1049,8 +1048,8 @@
                 });
             },
             'save' : function() {
-                if (editor.pageData.entity.id == null) {
-                    editor.pageData.entity.id = uuidv4();
+                if (!editor.pageData.entity.id) {
+                    editor.pageData.entity.id = curriculum.uuidv4();
                 }
 
                 editor.pageData.changes = editor.pageData.changes.filter(function(entry) {
