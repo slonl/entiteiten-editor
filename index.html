@@ -230,6 +230,27 @@
             </label>
         </div>
     </template>
+    <template id="entiteit-bouw">
+        <div class="slo-entity">
+            <label>Titel
+                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Description
+                <textarea data-simply-field="entity.description" placeholder="Entiteit description"></textarea>
+            </label>
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Niveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="niveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
+                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
     <template id="entiteit-examenprogramma">
         <div class="slo-entity">
             <label>Titel
@@ -674,7 +695,8 @@
                         <template data-simply-template="vakinhoud" rel="entiteit-vakinhoud"></template>
                         <template data-simply-template="doelniveau" rel="entiteit-doelniveau"></template>
                         <template data-simply-template="doel" rel="entiteit-doel"></template>
-                        <template data-simply-template="niveau"> rel="entiteit-niveau"></template>
+                        <template data-simply-template="niveau" rel="entiteit-niveau"></template>
+                        <template data-simply-template="bouw" rel="entiteit-bouw"></template>
                         <template data-simply-template="examenprogramma" rel="entiteit-examenprogramma"></template>
                         <template data-simply-template="examenprogramma_domein" rel="entiteit-examenprogramma_domein"></template>
                         <template data-simply-template="examenprogramma_subdomein" rel="entiteit-examenprogramma_subdomein"></template>
@@ -711,6 +733,7 @@
                                 <option value="vakinhoud">vakinhoud</option>
                                 <option value="doelniveau">doelniveau</option>
                                 <option value="doel">doel</option>
+                                <option value="bouw">bouw</option>
                                 <option value="niveau">niveau</option>
                                 <option value="examenprogramma">examenprogramma</option>
                                 <option value="examenprogramma_domein">examenprogramma_domein</option>
@@ -735,7 +758,8 @@
                         <template data-simply-template="vakinhoud" rel="entiteit-vakinhoud"></template>
                         <template data-simply-template="doelniveau" rel="entiteit-doelniveau"></template>
                         <template data-simply-template="doel" rel="entiteit-doel"></template>
-                        <template data-simply-template="niveau"> rel="entiteit-niveau"></template>
+                        <template data-simply-template="niveau" rel="entiteit-niveau"></template>
+                        <template data-simply-template="bouw" rel="entiteit-bouw"></template>
                         <template data-simply-template="examenprogramma" rel="entiteit-examenprogramma"></template>
                         <template data-simply-template="examenprogramma_domein" rel="entiteit-examenprogramma_domein"></template>
                         <template data-simply-template="examenprogramma_subdomein" rel="entiteit-examenprogramma_subdomein"></template>
@@ -840,6 +864,139 @@
         }
     }
 
+    var schemas = {
+        'curriculum-inhouden': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/context.json',
+        'curriculum-doelen': 'https://raw.githubusercontent.com/slonl/curriculum-doelen/master/context.json',
+        'curriculum-kerndoelen': 'https://raw.githubusercontent.com/slonl/curriculum-kerndoelen/master/context.json',
+        'curriculum-examenprogramma': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/context.json'
+    };
+    var loading = [];
+    Object.keys(schemas).forEach(function(schema) {
+        loading.push(
+            curriculum.loadContextFromURL(schema, schemas[schema])
+            .then(function() {
+                return curriculum.loadData(schema);
+            })
+        );
+    });
+
+    Promise.all(loading)
+    .then(function() {
+        Object.values(curriculum.index.id).forEach(function(entity) {
+            entity.section = curriculum.index.type[entity.id];
+        });
+
+        Object.keys(curriculum.data).forEach(function(dataset) {
+            editor.addDataSource(dataset, {
+                load : function(el, callback) {
+                    document.body.dataset.loading = "true";
+                    var options = '';
+                    curriculum.data[dataset].forEach(function(entity) {
+                        var option = entity.title + " " + entity.id;
+
+                        if (curriculum.index.type[entity.id] == "doelniveau") {
+                            var doel = curriculum.index.id[entity.doel_id[0]];
+                            var niveau = curriculum.index.id[entity.niveau_id[0]];
+                            option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
+                        }
+
+                        options += "<option value='" + entity.id + "'>" + option + "</option>";
+                    });
+                    window.setTimeout(function() {
+                        el.innerHTML = options;
+                        document.body.dataset.loading = "false";
+                    });
+                }
+            });
+        });
+
+        var parentInfo = {
+            'vak' : 'doel',
+            'examenprogramma' : 'examenprogramma',
+            'kerndoel_vakleergebied': 'kerndoelen'
+        };
+        Object.keys(parentInfo).forEach(function(section) {
+            curriculum.data[section].forEach(function(vakEntity) {
+                walk(parentInfo[section], vakEntity, [], function(entity, parents) {
+                    entity.parents = parents.map(function(parent) {
+                        return clone(parent.id);
+                    }).filter(Boolean).map(function(id) {
+                        return { id: id }
+                    });
+                });
+            });
+        });
+
+        editor.addDataSource("entities", {
+            load : function(el, callback) {
+                document.body.dataset.loading = "true";
+                var options = '';
+
+                // Priorities for sorting - we want the higher level entities to come first in the list.
+                var priorities = {
+                   "vak" : 2,
+                   "examenprogramma" : 1
+                };
+
+                Object.values(curriculum.index.id)
+                .sort(function(a, b) {
+                    if (priorities[a.section]) {
+                        if (priorities[b.section]) {
+                            if (priorities[a.section] > priorities[b.section]) {
+                                return -1;
+                            }
+                            if (priorities[a.section] < priorities[b.section]) {
+                                return 1;
+                            }
+                            if (a.title > b.title) {
+                                return 1;
+                            }
+                            if (a.title < b.title) {
+                                return -1;
+                            }
+                        } else {
+                            return -1;
+                        }
+                    }
+                    if (priorities[b.section]) {
+                        return 1;
+                    }
+                    return 0;
+		}).forEach(function(entity) {
+                    var option = entity.title + " " + entity.id;
+
+                    if (curriculum.index.type[entity.id] == "doelniveau") {
+                        var doel = curriculum.index.id[entity.doel_id[0]];
+                        var niveau = curriculum.index.id[entity.niveau_id[0]];
+                        option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
+                    }
+
+                    options += "<option value='" + entity.id + "'>" + option + "</option>";
+                });
+                window.setTimeout(function() {
+                    el.innerHTML = options;
+                    document.body.dataset.loading = "false";
+                });
+            }
+        });
+    })
+    .then(function() {
+        // restore changes from localstorage;
+        if (localStorage.changes) {
+            editor.pageData.changes = JSON.parse(localStorage.changes);
+            editor.pageData.changeCount = editor.pageData.changes.length;
+            editor.pageData.changes.forEach(function(entry) {
+                curriculum.index.id[entry.id] = clone(entry);
+                curriculum.index.type[entry.id] = clone(entry.section);
+            });
+        }
+    })
+    .then(function() {
+        document.body.dataset.loading = "false";
+        gotoHash();
+    });
+
+
     editor.transformers = {
         "round" : {
             "render" : function(data) {
@@ -927,52 +1084,36 @@
         }
     };
 
+    var emptyEntity = {
+        vakkern_id : [],
+        vaksubkern_id : [],
+        vakinhoud_id : [],
+        doelniveau_id : [],
+        doel_id : [],
+        niveau_id : [],
+        section: null,
+        id: null
+    };
+
     var entityEditor = simply.app({
         container: document.body,
         routes : {
             '/#edit/:id' : function(params) {
                 // reset page;
-                editor.pageData.entity = {
-                        vakkern_id : null,
-                        vaksubkern_id : null,
-                        vakinhoud_id : null,
-                        doelniveau_id : null,
-                        doel_id : null,
-                        niveau_id : null,
-                        section: null,
-                        id: null
-                };
+                editor.pageData.entity = emptyEntity;
                 editor.pageData.entity = clone(curriculum.index.id[params.id]);
                 editor.pageData.page = "edit";
                 window.scrollTo(0,0);
             },
             '/#edit/' : function(params) {
                 // reset page;
-                editor.pageData.entity = {
-                        vakkern_id : null,
-                        vaksubkern_id : null,
-                        vakinhoud_id : null,
-                        doelniveau_id : null,
-                        doel_id : null,
-                        niveau_id : null,
-                        section: null,
-                        id: null
-                };
+                editor.pageData.entity = emptyEntity;
                 editor.pageData.page = "edit";
                 window.scrollTo(0,0);
             },
             '/#new/' : function(params) {
                 // reset page;
-                editor.pageData.entity = {
-                        section: null,
-                        id: null,
-                        vakkern_id : null,
-                        vaksubkern_id : null,
-                        vakinhoud_id : null,
-                        doelniveau_id : null,
-                        doel_id : null,
-                        niveau_id : null
-                };
+                editor.pageData.entity = emptyEntity;
                 editor.pageData.page = "new";
                 window.scrollTo(0,0);
             }
@@ -1006,6 +1147,9 @@
             'add-relation' : function(el) {
                 var relationId = el.parentNode.querySelector("input").value;
                 var relation = el.getAttribute("data-slo-relation");
+                if (editor.pageData.entity[relation] == null) {
+                    editor.pageData.entity[relation] = [];
+                }
                 editor.pageData.entity[relation].push(relationId);
             },
             'delete-change' : function(el) {
