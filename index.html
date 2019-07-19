@@ -9,9 +9,6 @@
             padding: 0;
             margin: 0;
         }
-        body[data-loading="true"] {
-            opacity: 0.3;
-        }
         html {
             height: 100%;
         }
@@ -51,6 +48,9 @@
         .slo-id:empty:before {
             content: "(Nieuw UUID)";
         }
+        .slo-warning:not(:empty) + .slo-warning {
+            display: none;
+        }
     </style>
 </head>
 <body class="slo-main-page">
@@ -67,7 +67,7 @@
             <button data-simply-command="new" class="slo-button slo-new">Nieuwe entiteit</button>
             <p>
                 Aangepaste Entiteiten
-                <textarea placeholder="Commit message"></textarea>
+                <textarea placeholder="Commit message" data-simply-field="commitMessage"></textarea>
             </p>
             <p>
                 <span data-simply-field="changeCount">0</span> aanpassingen
@@ -754,7 +754,40 @@
             </template>
         </div>
     </main>
+
+    <dialog id="login" class="slo-login" open>
+        <header class="bg-brand">
+            <img src="/assets/img/slo.png" class="slo-logo">
+        </header>
+        <section class="body">
+            <div class="slo-warning" data-simply-field="login-error"></div>
+            <div class="slo-warning">Aanmelden met uw Github account</div>
+            <form data-simply-command="login">
+                <div class="group">
+                    <label>
+                        Naam
+                        <input type="text" name="username" id="username" data-simply-field="username" data-simply-element="username">
+                    </label>
+                </div>
+                <div class="group">
+                    <label>
+                        Wachtwoord
+                        <input type="password" name="password" data-simply-field="password" data-simply-element="password">
+                    </label>
+                </div>
+                <br>
+                <button type="submit" class="slo-button slo-button-primary">Login
+                    <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
+                </button>
+            </form>
+        </section>
+    </dialog>
+    
+    <div class="slo-dialog-overlay"></div>
+
+
 <script src="https://yvo.muze.nl/simply-edit/js/simply-edit.js" xsrc="https://cdn.simplyedit.io/1/simply-edit.js" data-simply-storage="none"></script>
+<script src="https://unpkg.com/github-api/dist/GitHub.bundle.js"></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
 <script src="uuidv4.js"></script>
 <script src="/js/curriculum.js"></script>
@@ -767,15 +800,6 @@
     window.addEventListener("hashchange", gotoHash);
 
     simply.bind = false;
-    document.body.dataset.loading = "true";
-
-    var idIndex = {};
-    function makeIndex(list) {
-        list.forEach(function(entry) {
-            idIndex[entry.id] = entry;
-        });
-    }
-
 
     var reverseDoelIndex = {};
     var hierarchies = {
@@ -817,6 +841,7 @@
         }
     }
 
+/*
     var schemas = {
         'curriculum-inhouden': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/context.json',
         'curriculum-doelen': 'https://raw.githubusercontent.com/slonl/curriculum-doelen/master/context.json',
@@ -832,91 +857,9 @@
             })
         );
     });
+*/
 
-    Promise.all(loading)
-    .then(function() {
-        Object.values(curriculum.index.id).forEach(function(entity) {
-            entity.section = curriculum.index.type[entity.id];
-        });
-
-        Object.keys(curriculum.data).forEach(function(dataset) {
-            editor.addDataSource(dataset, {
-                load : function(el, callback) {
-                    document.body.dataset.loading = "true";
-                    var options = '';
-                    curriculum.data[dataset].forEach(function(entity) {
-                        var option = entity.title + " " + entity.id;
-
-                        if (curriculum.index.type[entity.id] == "doelniveau") {
-                            var doel = curriculum.index.id[entity.doel_id[0]];
-                            var niveau = curriculum.index.id[entity.niveau_id[0]];
-                            option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
-                        }
-
-                        options += "<option value='" + entity.id + "'>" + option + "</option>";
-                    });
-                    window.setTimeout(function() {
-                        el.innerHTML = options;
-                        document.body.dataset.loading = "false";
-                    });
-                }
-            });
-        });
-
-		var parentInfo = {
-			'vak' : 'doel',
-			'examenprogramma' : 'examenprogramma',
-			'kerndoel_vakleergebied': 'kerndoelen'
-		};
-		Object.keys(parentInfo).forEach(function(section) {
-	        curriculum.data[section].forEach(function(vakEntity) {
-    	        walk(parentInfo[section], vakEntity, [], function(entity, parents) {
-        	        entity.parents = parents.map(function(parent) {
-            	        return clone(parent.id);
-                	}).filter(Boolean).map(function(id) {
-                	    return { id: id }
-                	});
-           		});
-	        });
-		});
-
-        editor.addDataSource("entities", {
-            load : function(el, callback) {
-                document.body.dataset.loading = "true";
-                var options = '';
-                Object.values(curriculum.index.id).forEach(function(entity) {
-                    var option = entity.title + " " + entity.id;
-
-                    if (curriculum.index.type[entity.id] == "doelniveau") {
-                        var doel = curriculum.index.id[entity.doel_id[0]];
-                        var niveau = curriculum.index.id[entity.niveau_id[0]];
-                        option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
-                    }
-
-                    options += "<option value='" + entity.id + "'>" + option + "</option>";
-                });
-                window.setTimeout(function() {
-                    el.innerHTML = options;
-                    document.body.dataset.loading = "false";
-                });
-            }
-        });
-    })
-    .then(function() {
-        // restore changes from localstorage;
-        if (localStorage.changes) {
-            editor.pageData.changes = JSON.parse(localStorage.changes);
-            editor.pageData.changeCount = editor.pageData.changes.length;
-            editor.pageData.changes.forEach(function(entry) {
-                curriculum.index.id[entry.id] = clone(entry);
-            });
-        }
-    })
-    .then(function() {
-        document.body.dataset.loading = "false";
-        gotoHash();
-    });
-
+    
 
     editor.transformers = {
         "round" : {
@@ -1056,6 +999,21 @@
             }
         },
         commands: {
+            login: function(form, values) {
+                document.body.dataset.loading="true";
+                return entityEditor.actions.start(values.username, values.password)
+                .then(function() {
+                    document.body.dataset.loading="false";
+                    document.getElementById('login').removeAttribute('open');
+                    entityEditor.view['login-error'] = '';
+                    return true;
+                })
+                .catch(function(error) {
+                    entityEditor.view['login-error'] = 'Login failed';
+                    document.body.dataset.loading="false";
+                    return false;
+                });
+            },
             'search': function(el) {
                 var searchText = el.parentNode.querySelector("input").value;
                 return entityEditor.actions.search(searchText);
@@ -1095,6 +1053,7 @@
                 simply.route.goto(document.location.pathname + "#edit/" + entityId);
             },
             'commit-changes' : function() {
+                document.body.dataset.loading="true";
                 entityEditor.actions['commit-changes'](editor.pageData.changes, editor.pageData.commitMessage)
                 .then(function(done) {
                     done.sort().reverse().forEach(function(changeIndex) {
@@ -1102,8 +1061,10 @@
                     })
                     editor.pageData.changeCount = editor.pageData.changes.length;
                     localStorage.changes = JSON.stringify(editor.pageData.changes);
+                    document.body.dataset.loading="false";
                 })
                 .catch(function(error) {
+                    document.body.dataset.loading="false";
                     alert(error);
                 });
             },
@@ -1131,7 +1092,11 @@
                   }
             },
             'commit-changes': function(changes, message) {
-                done = [];
+                if (!message) {
+                    return Promise.reject('Commit message required');
+                }
+                var done = [];
+                var schemas = {};
                 changes.forEach(function(change, changeIndex) {
                     var id = change.id;
                     var original = curriculum.data[curriculum.index.type[id]].find(function(entry) {
@@ -1142,16 +1107,147 @@
                     });
                     delete change.section;
                     delete change.parents;
+                    change.dirty = true;
                     if (original) {
                         var index = curriculum.data[curriculum.index.type[id]].indexOf(original);
                         curriculum.data[curriculum.index.type[id]][index] = change;
                     } else {
                     	curriculum.data[curriculum.index.type[id]].push(change);
                     }
+                    var section = curriculum.index.type[change.id];
+                    var schema = curriculum.getSchemaFromType(section);
+                    if (!schemas[schema]) {
+                        schemas[schema] = [];
+                    }
+                    schemas[schema].push(section);
                     done.push(changeIndex);
                 });
-                // FIXME: and actually write the datasets to github;
-                return Promise.resolve(done);
+                var files = [];
+                Object.keys(schemas).forEach(function(schema) {
+                    schemas[schema].forEach(function(section) {
+                        var filename = curriculum.schemas[schema].properties[section]['#file'];
+                        files.push({ path: filename, data: JSON.stringify(curriculum.data[section], null, "\t"), schema: schema});
+                    });
+                });
+                return new Promise(function(resolve, reject) {
+                    var errors = {};
+                    var writeFile = function() {
+                        if (!files.length) {
+                            if (Object.keys(errors).length) {
+                                //FIXME: some changes may have been committed correctly...
+                                return reject(errors);
+                            } else {
+                                return resolve(done);
+                            }
+                        }
+                        var file = files.shift();
+                        return curriculum.sources[file.schema].writeFile(file.path, file.data, message).then(writeFile);
+                    }
+                    writeFile();
+                });
+//              return curriculum.sources[schema].writeFiles(files, message);
+            },
+            start: function(user, pass) {
+                var schemas = {
+                    'curriculum-inhouden': 'poef/curriculum-inhouden',
+                    'curriculum-doelen': 'poef/curriculum-doelen',
+                    'curriculum-kerndoelen': 'poef/curriculum-kerndoelen',
+                    'curriculum-examenprogramma': 'poef/curriculum-examenprogramma'
+                };
+                var loading = [];
+                Object.keys(schemas).forEach(function(schema) {
+                    loading.push(
+                        curriculum.loadContextFromGithub(schema, schemas[schema], user, pass)
+                        .then(function() {
+                            return curriculum.loadData(schema);
+                        })
+                    );
+                });
+
+                return Promise.all(loading)
+                .then(function() {
+                    Object.values(curriculum.index.id).forEach(function(entity) {
+                        entity.section = curriculum.index.type[entity.id];
+                    });
+
+                    Object.keys(curriculum.data).forEach(function(dataset) {
+                        editor.addDataSource(dataset, {
+                            load : function(el, callback) {
+                                document.body.dataset.loading = "true";
+                                var options = '';
+                                curriculum.data[dataset].forEach(function(entity) {
+                                    var option = entity.title + " " + entity.id;
+
+                                    if (curriculum.index.type[entity.id] == "doelniveau") {
+                                        var doel = curriculum.index.id[entity.doel_id[0]];
+                                        var niveau = curriculum.index.id[entity.niveau_id[0]];
+                                        option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
+                                    }
+
+                                    options += "<option value='" + entity.id + "'>" + option + "</option>";
+                                });
+                                window.setTimeout(function() {
+                                    el.innerHTML = options;
+                                    document.body.dataset.loading = "false";
+                                });
+                            }
+                        });
+                    });
+
+                    var parentInfo = {
+                        'vak' : 'doel',
+                        'examenprogramma' : 'examenprogramma',
+                        'kerndoel_vakleergebied': 'kerndoelen'
+                    };
+                    Object.keys(parentInfo).forEach(function(section) {
+                        curriculum.data[section].forEach(function(vakEntity) {
+                            walk(parentInfo[section], vakEntity, [], function(entity, parents) {
+                                entity.parents = parents.map(function(parent) {
+                                    return clone(parent.id);
+                                }).filter(Boolean).map(function(id) {
+                                    return { id: id }
+                                });
+                            });
+                        });
+                    });
+
+                    editor.addDataSource("entities", {
+                        load : function(el, callback) {
+                            document.body.dataset.loading = "true";
+                            var options = '';
+                            Object.values(curriculum.index.id).forEach(function(entity) {
+                                var option = entity.title + " " + entity.id;
+
+                                if (curriculum.index.type[entity.id] == "doelniveau") {
+                                    var doel = curriculum.index.id[entity.doel_id[0]];
+                                    var niveau = curriculum.index.id[entity.niveau_id[0]];
+                                    option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
+                                }
+
+                                options += "<option value='" + entity.id + "'>" + option + "</option>";
+                            });
+                            window.setTimeout(function() {
+                                el.innerHTML = options;
+                                document.body.dataset.loading = "false";
+                            });
+                        }
+                    });
+                })
+                .then(function() {
+                    // restore changes from localstorage;
+                    if (localStorage.changes) {
+                        editor.pageData.changes = JSON.parse(localStorage.changes);
+                        editor.pageData.changeCount = editor.pageData.changes.length;
+                        editor.pageData.changes.forEach(function(entry) {
+                            curriculum.index.id[entry.id] = clone(entry);
+                        });
+                    }
+                })
+                .then(function() {
+                    document.body.dataset.loading = "false";
+                    gotoHash();
+                });
+
             }
         }
     });
