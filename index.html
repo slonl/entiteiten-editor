@@ -789,7 +789,7 @@
 <script src="https://yvo.muze.nl/simply-edit/js/simply-edit.js" xsrc="https://cdn.simplyedit.io/1/simply-edit.js" data-simply-storage="none"></script>
 <script src="https://unpkg.com/github-api/dist/GitHub.bundle.js"></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
-<script src="uuidv4.js"></script>
+<script src="/js/uuidv4.js"></script>
 <script src="/js/curriculum.js"></script>
 <script>
     var gotoHash = function() {
@@ -840,26 +840,6 @@
             });
         }
     }
-
-/*
-    var schemas = {
-        'curriculum-inhouden': 'https://raw.githubusercontent.com/slonl/curriculum-inhouden/master/context.json',
-        'curriculum-doelen': 'https://raw.githubusercontent.com/slonl/curriculum-doelen/master/context.json',
-        'curriculum-kerndoelen': 'https://raw.githubusercontent.com/slonl/curriculum-kerndoelen/master/context.json',
-        'curriculum-examenprogramma': 'https://raw.githubusercontent.com/slonl/curriculum-examenprogramma/master/context.json'
-    };
-    var loading = [];
-    Object.keys(schemas).forEach(function(schema) {
-        loading.push(
-            curriculum.loadContextFromURL(schema, schemas[schema])
-            .then(function() {
-                return curriculum.loadData(schema);
-            })
-        );
-    });
-*/
-
-    
 
     editor.transformers = {
         "round" : {
@@ -985,8 +965,8 @@
             '/#new/' : function(params) {
                 // reset page;
                 editor.pageData.entity = {
-            section: null,
-            id: null,
+                        section: null,
+                        id: null,
                         vakkern_id : null,
                         vaksubkern_id : null,
                         vakinhoud_id : null,
@@ -1032,16 +1012,16 @@
             'delete-change' : function(el) {
                 // find the id of the entity;
                 var id = el.parentNode.parentNode.querySelector("a").innerHTML;
-				if (curriculum.index.id[id]) {
-	                // find the original entity from the dataset;
-    	            var original = curriculum.data[curriculum.index.type[id]].find(function(entry) {
-        	            if (entry.id == id) {
-            	            return true;
-                	    }
-                    	return false;
-	                });
-	                curriculum.index.id[id] = original; 
-	            }
+                if (curriculum.index.id[id]) {
+                    // find the original entity from the dataset;
+                    var original = curriculum.data[curriculum.index.type[id]].find(function(entry) {
+                        if (entry.id == id) {
+                            return true;
+                        }
+                        return false;
+                    });
+                    curriculum.index.id[id] = original; 
+                }
 
                 el.parentNode.parentNode.removeChild(el.parentNode);
                 editor.pageData.changeCount = editor.pageData.changes.length;
@@ -1112,7 +1092,7 @@
                         var index = curriculum.data[curriculum.index.type[id]].indexOf(original);
                         curriculum.data[curriculum.index.type[id]][index] = change;
                     } else {
-                    	curriculum.data[curriculum.index.type[id]].push(change);
+                        curriculum.data[curriculum.index.type[id]].push(change);
                     }
                     var section = curriculum.index.type[change.id];
                     var schema = curriculum.getSchemaFromType(section);
@@ -1215,7 +1195,38 @@
                         load : function(el, callback) {
                             document.body.dataset.loading = "true";
                             var options = '';
-                            Object.values(curriculum.index.id).forEach(function(entity) {
+
+                            // Priorities for sorting - we want the higher level entities to come first in the list.
+                            var priorities = {
+                               "vak" : 2,
+                               "examenprogramma" : 1
+                            };
+
+                            Object.values(curriculum.index.id)
+                            .sort(function(a, b) {
+                                if (priorities[a.section]) {
+                                    if (priorities[b.section]) {
+                                        if (priorities[a.section] > priorities[b.section]) {
+                                            return -1;
+                                        }
+                                        if (priorities[a.section] < priorities[b.section]) {
+                                            return 1;
+                                        }
+                                        if (a.title > b.title) {
+                                            return 1;
+                                        }
+                                        if (a.title < b.title) {
+                                            return -1;
+                                        }
+                                    } else {
+                                        return -1;
+                                    }
+                                }
+                                if (priorities[b.section]) {
+                                    return 1;
+                                }
+                                return 0;
+                            }).forEach(function(entity) {
                                 var option = entity.title + " " + entity.id;
 
                                 if (curriculum.index.type[entity.id] == "doelniveau") {
