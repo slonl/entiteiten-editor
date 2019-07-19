@@ -491,6 +491,7 @@ ul.slo-nav-crumbs li:first-child::before {
 
 /* Page Elements: Errors */
 
+.slo-info,
 .slo-error,
 .slo-warning {
     font-size: 1.5em;
@@ -507,7 +508,10 @@ ul.slo-nav-crumbs li:first-child::before {
 .slo-warning {
     background-color: var(--warning-color);
 }
-
+.slo-info {
+	background-color: var(--info-color);
+	color: white;
+}
 /* Page Elements: Header */
 
 .slo-navbar {
@@ -774,6 +778,17 @@ dialog[open] ~ .slo-dialog-overlay {
             box-shadow: 1em 0 0 0 transparent, 3em 0 0 0 transparent, 5em 0 0 0 transparent;
         }
     }
+    [data-loading="true"]::before {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        background: rgba(255,255,255,0.7);
+        content: "";
+        z-index: 1001;
+    }
     [data-loading="true"]::after {
         display: block;
         content: "";
@@ -787,5 +802,5 @@ dialog[open] ~ .slo-dialog-overlay {
         border-radius: 50%;
         width: 1em;
         height: 1em;
-        z-index: 1001;
+        z-index: 1002;
     }
