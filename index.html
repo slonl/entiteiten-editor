@@ -124,6 +124,9 @@
             <label>Titel
                 <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
             </label>
+            <label>Omschrijving
+                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+            </label>
             <label>Vakkernen</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.vakkern_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
@@ -146,6 +149,9 @@
         <div class="slo-entity">
             <label>Titel
                 <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Omschrijving
+                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
             </label>
             <label>Vaksubkernen</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.vaksubkern_id" data-simply-entry="relatie">
@@ -170,6 +176,9 @@
             <label>Titel
                 <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
             </label>
+            <label>Omschrijving
+                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+            </label>
             <label>Vakinhouden</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.vakinhoud_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
@@ -192,6 +201,9 @@
         <div class="slo-entity">
             <label>Titel
                 <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+            </label>
+            <label>Omschrijving
+                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
             </label>
             <label>DoelNiveaus</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
@@ -220,6 +232,14 @@
             <form data-simply-command="add-relation" data-slo-relation="niveau" class="slo-search slo-grid slo-grid-3">
                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
                 <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Kerndoelen</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="kerndoel" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="kerndoel">
+                <button data-simply-command="add-relation" data-slo-relation="kerndoel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
         </div>
     </template>
@@ -272,11 +292,15 @@
             <label>Titel
                 <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
             </label>
-            <!--- aanwezig volgens context.json maar in praktijk niet
-            <label>Ingangsdatum</label>
-            <label>url</label>
-            <label>versie</label>
-            --->
+            <label>Ingangsdatum
+                <input type="text" data-simply-field="entity.ingangsdatum" placeholder="Examenprogramma Ingangsdatum">
+            </label>
+            <label>Ingangsdatum
+                <input type="text" data-simply-field="entity.url" placeholder="Examenprogramma URL">
+            </label>
+            <label>Versie
+                <input type="text" data-simply-field="entity.versie" placeholder="Examenprogramma Versie">
+            </label>
             <label>Domein</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_domein_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
