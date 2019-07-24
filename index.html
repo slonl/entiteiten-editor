@@ -51,6 +51,22 @@
         .slo-warning:not(:empty) + .slo-warning {
             display: none;
         }
+        .slo-label {
+            display: inline-block;
+        }
+        .slo-form-help {
+            font-size: 0.8em;
+            line-height: 1.5em;
+        }
+        label.slo-form-checkbox,
+        label.slo-form-radio {
+            padding-left: 1.5em;
+        }
+        .slo-form-checkbox input[type="checkbox"],
+        .slo-form-radio input[type="radio"] {
+            margin-left: -1.5em;
+            position: absolute;
+        }
     </style>
 </head>
 <body class="slo-main-page">
@@ -658,7 +674,8 @@
                 <span></span><button class="slo-button slo-right" data-simply-command="save">Bewaar</button>
             </div>
         </div>
-        <div class="slo-grid slo-grid-4" data-simply-field="page" data-simply-content="template" data-simply-default-value="new">
+        <div class="slo-grid slo-grid-4">
+            <div class="slo-grid-span-3" data-simply-field="page" data-simply-content="template" data-simply-default-value="new">
             <template data-simply-template="edit">
                 <article class="slo-card slo-grid-span-3">
                     <header class="slo-card-header slo-space">
@@ -673,6 +690,11 @@
                         <span class="slo-tag">
                             <label class="slo-tag-label">Type</label>
                             <span data-simply-field="entity.section"></span>
+                        </span>
+                        <span data-simply-field="entity.dirty" data-simply-content="template">
+                            <template data-simply-template="1">
+                                <span class="slo-tag">Inhoudelijk gewijzigd</span>
+                            </template>                                    
                         </span>
                         <button class="slo-button slo-right slo-button-nomargin">
                             <svg class="slo-icon slo-icon-feather">
@@ -776,6 +798,18 @@
                     </div>
                 </article>
             </template>
+            </div>
+            <div class="">
+                <div class="slo-form-field">
+                    <label class="slo-form-checkbox">
+                        <input type="checkbox" name="dirty" id="dirty" data-simply-field="entity.dirty"> <span class="slo-label">Inhoudelijk gewijzigd sinds de vorige release.</span>
+                    </label>
+                    <div class="slo-form-help">
+                        Als dit vinkje aan staat, betekend het dat deze entiteit bij de volgende release een nieuwe UUID krijgt. Het is belangrijk dat dit altijd gebeurd bij inhoudelijke wijzigingen. Alleen als je bijv. een typefout corrigeert mag je dit vinkje uitzetten. Let erop dat je dit alleen doet als
+                        het vinkje voor de correctie al uit stond.
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -959,7 +993,8 @@
         doel_id : [],
         niveau_id : [],
         section: null,
-        id: null
+        id: null,
+        dirty: 0
     };
 
     var entityEditor = simply.app({
@@ -1097,7 +1132,6 @@
                     });
                     delete change.section;
                     delete change.parents;
-                    change.dirty = true;
                     if (original) {
                         var index = curriculum.data[curriculum.index.type[id]].indexOf(original);
                         curriculum.data[curriculum.index.type[id]][index] = change;
