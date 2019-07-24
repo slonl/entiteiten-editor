@@ -107,17 +107,14 @@ var curriculum = (function(curriculum){
             var repo = gh.getRepo(repoUser, repoName);
             curriculum.sources[name].repo = repo;
             curriculum.sources[name].getFile = function(filename) {
-                return repo.getBranch('master')
-                .then(function(branchOb) {
-                    branch = branchOb;
-                    return branch.data.commit.sha;
-                })
-                .then(function(lastCommit) {
-                    return repo.getTree(lastCommit).then(function(list) {
-                        return getFile(filename, list);
-                    });
+                return new Promise(function(resolve, reject) {
+                   fetch("https://raw.githubusercontent.com/" + repository + "/master/" + filename)
+                    .then(function(response) {
+                        return resolve(response.json());
+                    });;
                 });
             };
+
             curriculum.sources[name].writeFile = function(filename, data, message) {
                 return repo.writeFile('master',filename,data,message,{encode:true});
             };
