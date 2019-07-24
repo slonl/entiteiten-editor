@@ -802,7 +802,7 @@
             <div class="">
                 <div class="slo-form-field">
                     <label class="slo-form-checkbox">
-                        <input type="checkbox" name="dirty" id="dirty" data-simply-field="entity.dirty"> <span class="slo-label">Inhoudelijk gewijzigd sinds de vorige release.</span>
+                        <input type="checkbox" name="dirty" id="dirty" value="1" data-simply-field="entity.dirty"> <span class="slo-label">Inhoudelijk gewijzigd sinds de vorige release.</span>
                     </label>
                     <div class="slo-form-help">
                         Als dit vinkje aan staat, betekend het dat deze entiteit bij de volgende release een nieuwe UUID krijgt. Het is belangrijk dat dit altijd gebeurd bij inhoudelijke wijzigingen. Alleen als je bijv. een typefout corrigeert mag je dit vinkje uitzetten. Let erop dat je dit alleen doet als
@@ -1004,6 +1004,9 @@
                 // reset page;
                 editor.pageData.entity = emptyEntity;
                 editor.pageData.entity = clone(curriculum.index.id[params.id]);
+		if (typeof editor.pageData.entity.dirty === "undefined") {
+			editor.pageData.entity.dirty = 0;
+		}
                 editor.pageData.page = "edit";
                 window.scrollTo(0,0);
             },
