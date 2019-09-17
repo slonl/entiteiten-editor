@@ -67,6 +67,10 @@
             margin-left: -1.5em;
             position: absolute;
         }
+		textarea[data-simply-activate="autosize"] {
+			height: var(--slo-line-height);
+			resize: none;
+		}
     </style>
 </head>
 <body class="slo-main-page">
@@ -122,10 +126,10 @@
     <template id="entiteit-vakkencluster">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Omschrijving
-                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Vakken</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.vak_id" data-simply-entry="relatie">
@@ -148,10 +152,10 @@
     <template id="entiteit-leerlijn">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Omschrijving
-                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Vakken</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.vak_id" data-simply-entry="relatie">
@@ -190,10 +194,10 @@
     <template id="entiteit-vak">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Omschrijving
-                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Vakkernen</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.vakkern_id" data-simply-entry="relatie">
@@ -216,10 +220,10 @@
     <template id="entiteit-vakkern">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Omschrijving
-                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Vaksubkernen</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.vaksubkern_id" data-simply-entry="relatie">
@@ -242,10 +246,10 @@
     <template id="entiteit-vaksubkern">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Omschrijving
-                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Vakinhouden</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.vakinhoud_id" data-simply-entry="relatie">
@@ -268,10 +272,10 @@
     <template id="entiteit-vakinhoud">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Omschrijving
-                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>DoelNiveaus</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
@@ -314,20 +318,20 @@
     <template id="entiteit-doel">
         <div class="slo-entity">
             <label>Titel
-                <textarea data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
         </div>
     </template>
     <template id="entiteit-niveau">
         <div class="slo-entity">
-            <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-            </label>
-            <label>Description
-                <textarea data-simply-field="entity.description" placeholder="Entiteit description"></textarea>
-            </label>
             <label>Prefix
                 <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Type
                 <input type="text" data-simply-field="entity.type" placeholder="Niveau type">
@@ -337,7 +341,7 @@
     <template id="entiteit-examenprogramma">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Ingangsdatum
                 <input type="text" data-simply-field="entity.ingangsdatum" placeholder="Examenprogramma Ingangsdatum">
@@ -376,11 +380,11 @@
     </template>
     <template id="entiteit-examenprogramma_domein">
         <div class="slo-entity">
-            <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
-            </label>
             <label>Prefix
                 <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <!--- aanwezig volgens context.json maar in praktijk niet
             <label>Ingangsdatum</label>
@@ -408,7 +412,7 @@
     <template id="entiteit-examenprogramma_subdomein">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <!--- aanwezig volgens context.json maar in praktijk niet
             <label>Ingangsdatum</label>
@@ -431,10 +435,10 @@
                 <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
             </label>
             <label>Titel
-                <textarea data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
-            <label>Description
-                <textarea data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label class="slo-checkbox">
                 <input type="checkbox" data-simply-field="entity.ce"> CE
@@ -466,7 +470,7 @@
     <template id="entiteit-examenprogramma_vakleergebied">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Vak</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.vak_id" data-simply-entry="relatie">
@@ -484,7 +488,7 @@
                 <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
             </label>
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Kop 2</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop2_id" data-simply-entry="relatie">
@@ -518,7 +522,7 @@
                 <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
             </label>
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Kop 3</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop3_id" data-simply-entry="relatie">
@@ -553,7 +557,7 @@
                 <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
             </label>
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Kop 2 (niet volgens context.json)</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop2_id" data-simply-entry="relatie">
@@ -603,7 +607,7 @@
                 <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
             </label>
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Body</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_body_id" data-simply-entry="relatie">
@@ -629,7 +633,7 @@
                 <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
             </label>
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Tag</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
@@ -648,10 +652,10 @@
                 <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
             </label>
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Omschrijving
-                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Niveau</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
@@ -666,7 +670,7 @@
     <template id="entiteit-kerndoel_domein">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Kerndoel</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_id" data-simply-entry="relatie">
@@ -681,10 +685,10 @@
     <template id="entiteit-kerndoel_uitstroomprofiel">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Omschrijving
-                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Tag</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.tag_id" data-simply-entry="relatie">
@@ -699,7 +703,7 @@
     <template id="entiteit-kerndoel_vakleergebied">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Domein</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.kerndoel_domein_id" data-simply-entry="relatie">
@@ -742,10 +746,10 @@
                 <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
             </label>
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Omschrijving
-                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Examenprogramma</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_id" data-simply-entry="relatie">
@@ -784,10 +788,10 @@
     <template id="entiteit-syllabus_vakbegrip">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Omschrijving
-                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Examenprogramma</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_id" data-simply-entry="relatie">
@@ -826,10 +830,10 @@
     <template id="entiteit-syllabus_specifieke_eindterm">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Omschrijving
-                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Examenprogramma</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_id" data-simply-entry="relatie">
@@ -868,10 +872,10 @@
     <template id="entiteit-syllabus_toelichting">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Omschrijving
-                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Examenprogramma</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_id" data-simply-entry="relatie">
@@ -911,10 +915,10 @@
     <template id="entiteit-leerlingtekst">
         <div class="slo-entity">
             <label>Titel
-                <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Omschrijving
-                <input type="text" data-simply-field="entity.description" placeholder="Entiteit omschrijving">
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Vakken</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.vak_id" data-simply-entry="relatie">
@@ -1226,8 +1230,10 @@
 <script src="https://canary.simplyedit.io/1/simply-edit.js" xsrc="https://yvo.muze.nl/simply-edit/js/simply-edit.js" xsrc="https://cdn.simplyedit.io/1/simply-edit.js" data-simply-storage="none"></script>
 <script src="https://unpkg.com/github-api/dist/GitHub.bundle.js"></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
+<script src="/assets/simplyview/js/simply.activate.js"></script>
 <script src="/js/curriculum.js"></script>
 <script>
+	simply.bind = false;
     var gotoHash = function() {
         var path = document.location.pathname + document.location.hash;
         path = path.replace(/\/$/, '');
@@ -1745,6 +1751,18 @@
         }, true);
     }
 
+
+	simply.activate.addListener('autosize', function() {
+		var self = this;
+        self.style.height = 'auto';
+        self.style.height = (self.scrollHeight+2)+'px';
+	   	this.addEventListener('input',function(evt) {
+	        window.setTimeout(function() {
+	            self.style.height = 'auto';
+	            self.style.height = (self.scrollHeight+2)+'px';
+	        },0);
+	    });
+	});
 </script>
 </body>
 </html>
