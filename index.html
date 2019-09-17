@@ -421,7 +421,15 @@
             <label>Titel
                 <input type="text" data-simply-field="entity.title" placeholder="Entiteit titel">
             </label>
-        </div>
+            <label>Vak</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.vak_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="vak_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vak">
+                <button data-simply-command="add-relation" data-slo-relation="vak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+	</div>
     </template>
     <template id="entiteit-examenprogramma_kop1">
         <div class="slo-entity">
@@ -752,6 +760,7 @@
                         <template data-simply-template="examenprogramma_kop3" rel="entiteit-examenprogramma_kop3"></template>
                         <template data-simply-template="examenprogramma_kop4" rel="entiteit-examenprogramma_kop4"></template>
                         <template data-simply-template="examenprogramma_body" rel="entiteit-examenprogramma_body"></template>
+                        <template data-simply-template="examenprogramma_vakleergebied" rel="entiteit-examenprogramma_vakleergebied"></template>
                         <template data-simply-template="kerndoel" rel="entiteit-kerndoel"></template>
                         <template data-simply-template="kerndoel_domein" rel="entiteit-kerndoel_domein"></template>
                         <template data-simply-template="kerndoel_uitstroomprofiel" rel="entiteit-kerndoel_uitstroomprofiel"></template>
@@ -790,6 +799,7 @@
                                 <option value="examenprogramma_kop3">examenprogramma_kop3</option>
                                 <option value="examenprogramma_kop4">examenprogramma_kop4</option>
                                 <option value="examenprogramma_body">examenprogramma_body</option>
+                                <option value="examenprogramma_vakleergebied">examenprogramma_vakleergebied</option>
                                 <option value="kerndoel">kerndoel</option>
                                 <option value="kerndoel_domein">kerndoel_domein</option>
                                 <option value="kerndoel_uitstroomprofiel">kerndoel_uitstroomprofiel</option>
@@ -815,6 +825,7 @@
                         <template data-simply-template="examenprogramma_kop3" rel="entiteit-examenprogramma_kop3"></template>
                         <template data-simply-template="examenprogramma_kop4" rel="entiteit-examenprogramma_kop4"></template>
                         <template data-simply-template="examenprogramma_body" rel="entiteit-examenprogramma_body"></template>
+                        <template data-simply-template="examenprogramma_vakleergebied" rel="entiteit-examenprogramma_vakleergebied"></template>
                         <template data-simply-template="kerndoel" rel="entiteit-kerndoel"></template>
                         <template data-simply-template="kerndoel_domein" rel="entiteit-kerndoel_domein"></template>
                         <template data-simply-template="kerndoel_uitstroomprofiel" rel="entiteit-kerndoel_uitstroomprofiel"></template>
