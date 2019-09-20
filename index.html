@@ -346,7 +346,7 @@
             <label>Ingangsdatum
                 <input type="text" data-simply-field="entity.ingangsdatum" placeholder="Examenprogramma Ingangsdatum">
             </label>
-            <label>Ingangsdatum
+            <label>URL
                 <input type="text" data-simply-field="entity.url" placeholder="Examenprogramma URL">
             </label>
             <label>Versie
@@ -645,6 +645,231 @@
             </form>
         </div>
     </template>
+    <!-- examenprogramma beroepsgericht -->
+    <template id="entiteit-examenprogramma_bg_profiel">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Kern</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_bg_kern_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_kern_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_bg_kern">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_kern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Module</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_bg_module_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_module_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_bg_module">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_module_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Keuzevak</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_bg_keuzevak_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_keuzevak_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_bg_keuzevak">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_keuzevak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_bg_kern">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Kerndeel</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_bg_kerndeel_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_kerndeel_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_bg_kerndeel">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_kerndeel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_bg_module">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Moduletaak</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_bg_moduletaak_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_moduletaak_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_bg_moduletaak">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_moduletaak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Deeltaak</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_bg_deeltaak_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_deeltaak_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_bg_deeltaak">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_deeltaak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_bg_keuzevak">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Keuzevaktaak</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_bg_keuzevaktaak_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_keuzevaktaak_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_bg_keuzevaktaak">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_keuzevaktaak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Deeltaak</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_bg_deeltaak_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_deeltaak_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_bg_deeltaak">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_deeltaak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_bg_kerndeel">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Globale Eindterm</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_bg_globale_eindterm_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_globale_eindterm_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_bg_globale_eindterm">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_globale_eindterm_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_bg_deeltaak">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Globale Eindterm</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_bg_globale_eindterm_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_globale_eindterm_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_bg_globale_eindterm">
+                <button data-simply-command="add-relation" data-slo-relation="examenprogramma_bg_globale_eindterm_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_bg_globale-eindterm">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Niveau</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
+                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_bg_moduletaak">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Niveau</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
+                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-examenprogramma_bg_keuzevaktaak">
+        <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Niveau</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-search slo-grid slo-grid-3">
+                <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
+                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+
+
+
     <!-- kerndoelen -->
     <template id="entiteit-kerndoel">
         <div class="slo-entity">
@@ -1020,6 +1245,16 @@
     <datalist id="examenprogramma_subdomein" data-simply-list="dataset.examenprogramma_subdomein" data-simply-data="examenprogramma_subdomein" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="examenprogramma_eindterm" data-simply-list="dataset.examenprogramma_eindterm" data-simply-data="examenprogramma_eindterm" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
 
+    <datalist id="examenprogramma_bg_profiel" data-simply-list="dataset.examenprogramma_bg_profiel" data-simply-data="examenprogramma_bg_profiel" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="examenprogramma_bg_kern" data-simply-list="dataset.examenprogramma_bg_kern" data-simply-data="examenprogramma_bg_kern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="examenprogramma_bg_module" data-simply-list="dataset.examenprogramma_bg_module" data-simply-data="examenprogramma_bg_module" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="examenprogramma_bg_keuzevak" data-simply-list="dataset.examenprogramma_bg_keuzevak" data-simply-data="examenprogramma_bg_keuzevak" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="examenprogramma_bg_kerndeel" data-simply-list="dataset.examenprogramma_bg_kerndeel" data-simply-data="examenprogramma_bg_kerndeel" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="examenprogramma_bg_deeltaak" data-simply-list="dataset.examenprogramma_bg_deeltaak" data-simply-data="examenprogramma_bg_deeltaak" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="examenprogramma_bg_moduletaak" data-simply-list="dataset.examenprogramma_bg_moduletaak" data-simply-data="examenprogramma_bg_moduletaak" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="examenprogramma_bg_keuzevaktaak" data-simply-list="dataset.examenprogramma_bg_keuzevaktaak" data-simply-data="examenprogramma_bg_keuzevaktaak" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="examenprogramma_bg_globale_eindterm" data-simply-list="dataset.examenprogramma_bg_globale_eindterm" data-simply-data="examenprogramma_bg_globale_eindterm" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+
     <datalist id="syllabus_vakbegrip" data-simply-list="dataset.syllabus_vakbegrip" data-simply-data="syllabus_vakbegrip" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="syllabus_toelichting" data-simply-list="dataset.syllabus_toelichting" data-simply-data="syllabus_toelichting" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="syllabus_specifieke_eindterm" data-simply-list="dataset.syllabus_specifieke_eindterm" data-simply-data="syllabus_specifieke_eindterm" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
@@ -1090,6 +1325,17 @@
                         <template data-simply-template="examenprogramma_kop4" rel="entiteit-examenprogramma_kop4"></template>
                         <template data-simply-template="examenprogramma_body" rel="entiteit-examenprogramma_body"></template>
                         <template data-simply-template="examenprogramma_vakleergebied" rel="entiteit-examenprogramma_vakleergebied"></template>
+
+                        <template data-simply-template="examenprogramma_bg_profiel" rel="entiteit-examenprogramma_bg_profiel"></template>
+                        <template data-simply-template="examenprogramma_bg_kern" rel="entiteit-examenprogramma_bg_kern"></template>
+                        <template data-simply-template="examenprogramma_bg_module" rel="entiteit-examenprogramma_bg_module"></template>
+                        <template data-simply-template="examenprogramma_bg_keuzevak" rel="entiteit-examenprogramma_bg_keuzevak"></template>
+                        <template data-simply-template="examenprogramma_bg_kerndeel" rel="entiteit-examenprogramma_bg_kerndeel"></template>
+                        <template data-simply-template="examenprogramma_bg_deeltaak" rel="entiteit-examenprogramma_bg_deeltaak"></template>
+                        <template data-simply-template="examenprogramma_bg_moduletaak" rel="entiteit-examenprogramma_bg_moduletaak"></template>
+                        <template data-simply-template="examenprogramma_bg_keuzevaktaak" rel="entiteit-examenprogramma_bg_keuzevaktaak"></template>
+                        <template data-simply-template="examenprogramma_bg_globale_eindterm" rel="entiteit-examenprogramma_bg_globale_eindterm"></template>
+
                         <template data-simply-template="kerndoel" rel="entiteit-kerndoel"></template>
                         <template data-simply-template="kerndoel_domein" rel="entiteit-kerndoel_domein"></template>
                         <template data-simply-template="kerndoel_uitstroomprofiel" rel="entiteit-kerndoel_uitstroomprofiel"></template>
@@ -1135,6 +1381,15 @@
                                 <option value="examenprogramma_kop4">examenprogramma_kop4</option>
                                 <option value="examenprogramma_body">examenprogramma_body</option>
                                 <option value="examenprogramma_vakleergebied">examenprogramma_vakleergebied</option>
+                                <option value="examenprogramma_bg_profiel">examenprogramma_bg_profiel</option>
+                                <option value="examenprogramma_bg_kern">examenprogramma_bg_kern</option>
+                                <option value="examenprogramma_bg_module">examenprogramma_bg_module</option>
+                                <option value="examenprogramma_bg_keuzevak">examenprogramma_bg_keuzevak</option>
+                                <option value="examenprogramma_bg_kerndeel">examenprogramma_bg_kerndeel</option>
+                                <option value="examenprogramma_bg_deeltaak">examenprogramma_bg_deeltaak</option>
+                                <option value="examenprogramma_bg_moduletaak">examenprogramma_bg_moduletaak</option>
+                                <option value="examenprogramma_bg_keuzevaktaak">examenprogramma_bg_keuzevaktaak</option>
+                                <option value="examenprogramma_bg_globale_eindterm">examenprogramma_bg_globale_eindterm</option>
                                 <option value="kerndoel">kerndoel</option>
                                 <option value="kerndoel_domein">kerndoel_domein</option>
                                 <option value="kerndoel_uitstroomprofiel">kerndoel_uitstroomprofiel</option>
@@ -1169,6 +1424,15 @@
                         <template data-simply-template="examenprogramma_kop4" rel="entiteit-examenprogramma_kop4"></template>
                         <template data-simply-template="examenprogramma_body" rel="entiteit-examenprogramma_body"></template>
                         <template data-simply-template="examenprogramma_vakleergebied" rel="entiteit-examenprogramma_vakleergebied"></template>
+                        <template data-simply-template="examenprogramma_bg_profiel" rel="entiteit-examenprogramma_bg_profiel"></template>
+                        <template data-simply-template="examenprogramma_bg_kern" rel="entiteit-examenprogramma_bg_kern"></template>
+                        <template data-simply-template="examenprogramma_bg_module" rel="entiteit-examenprogramma_bg_module"></template>
+                        <template data-simply-template="examenprogramma_bg_keuzevak" rel="entiteit-examenprogramma_bg_keuzevak"></template>
+                        <template data-simply-template="examenprogramma_bg_kerndeel" rel="entiteit-examenprogramma_bg_kerndeel"></template>
+                        <template data-simply-template="examenprogramma_bg_deeltaak" rel="entiteit-examenprogramma_bg_deeltaak"></template>
+                        <template data-simply-template="examenprogramma_bg_moduletaak" rel="entiteit-examenprogramma_bg_moduletaak"></template>
+                        <template data-simply-template="examenprogramma_bg_keuzevaktaak" rel="entiteit-examenprogramma_bg_keuzevaktaak"></template>
+                        <template data-simply-template="examenprogramma_bg_globale_eindterm" rel="entiteit-examenprogramma_bg_globale_eindterm"></template>
                         <template data-simply-template="kerndoel" rel="entiteit-kerndoel"></template>
                         <template data-simply-template="kerndoel_domein" rel="entiteit-kerndoel_domein"></template>
                         <template data-simply-template="kerndoel_uitstroomprofiel" rel="entiteit-kerndoel_uitstroomprofiel"></template>
@@ -1231,7 +1495,7 @@
 <script src="https://unpkg.com/github-api/dist/GitHub.bundle.js"></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
 <script src="/assets/simplyview/js/simply.activate.js"></script>
-<script src="/js/curriculum.js"></script>
+<script src="js/curriculum.js"></script>
 <script>
 	simply.bind = false;
     var gotoHash = function() {
@@ -1261,6 +1525,14 @@
             'examenprogramma_kop3':['examenprogramma_kop4_id', 'examenprogramma_body_id'],
             'examenprogramma_kop4':['examenprogramma_body_id']
         },
+		'examenprogramma_bg': {
+			'examenprogramma_bg_profiel': ['examenprogramma_bg_kern','examenprogramma_bg_module','examenprogramma_bg_keuzevak'],
+			'examenprogramma_bg_kern': ['examenprogramma_bg_kerndeel'],
+			'examenprogramma_bg_kerndeel': ['examenprogramma_bg_globale_eindterm'],
+			'examenprogramma_bg_module': ['examenprogramma_bg_deeltaak','examenprogramma_bg_moduletaak'],
+			'examenprogramma_bg_deeltaak': ['examenprogramma_bg_globale_eindterm'],
+			'examenprogramma_bg_keuzevak': ['examenprogramma_bg_deeltaak','examenprogramma_bg_keuzevaktaak']
+		},
         'kerndoelen': {
             'kerndoel_domein' : ['kerndoel_id'],
             'kerndoel_vakleergebied' : ['kerndoel_uitstroomprofiel_id', 'kerndoel_id', 'kerndoel_domein_id']
@@ -1565,6 +1837,7 @@
                     'curriculum-doelen': 'slonl/curriculum-doelen',
                     'curriculum-kerndoelen': 'slonl/curriculum-kerndoelen',
                     'curriculum-examenprogramma': 'slonl/curriculum-examenprogramma',
+					'curriculum-examenprogramma-bg': 'slonl/curriculum-examenprogramma-bg',
                     'curriculum-syllabus': 'slonl/curriculum-syllabus',
                     'curriculum-doelgroepteksten': 'slonl/curriculum-doelgroepteksten'
                 };
@@ -1625,7 +1898,8 @@
                     var parentInfo = {
                         'vak' : 'doel',
                         'examenprogramma' : 'examenprogramma',
-                        'kerndoel_vakleergebied': 'kerndoelen'
+                        'kerndoel_vakleergebied': 'kerndoelen',
+						'examenprogramma_bg_profiel': 'examenprogramma_bg'
                     };
                     Object.keys(parentInfo).forEach(function(section) {
                         curriculum.data[section].forEach(function(vakEntity) {
@@ -1646,9 +1920,10 @@
 
                             // Priorities for sorting - we want the higher level entities to come first in the list.
                             var priorities = {
-                                "vak" : 3,
-                                "leerlijn" : 2,
-                                "examenprogramma" : 1
+                                "vak" : 4,
+                                "leerlijn" : 3,
+                                "examenprogramma" : 2,
+								"examenprogramma_bg": 1
                             };
 
                             Object.values(curriculum.index.id)
