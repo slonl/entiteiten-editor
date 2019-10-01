@@ -1756,7 +1756,7 @@
                     return true;
                 })
                 .catch(function(error) {
-                    entityEditor.view['login-error'] = 'Login failed';
+                    entityEditor.view['login-error'] = 'Github login mislukt';
                     document.body.dataset.loading="false";
                     return false;
                 });
@@ -1854,7 +1854,7 @@
                     return true;
                 })
                 .catch(function(error) {
-                    document.getElementById('login').setAttribute('open');
+                    document.getElementById('login').setAttribute('open','open');
                     entityEditor.view['login-error'] = '';
                     document.body.dataset.loading="false";
                     return false;
@@ -1953,7 +1953,19 @@
                     );
                 });
 
-                return Promise.all(loading)
+               	// get user info
+               	// put it in the editor.pageData.user
+               	// name and avatar_url
+               	var gh = new GitHub({username:user, password: pass});
+               	return gh.getUser().getProfile()
+               	.then(function(profile) {
+               		editor.pageData.user = profile.data;
+              		document.body.classList.add('slo-logged-on');
+              		return profile;
+               	})
+                .then(function(profile) {
+ 	               return Promise.all(loading);
+ 	            })
                 .then(function() {
                     Object.values(curriculum.index.id).forEach(function(entity) {
                         entity.section = curriculum.index.type[entity.id];
@@ -2093,8 +2105,6 @@
                             });
                         }
                     });
-                })
-                .then(function() {
                     // restore changes from localstorage;
                     if (localStorage.changes) {
                         editor.pageData.changes = JSON.parse(localStorage.changes);
@@ -2103,23 +2113,10 @@
                             curriculum.index.id[entry.id] = clone(entry);
                         });
                     }
-                })
-                .then(function() {
-                	// get user info
-                	// put it in the editor.pageData.user
-                	// name and avatar_url
-                	var gh = new GitHub({username:user, password: pass});
-                	gh.getUser().getProfile()
-                	.then(function(profile) {
-                		editor.pageData.user = profile.data;
-                		document.body.classList.add('slo-logged-on');
-                	});
-                })
-                .then(function() {
                     document.body.dataset.loading = "false";
                     gotoHash();
+                    return true;
                 });
-
             }
         }
     });
