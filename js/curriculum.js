@@ -76,10 +76,14 @@ var curriculum = (function(curriculum){
         });
     }
 
-    curriculum.loadContextFromGithub = function(name, repository, user, password) {
+    curriculum.loadContextFromGithub = function(name, repository, user, password, branchName) {
+		if (!branchName) {
+			branchName = 'master';
+		}
         curriculum.sources[name] = {
             method: 'github',
             source: repository,
+			branch: branchName,
             state: 'loading'
         };
         var gh = new GitHub({username:user, password: password});
@@ -108,7 +112,7 @@ var curriculum = (function(curriculum){
             curriculum.sources[name].repo = repo;
             curriculum.sources[name].getFile = function(filename) {
                 return new Promise(function(resolve, reject) {
-                   fetch("https://raw.githubusercontent.com/" + repository + "/master/" + filename)
+                   fetch("https://raw.githubusercontent.com/" + repository + "/" + branchName + "/" + filename)
                     .then(function(response) {
                         return resolve(response.json());
                     });;
@@ -132,7 +136,7 @@ var curriculum = (function(curriculum){
                     }));
                 });
                 return Promise.all(blobs).then(function(blobs) {
-                    repo.getBranch('master')
+                    repo.getBranch(branchName)
                     .then(function(branchOb) {
                         branch = branchOb;
                         return branch.data.commit.sha;
