@@ -67,10 +67,35 @@
             margin-left: -1.5em;
             position: absolute;
         }
-		textarea[data-simply-activate="autosize"] {
-			height: var(--slo-line-height);
-			resize: none;
-		}
+        textarea[data-simply-activate="autosize"] {
+            height: var(--slo-line-height);
+            resize: none;
+        }
+        .slo-profile {
+        	display: grid;
+        	grid-template-areas: "avatar name" 
+        	                     "avatar button";
+        }
+        .slo-avatar {
+			grid-area: avatar;        
+        	height: 40px;
+        	margin: 10px;
+        }
+        .slo-username {
+        	grid-area: name;
+        	line-height: 38px;
+        	height: 25px;
+        	display: block;
+        	white-space: nowrap;
+        }
+        .slo-logoff {
+        	grid-area: button;
+        	display: none;
+        	line-height: 20px;
+        }
+        body.slo-logged-on .slo-logoff {
+        	display: block;
+        }
     </style>
 </head>
 <body class="slo-main-page">
@@ -80,6 +105,11 @@
         </nav>
         <div class="slo-navbar-left">
             OpenData Portal: Entiteit toevoegen
+        </div>
+        <div class="slo-navbar-right slo-profile">
+        	<img class="slo-avatar" data-simply-field="user.avatar_url">
+        	<div class="slo-username" data-simply-field="user.name"></div>
+        	<a href="#" class="slo-logoff" data-simply-command="logoff">Afmelden</a>
         </div>
     </header>
     <div class="slo-navbar slo-navbar-side bg-gray">
@@ -120,7 +150,12 @@
                 </svg>
             </button>
             <span data-simply-field="relatie" data-simply-transformer="idToTitle"></span><br>
-            <a href="#" data-simply-field="relatie" data-simply-transformer="editlink"></a>
+            <span class="slo-tag">
+            	<a class="slo-tag-label" href="#" data-simply-field="relatie" data-simply-transformer="opendatalink" data-simply-content="fixed" target="_blank">
+                    <svg class="slo-icon slo-icon-feather"><use xlink:href="/files/feather-sprite.svg#link"></use></svg>
+                </a>
+                <a class="slo-id" href="#" data-simply-field="relatie" data-simply-transformer="editlink"></a>
+            </span>
         </div>
     </template>
     <template id="entiteit-vakkencluster">
@@ -480,7 +515,7 @@
                 <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vak">
                 <button data-simply-command="add-relation" data-slo-relation="vak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
-	</div>
+    </div>
     </template>
     <template id="entiteit-examenprogramma_kop1">
         <div class="slo-entity">
@@ -804,7 +839,7 @@
             </form>
         </div>
     </template>
-    <template id="entiteit-examenprogramma_bg_globale-eindterm">
+    <template id="entiteit-examenprogramma_bg_globale_eindterm">
         <div class="slo-entity">
             <label>Prefix
                 <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
@@ -1275,11 +1310,9 @@
                 <article class="slo-card slo-grid-span-3">
                     <header class="slo-card-header slo-space">
                         <span class="slo-tag">
-                            <label class="slo-tag-label">
-                                <svg class="slo-icon slo-icon-feather">
-                                    <use xlink:href="/files/feather-sprite.svg#link">
-                                </use></svg>
-                            </label>
+                        	<a class="slo-tag-label" href="#" data-simply-field="entity.id" data-simply-transformer="opendatalink" data-simply-content="fixed" target="_blank">
+                                <svg class="slo-icon slo-icon-feather"><use xlink:href="/files/feather-sprite.svg#link"></use></svg>
+                            </a>
                             <span class="slo-id" data-simply-field="entity.id"></span>
                         </span>
                         <span class="slo-tag">
@@ -1291,7 +1324,7 @@
                                 <span class="slo-tag">Inhoudelijk gewijzigd</span>
                             </template>                                    
                         </span>
-                        <button class="slo-button slo-right slo-button-nomargin">
+                        <button class="slo-button slo-right slo-button-nomargin" data-simply-command="deprecate">
                             <svg class="slo-icon slo-icon-feather">
                                 <use xlink:href="/files/feather-sprite.svg#trash">
                                 </use>
@@ -1460,7 +1493,7 @@
         </div>
     </main>
 
-    <dialog id="login" class="slo-login" open>
+    <dialog id="login" class="slo-login">
         <header class="bg-brand">
             <img src="/assets/img/slo.png" class="slo-logo">
         </header>
@@ -1480,6 +1513,12 @@
                         <input type="password" name="password" data-simply-field="password" data-simply-element="password">
                     </label>
                 </div>
+                <div class="group">
+                    <label>
+                        <input type="checkbox" name="savelogin" value="1" data-simply-field="savelogin" data-simply-element="savelogin">
+                        Bewaar mijn logingegevens op deze computer
+                    </label>
+                </div>
                 <br>
                 <button type="submit" class="slo-button slo-button-primary">Login
                     <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
@@ -1497,7 +1536,7 @@
 <script src="/assets/simplyview/js/simply.activate.js"></script>
 <script src="js/curriculum.js"></script>
 <script>
-	simply.bind = false;
+    simply.bind = false;
     var gotoHash = function() {
         var path = document.location.pathname + document.location.hash;
         path = path.replace(/\/$/, '');
@@ -1505,7 +1544,6 @@
     };
     window.addEventListener("hashchange", gotoHash);
 
-    simply.bind = false;
 
     var reverseDoelIndex = {};
     var hierarchies = {
@@ -1525,14 +1563,14 @@
             'examenprogramma_kop3':['examenprogramma_kop4_id', 'examenprogramma_body_id'],
             'examenprogramma_kop4':['examenprogramma_body_id']
         },
-		'examenprogramma_bg': {
-			'examenprogramma_bg_profiel': ['examenprogramma_bg_kern','examenprogramma_bg_module','examenprogramma_bg_keuzevak'],
-			'examenprogramma_bg_kern': ['examenprogramma_bg_kerndeel'],
-			'examenprogramma_bg_kerndeel': ['examenprogramma_bg_globale_eindterm'],
-			'examenprogramma_bg_module': ['examenprogramma_bg_deeltaak','examenprogramma_bg_moduletaak'],
-			'examenprogramma_bg_deeltaak': ['examenprogramma_bg_globale_eindterm'],
-			'examenprogramma_bg_keuzevak': ['examenprogramma_bg_deeltaak','examenprogramma_bg_keuzevaktaak']
-		},
+        'examenprogramma_bg': {
+            'examenprogramma_bg_profiel': ['examenprogramma_bg_kern','examenprogramma_bg_module','examenprogramma_bg_keuzevak'],
+            'examenprogramma_bg_kern': ['examenprogramma_bg_kerndeel'],
+            'examenprogramma_bg_kerndeel': ['examenprogramma_bg_globale_eindterm'],
+            'examenprogramma_bg_module': ['examenprogramma_bg_deeltaak','examenprogramma_bg_moduletaak'],
+            'examenprogramma_bg_deeltaak': ['examenprogramma_bg_globale_eindterm'],
+            'examenprogramma_bg_keuzevak': ['examenprogramma_bg_deeltaak','examenprogramma_bg_keuzevaktaak']
+        },
         'kerndoelen': {
             'kerndoel_domein' : ['kerndoel_id'],
             'kerndoel_vakleergebied' : ['kerndoel_uitstroomprofiel_id', 'kerndoel_id', 'kerndoel_domein_id']
@@ -1563,9 +1601,12 @@
         },
         "opendatalink" : {
             "render" : function(data) {
-                this.href="https://opendata.slo.nl/curriculum/uuid/"+data;
-                this.innerHTML = data;
+            	this._data = data;
+            	data = "https://opendata.slo.nl/curriculum/api-acpt/v1/uuid/"+data;
                 return data;
+            },
+            "extract": function() {
+            	return this._data;
             }
         },
         "editlink" : {
@@ -1590,9 +1631,24 @@
                 this.sloId = data;
                 var entity = curriculum.index.id[data];
                 if (curriculum.index.type[data] == "doelniveau") {
-                    var doel = curriculum.index.id[entity.doel_id[0]];
+                    if (entity.doel_id && entity.doel_id[0]) {
+                        var doel = curriculum.index.id[entity.doel_id[0]];
+                    } else if (entity.kerndoel_id && entity.kerndoel_id[0]) {
+                        var doel = curriculum.index.id[entity.kerndoel_id[0]];
+                    }
                     var niveau = curriculum.index.id[entity.niveau_id[0]];
-                    return "[" + niveau.title + "] " + doel.title;
+                    var result = '';
+                    if (niveau && niveau.title ) {
+                        result += '['+niveau.title+'] ';
+                    } else {
+                        result += '[geen niveau]';
+                    }
+                    if (doel && doel.title) {
+                        result += doel.title;
+                    } else {
+                        result += 'geen doel';
+                    }
+                    return result;
                 } else {
                     return curriculum.index.id[data].title ? curriculum.index.id[data].title : "";
                 }
@@ -1642,45 +1698,51 @@
         }
     };
 
-    var emptyEntity = {
-        vakkern_id : [],
-        vaksubkern_id : [],
-        vakinhoud_id : [],
-        doelniveau_id : [],
-        doel_id : [],
-        niveau_id : [],
-        section: null,
-        id: null,
-        dirty: 0
+    var emptyEntity = function() {
+        return {
+            vakkern_id : [],
+            vaksubkern_id : [],
+            vakinhoud_id : [],
+            doelniveau_id : [],
+            doel_id : [],
+            niveau_id : [],
+            section: null,
+            id: null,
+            dirty: 0
+        };
     };
-
+    
     var entityEditor = simply.app({
         container: document.body,
         routes : {
             '/#edit/:id' : function(params) {
                 // reset page;
-                editor.pageData.entity = emptyEntity;
+                editor.pageData.entity = emptyEntity();
                 editor.pageData.entity = clone(curriculum.index.id[params.id]);
-		if (typeof editor.pageData.entity.dirty === "undefined") {
-			editor.pageData.entity.dirty = 0;
-		}
+                if (typeof editor.pageData.entity.dirty === "undefined") {
+                    editor.pageData.entity.dirty = 0;
+                }
                 editor.pageData.page = "edit";
                 window.scrollTo(0,0);
             },
             '/#edit/' : function(params) {
                 // reset page;
-                editor.pageData.entity = emptyEntity;
+                editor.pageData.entity = emptyEntity();
                 editor.pageData.page = "edit";
                 window.scrollTo(0,0);
             },
             '/#new/' : function(params) {
                 // reset page;
-                editor.pageData.entity = emptyEntity;
+                editor.pageData.entity = emptyEntity();
                 editor.pageData.page = "new";
                 window.scrollTo(0,0);
             }
         },
         commands: {
+        	logoff: function() {
+        		localStorage.removeItem('login');
+        		location.reload(true);
+        	},
             login: function(form, values) {
                 document.body.dataset.loading="true";
                 return entityEditor.actions.start(values.username, values.password)
@@ -1688,6 +1750,9 @@
                     document.body.dataset.loading="false";
                     document.getElementById('login').removeAttribute('open');
                     entityEditor.view['login-error'] = '';
+                    if (values.savelogin) {
+                        localStorage.setItem('login',JSON.stringify(values));
+                    }
                     return true;
                 })
                 .catch(function(error) {
@@ -1697,7 +1762,9 @@
                 });
             },
             'search': function(el) {
-                var searchText = el.parentNode.querySelector("input").value;
+                var searchInput = el.parentElement.querySelector('input');
+                var searchText = searchInput.value;
+                searchInput.value = '';
                 return entityEditor.actions.search(searchText);
             },
             'new': function(el) {
@@ -1757,24 +1824,58 @@
                 if (!editor.pageData.entity.id) {
                     editor.pageData.entity.id = curriculum.uuidv4();
                 }
-
-                editor.pageData.changes = editor.pageData.changes.filter(function(entry) {
-                    if (editor.pageData.entity.id == entry.id) {
-                        return false;
+                entityEditor.actions.save(clone(editor.pageData.entity));
+                
+            },
+            deprecate: function() {
+                if (editor.pageData.entity.id) {
+                    if (confirm('Weet u zeker dat u deze entiteit wil verwijderen?')) {
+                        //TODO: only deprecate entities that are released
+                        var changedEntity = clone(editor.pageData.entity);
+                        changedEntity.types = [changedEntity.section];
+                        changedEntity.section = 'deprecated';
+                        changedEntity.replacedBy = [];
+                          entityEditor.actions.save(changedEntity);          
                     }
-                    return true;
-                });
-                editor.pageData.changes.push(clone(editor.pageData.entity));
-                curriculum.index.id[editor.pageData.entity.id] = clone(editor.pageData.entity);
-                editor.pageData.changeCount = editor.pageData.changes.length;
-                localStorage.changes = JSON.stringify(editor.pageData.changes);
+                }
             }
         },
         actions: {
+            'showLogin': function() {
+                 document.getElementById('login').setAttribute('open','open');
+                 entityEditor.view['login-error'] = '';
+                 return Promise.resolve(true);
+            },
+            'autologin': function(username, password) {
+                document.body.dataset.loading="true";
+                return entityEditor.actions.start(username, password)
+                .then(function() {
+                    document.body.dataset.loading="false";
+                    return true;
+                })
+                .catch(function(error) {
+                    document.getElementById('login').setAttribute('open');
+                    entityEditor.view['login-error'] = '';
+                    document.body.dataset.loading="false";
+                    return false;
+                });
+            },
             'search': function(searchText) {
                   if (curriculum.index.id[searchText]) {
                       simply.route.goto(document.location.pathname + "#edit/" + searchText);
                   }
+            },
+            save: function(entity) {
+                editor.pageData.changes = editor.pageData.changes.filter(function(entry) {
+                    if (entity.id == entry.id) {
+                        return false;
+                    }
+                    return true;
+                });
+                editor.pageData.changes.push(entity);
+                curriculum.index.id[entity.id] = entity;
+                editor.pageData.changeCount = editor.pageData.changes.length;
+                localStorage.changes = JSON.stringify(editor.pageData.changes);
             },
             'commit-changes': function(changes, message) {
                 if (!message) {
@@ -1837,14 +1938,15 @@
                     'curriculum-doelen': 'slonl/curriculum-doelen',
                     'curriculum-kerndoelen': 'slonl/curriculum-kerndoelen',
                     'curriculum-examenprogramma': 'slonl/curriculum-examenprogramma',
-					'curriculum-examenprogramma-bg': 'slonl/curriculum-examenprogramma-bg',
+                    'curriculum-examenprogramma-bg': 'slonl/curriculum-examenprogramma-bg',
                     'curriculum-syllabus': 'slonl/curriculum-syllabus',
                     'curriculum-doelgroepteksten': 'slonl/curriculum-doelgroepteksten'
                 };
+                var branch = 'editor';
                 var loading = [];
                 Object.keys(schemas).forEach(function(schema) {
                     loading.push(
-                        curriculum.loadContextFromGithub(schema, schemas[schema], user, pass)
+                        curriculum.loadContextFromGithub(schema, schemas[schema], user, pass, branch)
                         .then(function() {
                             return curriculum.loadData(schema);
                         })
@@ -1858,48 +1960,52 @@
                     });
 
                     Object.keys(curriculum.data).forEach(function(dataset) {
-                        editor.addDataSource(dataset, {
-                            load : function(el, callback) {
-                                document.body.dataset.loading = "true";
-                                var options = '';
-                                curriculum.data[dataset].forEach(function(entity) {
-                                    var option = entity.title + " " + entity.id;
+                        if (dataset!='deprecated') {
+                            editor.addDataSource(dataset, {
+                                load : function(el, callback) {
+                                    document.body.dataset.loading = "true";
+                                    var options = '';
+                                    curriculum.data[dataset].forEach(function(entity) {
+                                        var option = entity.title;
 
-                                    if (curriculum.index.type[entity.id] == "doelniveau") {
-	                                    var doel;
-	                                    var niveau;
-	                                    if (entity.doel_id) {
-	                                        doel = curriculum.index.id[entity.doel_id[0]];
-	                                    }
-	                                    if (entity.kerndoel_id) {
-	                                        doel = curriculum.index.id[entity.kerndoel_id[0]];
-	                                    }
-	                                    if (entity.eindterm_id) {
-	                                        doel = curriculum.index.id[entity.eindterm_id[0]];
-	                                    }
-	                                    if (entity.niveau_id) {
-	                                        niveau = curriculum.index.id[entity.niveau_id[0]];
-	                                    }
-	                                    if (doel && niveau) {
-	                                        option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
-	                                    }
-                                    }
-
-                                    options += "<option value='" + entity.id + "'>" + option + "</option>";
-                                });
-                                window.setTimeout(function() {
-                                    el.innerHTML = options;
-                                    document.body.dataset.loading = "false";
-                                });
-                            }
-                        });
+                                        if (curriculum.index.type[entity.id] == "doelniveau") {
+                                            var doel;
+                                            var niveau;
+                                            if (entity.doel_id) {
+                                                doel = curriculum.index.id[entity.doel_id[0]];
+                                            }
+                                            if (entity.kerndoel_id) {
+                                                doel = curriculum.index.id[entity.kerndoel_id[0]];
+                                            }
+                                            if (entity.eindterm_id) {
+                                                doel = curriculum.index.id[entity.eindterm_id[0]];
+                                            }
+                                            if (entity.niveau_id) {
+                                                niveau = curriculum.index.id[entity.niveau_id[0]];
+                                            }
+                                            if (doel && niveau) {
+                                                option = "[" + niveau.title + "] " + doel.title;
+                                            }
+                                        }
+                                        if (navigator.userAgent.indexOf('Chrome/') === -1) {
+                                            option += ' ' + entity.id;
+                                        }
+                                        options += "<option value='" + entity.id + "'>" + option + "</option>";
+                                    });
+                                    window.setTimeout(function() {
+                                        el.innerHTML = options;
+                                        document.body.dataset.loading = "false";
+                                    });
+                                }
+                            });
+                        }
                     });
 
                     var parentInfo = {
                         'vak' : 'doel',
                         'examenprogramma' : 'examenprogramma',
                         'kerndoel_vakleergebied': 'kerndoelen',
-						'examenprogramma_bg_profiel': 'examenprogramma_bg'
+                        'examenprogramma_bg_profiel': 'examenprogramma_bg'
                     };
                     Object.keys(parentInfo).forEach(function(section) {
                         curriculum.data[section].forEach(function(vakEntity) {
@@ -1923,9 +2029,11 @@
                                 "vak" : 4,
                                 "leerlijn" : 3,
                                 "examenprogramma" : 2,
-								"examenprogramma_bg": 1
+                                "examenprogramma_bg": 1
                             };
 
+                            var isChrome = navigator.userAgent.indexOf('Chrome/')!==-1;
+                            
                             Object.values(curriculum.index.id)
                             .sort(function(a, b) {
                                 if (priorities[a.section]) {
@@ -1951,7 +2059,7 @@
                                 }
                                 return 0;
                             }).forEach(function(entity) {
-                                var option = entity.title + " " + entity.id;
+                                var option = entity.title;
 
                                 if (curriculum.index.type[entity.id] == "doelniveau") {
                                     var doel;
@@ -1969,11 +2077,15 @@
                                         niveau = curriculum.index.id[entity.niveau_id[0]];
                                     }
                                     if (doel && niveau) {
-                                        option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
+                                        option = "[" + niveau.title + "] " + doel.title;
                                     }
                                 }
-
-                                options += "<option value='" + entity.id + "'>" + option + "</option>";
+                                if (!isChrome) {
+                                    option += ' ' + entity.id;
+                                }
+                                if (curriculum.index.type[entity.id] != 'deprecated') {
+                                    options += "<option value='" + entity.id + "'>" + option + "</option>";
+                                }
                             });
                             window.setTimeout(function() {
                                 el.innerHTML = options;
@@ -1993,6 +2105,17 @@
                     }
                 })
                 .then(function() {
+                	// get user info
+                	// put it in the editor.pageData.user
+                	// name and avatar_url
+                	var gh = new GitHub({username:user, password: pass});
+                	gh.getUser().getProfile()
+                	.then(function(profile) {
+                		editor.pageData.user = profile.data;
+                		document.body.classList.add('slo-logged-on');
+                	});
+                })
+                .then(function() {
                     document.body.dataset.loading = "false";
                     gotoHash();
                 });
@@ -2001,6 +2124,22 @@
         }
     });
 
+    (function() {
+        var login;
+        var loginString = localStorage.getItem('login');
+        if (loginString) {
+            try {
+                login = JSON.parse(loginString);
+            } catch(e) {
+            }
+        }
+        if (login) {
+            entityEditor.actions.autologin(login.username, login.password);
+        } else {
+            entityEditor.actions.showLogin();
+        }
+    })();
+    
     function clone(ob) {
         if (typeof ob == 'undefined' || ob == null) {
             return null;
@@ -2027,17 +2166,77 @@
     }
 
 
-	simply.activate.addListener('autosize', function() {
-		var self = this;
+    simply.activate.addListener('autosize', function() {
+        var self = this;
         self.style.height = 'auto';
         self.style.height = (self.scrollHeight+2)+'px';
-	   	this.addEventListener('input',function(evt) {
-	        window.setTimeout(function() {
-	            self.style.height = 'auto';
-	            self.style.height = (self.scrollHeight+2)+'px';
-	        },0);
-	    });
-	});
+           this.addEventListener('input',function(evt) {
+            window.setTimeout(function() {
+                self.style.height = 'auto';
+                self.style.height = (self.scrollHeight+2)+'px';
+            },0);
+        });
+    });
+
+    var lpibMatches = {};
+    var reverseLpibMatches = {};
+    function checkLPIBMatch() {
+        fetch('lpib-matches.json').then(function(data) {
+            return data.json();
+        })
+        .then(function(json) {
+            lpibMatches = json;
+            // fix bk:ids, load reverse of matches
+            Object.keys(lpibMatches).forEach(function(lpibId) {
+                lpibMatches[lpibId].forEach(function(obkId, index) {
+                    if (obkId.substr(0,3)==='bk:') {
+                        obkId = obkId.substr(3);
+                        lpibMatches[lpibId][index] = obkId;
+                    }
+                    if (!reverseLpibMatches[obkId]) {
+                        reverseLpibMatches[obkId] = [];
+                    }
+                    reverseLpibMatches[obkId].push(lpibId);
+                });
+            });
+            // find matches that have n to m relations
+            // lpibMatches[x] has more than 1 entry
+            // and reverseLpibMatches[y] for at least on of those entries has more than 1 entry
+            var lpibN = Object.keys(lpibMatches).filter(function(lpibId) {
+                return lpibMatches[lpibId].length>1;
+            });
+            lpibNM = lpibN.filter(function(lpibId) {
+                var M = false;
+                lpibMatches[lpibId].forEach(function(obkId) {
+                    if (reverseLpibMatches[obkId].length>1) {
+                        M = true;
+                    }
+                });
+                return M;
+            });
+            lpibNM.forEach(function(lpibId) {
+                var lpEnt = curriculum.index.id[lpibId];
+                console.group('N to M link:')
+                console.log('From '+lpEnt.id+' '+lpEnt.title);
+                lpibMatches[lpibId].forEach(function(obkId) {
+                    if (reverseLpibMatches[obkId].length>1) {
+                        var obkEnt = curriculum.index.id[obkId];
+                        console.log('To '+obkEnt.id+' '+obkEnt.title);
+                        console.group('Which also links to:')
+                        reverseLpibMatches[obkId].forEach(function(lpibId) {
+                            var lpEnt2 = curriculum.index.id[lpibId];
+                            console.log(lpEnt2.id+' '+lpEnt2.title);
+                        });
+                        console.groupEnd();
+                    }
+                });
+                console.groupEnd();
+            });
+        })
+        .catch(function(err) {
+            console.error(err);
+        });
+    }
 </script>
 </body>
 </html>
