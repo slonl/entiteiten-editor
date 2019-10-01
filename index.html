@@ -97,6 +97,10 @@
         	display: block;
         }
     </style>
+    <script src="https://cdn.lr-ingest.io/LogRocket.min.js" crossorigin="anonymous"></script>
+    <script>
+        window.LogRocket && window.LogRocket.init('muze/entiteiten-editor');
+    </script>
 </head>
 <body class="slo-main-page">
     <header class="slo-navbar">
@@ -1542,6 +1546,7 @@
         path = path.replace(/\/$/, '');
         simply.route.match(path);
     };
+    
     window.addEventListener("hashchange", gotoHash);
 
 
@@ -1636,7 +1641,9 @@
                     } else if (entity.kerndoel_id && entity.kerndoel_id[0]) {
                         var doel = curriculum.index.id[entity.kerndoel_id[0]];
                     }
-                    var niveau = curriculum.index.id[entity.niveau_id[0]];
+                    if (entity.niveau_id && entity.niveau_id[0]) {
+                        var niveau = curriculum.index.id[entity.niveau_id[0]];
+                    }
                     var result = '';
                     if (niveau && niveau.title ) {
                         result += '['+niveau.title+'] ';
@@ -1739,10 +1746,10 @@
             }
         },
         commands: {
-        	logoff: function() {
-        		localStorage.removeItem('login');
-        		location.reload(true);
-        	},
+            logoff: function() {
+        	localStorage.removeItem('login');
+        	location.reload(true);
+            },
             login: function(form, values) {
                 document.body.dataset.loading="true";
                 return entityEditor.actions.start(values.username, values.password)
@@ -1755,10 +1762,25 @@
                     }
                     return true;
                 })
+                .then(function() {
+                        if (typeof LogRocket != 'undefined') {
+                            LogRocket.identify(values.username);
+                        }
+                    return true;
+                })
                 .catch(function(error) {
-                    entityEditor.view['login-error'] = 'Login failed';
-                    document.body.dataset.loading="false";
-                    return false;
+                    if (error.path=='/user') {
+                        entityEditor.view['login-error'] = 'Github login mislukt';
+                        document.body.dataset.loading="false";
+                        return false;
+                    } else {
+                        document.getElementById('login').removeAttribute('open');
+                        entityEditor.view['login-error'] = '';
+                        if (values.savelogin) {
+                            localStorage.setItem('login',JSON.stringify(values));
+                        }
+                        throw error;
+                    }
                 });
             },
             'search': function(el) {
@@ -1768,18 +1790,32 @@
                 return entityEditor.actions.search(searchText);
             },
             'new': function(el) {
-                simply.route.goto('/#new');
+                simply.route.goto(document.location.pathname + '#new');
             },
             'delete-relation' : function(el) {
                 el.parentNode.parentNode.removeChild(el.parentNode);
             },
             'add-relation' : function(el) {
-                var relationId = el.parentNode.querySelector("input").value;
+		var relationInput = el.parentNode.querySelector("input");
+                var relationId = relationInput.value;
                 var relation = el.getAttribute("data-slo-relation");
                 if (editor.pageData.entity[relation] == null) {
                     editor.pageData.entity[relation] = [];
                 }
-                editor.pageData.entity[relation].push(relationId);
+                var exists = editor.pageData.entity[relation].filter(function(id) {
+                    return (''+id) == relationId;
+                });
+                if (!exists.length) {
+                    if (curriculum.index.id[relationId]) {
+                        editor.pageData.entity[relation].push(relationId);
+                    } else {
+                        alert(relationId+' niet gevonden');
+                    }
+                }
+                relationInput.value = '';
+                window.setTimeout(function() {
+                    relationInput.focus();
+                },500);
             },
             'delete-change' : function(el) {
                 // find the id of the entity;
@@ -1813,6 +1849,7 @@
                     })
                     editor.pageData.changeCount = editor.pageData.changes.length;
                     localStorage.changes = JSON.stringify(editor.pageData.changes);
+                    editor.pageData.commitMessage = '';
                     document.body.dataset.loading="false";
                 })
                 .catch(function(error) {
@@ -1853,11 +1890,23 @@
                     document.body.dataset.loading="false";
                     return true;
                 })
+                .then(function() {
+                    if (typeof LogRocket != 'undefined') {
+                        LogRocket.identify(username);
+                    }                    
+                    return true;
+                })
                 .catch(function(error) {
-                    document.getElementById('login').setAttribute('open');
-                    entityEditor.view['login-error'] = '';
-                    document.body.dataset.loading="false";
-                    return false;
+                    if (error.path == '/user') {
+                        document.getElementById('login').setAttribute('open','open');
+                        entityEditor.view['login-error'] = '';
+                        document.body.dataset.loading="false";
+                        return false;
+                    } else {
+                        document.getElementById('login').removeAttribute('open');
+                        entityEditor.view['login-error'] = '';
+                        throw error;
+                    }
                 });
             },
             'search': function(searchText) {
@@ -1891,8 +1940,8 @@
                         }
                         return false;
                     });
-                    delete change.section;
-                    delete change.parents;
+//                    delete change.section;
+//                    delete change.parents;
                     if (original) {
                         var index = curriculum.data[curriculum.index.type[id]].indexOf(original);
                         curriculum.data[curriculum.index.type[id]][index] = change;
@@ -1907,11 +1956,19 @@
                     schemas[schema].push(section);
                     done.push(changeIndex);
                 });
+                var clean = function(dataset) {
+                    dataset = clone(dataset);
+                    dataset.forEach(function(entity) {
+                        delete entity.section;
+                        delete entity.parents;
+                    });
+                    return dataset;
+                };
                 var files = [];
                 Object.keys(schemas).forEach(function(schema) {
                     schemas[schema].forEach(function(section) {
                         var filename = curriculum.schemas[schema].properties[section]['#file'];
-                        files.push({ path: filename, data: JSON.stringify(curriculum.data[section], null, "\t"), schema: schema});
+                        files.push({ path: filename, data: JSON.stringify(clean(curriculum.data[section]), null, "\t"), schema: schema});
                     });
                 });
                 return new Promise(function(resolve, reject) {
@@ -1953,12 +2010,25 @@
                     );
                 });
 
-                return Promise.all(loading)
+               	// get user info
+               	// put it in the editor.pageData.user
+               	// name and avatar_url
+               	var gh = new GitHub({username:user, password: pass});
+               	return gh.getUser().getProfile()
+               	.then(function(profile) {
+               		editor.pageData.user = profile.data;
+              		document.body.classList.add('slo-logged-on');
+              		return profile;
+               	})
+                .then(function(profile) {
+ 	               return Promise.all(loading);
+ 	            })
                 .then(function() {
                     Object.values(curriculum.index.id).forEach(function(entity) {
                         entity.section = curriculum.index.type[entity.id];
                     });
 
+                    var counter = 1000;
                     Object.keys(curriculum.data).forEach(function(dataset) {
                         if (dataset!='deprecated') {
                             editor.addDataSource(dataset, {
@@ -1994,13 +2064,15 @@
                                     });
                                     window.setTimeout(function() {
                                         el.innerHTML = options;
+                                        el.dataset.simplyDataName = dataset;
                                         document.body.dataset.loading = "false";
-                                    });
+                                    }, counter);
+                                    counter+=1000;
                                 }
                             });
                         }
                     });
-
+                    
                     var parentInfo = {
                         'vak' : 'doel',
                         'examenprogramma' : 'examenprogramma',
@@ -2093,8 +2165,6 @@
                             });
                         }
                     });
-                })
-                .then(function() {
                     // restore changes from localstorage;
                     if (localStorage.changes) {
                         editor.pageData.changes = JSON.parse(localStorage.changes);
@@ -2103,23 +2173,10 @@
                             curriculum.index.id[entry.id] = clone(entry);
                         });
                     }
-                })
-                .then(function() {
-                	// get user info
-                	// put it in the editor.pageData.user
-                	// name and avatar_url
-                	var gh = new GitHub({username:user, password: pass});
-                	gh.getUser().getProfile()
-                	.then(function(profile) {
-                		editor.pageData.user = profile.data;
-                		document.body.classList.add('slo-logged-on');
-                	});
-                })
-                .then(function() {
                     document.body.dataset.loading = "false";
                     gotoHash();
+                    return true;
                 });
-
             }
         }
     });

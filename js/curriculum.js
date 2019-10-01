@@ -86,6 +86,7 @@ var curriculum = (function(curriculum){
 			branch: branchName,
             state: 'loading'
         };
+        var branchName = 'editor';
         var gh = new GitHub({username:user, password: password});
         var repoUser = repository.split('/')[0];
         var repoName = repository.split('/')[1];
@@ -120,7 +121,7 @@ var curriculum = (function(curriculum){
             };
 
             curriculum.sources[name].writeFile = function(filename, data, message) {
-                return repo.writeFile('master',filename,data,message,{encode:true});
+                return repo.writeFile(branchName,filename,data,message,{encode:true});
             };
             curriculum.sources[name].writeFiles = function(files, message) {
                 var blobs = [];
