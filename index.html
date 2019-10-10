@@ -121,11 +121,25 @@
             <button data-simply-command="new" class="slo-button slo-new">Nieuwe entiteit</button>
             <p>
                 Aangepaste Entiteiten
-                <textarea placeholder="Commit message" data-simply-field="commitMessage"></textarea>
+		<div data-simply-field="changeCount" data-simply-content="template" data-simply-default-template="default">
+			<template data-simply-template="0">
+		                <textarea disabled placeholder="Commit message" data-simply-field="commitMessage"></textarea>
+			</template>
+			<template data-simply-template="default">
+				<textarea placeholder="Commit message" data-simply-field="commitMessage"></textarea>
+			</template>
+		</div>
             </p>
             <p>
                 <span data-simply-field="changeCount">0</span> aanpassingen
-                <button data-simply-command="commit-changes" class="slo-button slo-commit">Verwerken</button>
+		<div data-simply-field="changeCount" data-simply-content="template" data-simply-default-template="default">
+			<template data-simply-template="0">
+		                <button disabled class="slo-button slo-commit">Verwerken</button>
+			</template>
+			<template data-simply-template="default">
+		                <button data-simply-command="commit-changes" class="slo-button slo-commit">Verwerken</button>
+			</template>
+		</div>
             </p>
             <div class="slo-entiteit-changes" data-simply-list="changes">
                 <template>
@@ -1793,29 +1807,29 @@
                 simply.route.goto(document.location.pathname + '#new');
             },
             'delete-relation' : function(el) {
+				rememberScrollPosition();
                 el.parentNode.parentNode.removeChild(el.parentNode);
             },
             'add-relation' : function(el) {
-		var relationInput = el.parentNode.querySelector("input");
+                var relationInput = el.parentNode.querySelector("input");
                 var relationId = relationInput.value;
                 var relation = el.getAttribute("data-slo-relation");
                 if (editor.pageData.entity[relation] == null) {
                     editor.pageData.entity[relation] = [];
                 }
+
                 var exists = editor.pageData.entity[relation].filter(function(id) {
                     return (''+id) == relationId;
                 });
                 if (!exists.length) {
                     if (curriculum.index.id[relationId]) {
+                        rememberScrollPosition();
                         editor.pageData.entity[relation].push(relationId);
+		                relationInput.value = '';
                     } else {
                         alert(relationId+' niet gevonden');
                     }
                 }
-                relationInput.value = '';
-                window.setTimeout(function() {
-                    relationInput.focus();
-                },500);
             },
             'delete-change' : function(el) {
                 // find the id of the entity;
@@ -2294,6 +2308,25 @@
             console.error(err);
         });
     }
+
+	/* Code to remember scroll position when the lists are changed and redrawn */
+    function rememberScrollPosition() {
+        window.scrollPosition = {
+			y: window.scrollY,
+			x: window.scrollX
+		};
+    }
+	window.addEventListener("databind:elementresolved", function(evt) {
+		window.setTimeout(function() {
+	        delete window.scrollPosition;
+		}, 200);
+	});
+
+    window.addEventListener("scroll", function(evt) {
+        if (typeof window.scrollPosition !== "undefined") {
+            window.scrollTo(window.scrollPosition.x, window.scrollPosition.y);
+        }
+    });
 </script>
 </body>
-</html>
+0</html>
