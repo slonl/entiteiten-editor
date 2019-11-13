@@ -150,7 +150,7 @@
                                 </use>
                             </svg>
                         </button>
-                        <input type="checkbox" checked>
+                        <input type="checkbox" checked data-simply-field="commit" value=1>
                         <span class="slo-title" data-simply-field="title"></span><br>
                         <span class="slo-type" data-simply-field="section"></span><br>
                         <a href="#" class="slo-uuid" data-simply-field="id" data-simply-transformer="editlink"></a>
@@ -1937,6 +1937,7 @@
                 });
                 editor.pageData.changes.push(entity);
                 curriculum.index.id[entity.id] = entity;
+                curriculum.index.type[entity.id] = entity.section;
                 editor.pageData.changeCount = editor.pageData.changes.length;
                 localStorage.changes = JSON.stringify(editor.pageData.changes);
             },
@@ -1947,6 +1948,9 @@
                 var done = [];
                 var schemas = {};
                 changes.forEach(function(change, changeIndex) {
+                    if (!change.commit) {
+                        return false;
+                    }
                     var id = change.id;
                     var original = curriculum.data[curriculum.index.type[id]].find(function(entry) {
                         if (entry.id == id) {
@@ -2185,6 +2189,7 @@
                         editor.pageData.changeCount = editor.pageData.changes.length;
                         editor.pageData.changes.forEach(function(entry) {
                             curriculum.index.id[entry.id] = clone(entry);
+                            curriculum.index.type[entry.id] = entry.section;
                         });
                     }
                     document.body.dataset.loading = "false";
