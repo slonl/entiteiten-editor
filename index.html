@@ -1845,6 +1845,13 @@
                     if (curriculum.index.id[relationId]) {
                         rememberScrollPosition();
                         editor.pageData.entity[relation].push(relationId);
+						// fix for a bug in simply edit where the list / binding gets broken somehow;
+						for (var i=0; i<editor.pageData.entity._bindings_[relation].elements.length; i++) {
+							editor.pageData.entity._bindings_[relation].bind(editor.pageData.entity._bindings_[relation].elements[i]);
+						}
+						window.setTimeout(function() {
+							window.scrollPosition = undefined;
+						}, 350);
 		                relationInput.value = '';
                     } else {
                         alert(relationId+' niet gevonden');
@@ -2351,4 +2358,4 @@
     });
 </script>
 </body>
-0</html>
+</html>
