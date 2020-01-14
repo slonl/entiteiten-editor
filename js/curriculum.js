@@ -26,6 +26,46 @@ var curriculum = (function(curriculum){
 
     curriculum.errors = [];
 
+	curriculum.parseSchema = function(schema) {
+		if (typeof $RefParser == 'undefined') {
+			console.error('json schema ref parser not loaded');
+			return;
+		}
+		if (typeof _ == 'undefined' ) {
+			console.error('lodash not loaded');
+			return;
+		}
+        var resolveAllOf = (function() {
+            // from https://github.com/mokkabonna/json-schema-merge-allof
+            var customizer = function (objValue, srcValue) {
+                if (_.isArray(objValue)) {
+                    return _.union(objValue, srcValue);
+                }
+                return;
+            };
+            return function(inputSpec) {
+                if (inputSpec && typeof inputSpec === 'object') {
+                    if (Object.keys(inputSpec).length > 0) {
+                        if (inputSpec.allOf) {
+                            var allOf = inputSpec.allOf;
+                            delete inputSpec.allOf;
+                            var nested = _.mergeWith.apply(_, [{}].concat(allOf, [customizer]));
+                            inputSpec = _.defaultsDeep(inputSpec, nested, customizer);
+                        }
+                        Object.keys(inputSpec).forEach(function (key) {
+                            inputSpec[key] = resolveAllOf(inputSpec[key]);
+                        });
+                    }
+                }
+                return inputSpec;
+            }
+        })();
+		return $RefParser.dereference(schema)
+		.then(function(schema) {
+			return resolveAllOf(schema);
+		});
+	}
+
     curriculum.loadContextFromURL = function(name, url) {
         curriculum.sources[name] = {
             method: 'url',
@@ -218,12 +258,17 @@ var curriculum = (function(curriculum){
         return Promise.all(Object.values(data))
         .then(function(results) {
             Object.keys(data).forEach(function(propertyName) {
+                if (/deprecated/.exec(propertyName)) {
+                    return;
+                }
                 data[propertyName].then(function(entities) {
+                    console.log('index size '+Object.keys(curriculum.index.id).length);
+                    console.log('indexing '+name+'.'+propertyName+' ('+entities.length+')');
                     if (!curriculum.data[propertyName]) {
                         curriculum.data[propertyName] = [];
                     }
                     Array.prototype.push.apply(curriculum.data[propertyName],entities);
-
+                    var count = 0;
                     entities.forEach(function(entity) {
                         if (entity.id) {
                             if (curriculum.index.id[entity.id]) {
@@ -233,7 +278,14 @@ var curriculum = (function(curriculum){
                                 curriculum.index.type[entity.id] = propertyName;
                                 curriculum.index.schema[entity.id] = name;
                             }
+                            if (entity.id=='c0f3b769-606e-488a-aeb1-405bf46df24a') {
+                                console.log(entity.id);
+                                console.log(curriculum.index.id[entity.id]);
+                            }
+                        } else {
+                            curriculum.errors.push('Missing id in '+name+'.'+propertyName+': '+count);
                         }
+                        count++;
                     });
                 });
             });

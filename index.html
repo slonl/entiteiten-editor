@@ -3,6 +3,44 @@
 <head>
     <title>Entiteiten editor</title>
     <meta charset="utf-8">
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="js/vanillaSelectBox.css">
+    <style>
+
+        .slo-treeview .vsb-main button {
+            margin-left: 10px;
+            color: #333;
+            background: white !important;
+            height: calc(var(--line-height) * 1.5);
+            box-sizing: border-box;
+            border: 1px solid var(--input-border) !important;
+            line-height: inherit;
+            font-size: inherit;
+            padding: 0.5em;
+        }
+        .slo-treeview .vsb-main {
+            width: 50% !important;
+            flex-shrink: 0;
+        }        
+        .slo-treeview .vsb-main .title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 95%;
+            display: inline-block;
+        }
+        .slo-treeview .vsb-menu {
+            position: absolute;
+            top: auto !important;
+            width: 100%;
+            left: 10px !important;
+            border-radius: 0;
+        }
+    </style>
+    <script src="js/vanillaSelectBox.js"></script>
     <link rel="stylesheet" href="css/styles.css">
     <style>
         html,body {
@@ -72,32 +110,146 @@
             resize: none;
         }
         .slo-profile {
-        	display: grid;
-        	grid-template-areas: "avatar name" 
-        	                     "avatar button";
+            display: grid;
+            grid-template-areas: "avatar name" 
+                                 "avatar button";
         }
         .slo-avatar {
-			grid-area: avatar;        
-        	height: 40px;
-        	margin: 10px;
+            grid-area: avatar;        
+            height: 40px;
+            margin: 10px;
         }
         .slo-username {
-        	grid-area: name;
-        	line-height: 38px;
-        	height: 25px;
-        	display: block;
-        	white-space: nowrap;
+            grid-area: name;
+            line-height: 38px;
+            height: 25px;
+            display: block;
+            white-space: nowrap;
         }
         .slo-logoff {
-        	grid-area: button;
-        	display: none;
-        	line-height: 20px;
+            grid-area: button;
+            display: none;
+            line-height: 20px;
         }
         body.slo-logged-on .slo-logoff {
-        	display: block;
+            display: block;
+        }
+        .slo-hidden {
+            display: none;
+        }
+        .slo-treeview {
+            width: 35vw;
+            height: 75vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+            float: left;
+        }
+        .slo-treeview-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            max-width: 100%;
+            text-decoration: none;
+            cursor: pointer;
+            position: relative;
+        }
+        .slo-treeview-title .slo-title {
+            line-height: 2em;
+        }
+        .slo-treeview-title.slo-selected .slo-title {
+            text-decoration: underline;
+        }
+        .slo-treeview-children {
+            padding-left: 1em;
+        }
+        .slo-treeview-filters {
+            display: flex;
+            flex-direction: row;
+            position: sticky;
+            top: 0;
+            padding: 0 1em;
+            background: white;
+            z-index: 100;
+        }
+        .slo-treeview-tree {
+            padding: 1em;
+        }
+        .slo-entity {
+            height: 75vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        .slo-tag {
+            vertical-align: middle;
+        }
+        .slo-tag a.slo-id {
+            text-decoration: none;
+            color: var(--font-color);
+        }
+        .slo-treeview .slo-tag {
+            white-space: nowrap;
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            direction: rtl;
+        }
+        .slo-button-naked {
+            background: transparent;
+            margin: 0;
+        }
+        .slo-remove-button {
+            position: absolute;
+            right: 2px;
+            display: none;
+            background-color: var(--brand);
+            border-radius: 50%;
+            padding: 4px;
+            color: var(--brand-contrast);
+            line-height: 1em !important;
+            height: 2em;
+            border: 3px solid white;
+            width: 2em;
+            margin-top: 2px;
+            font-weight: bold;
+            transition: all .2s ease;
+        }
+        .slo-remove-button:hover {
+            color: var(--brand-contrast);
+        }
+        .slo-treeview-title:focus,
+        .slo-treeview-title:hover {
+            background-color: #EEE;
+        }
+        .slo-treeview-title:focus .slo-remove-button,
+        .slo-treeview-title:hover .slo-remove-button {
+            display: block;
+        }
+        .slo-treeview-title.slo-removed,
+        .slo-removed {
+            text-decoration: line-through;
+        }
+        .slo-removed .slo-remove-button {
+            transform: rotate(45deg);
+            background-color: blue;
+        }
+        .slo-add-button {
+            background-color: var(--support);
+            color: black;
+            border-radius: 50%;
+            padding: 4px;
+        }
+        .slo-tag input {
+            display: inline-block;
+            width: auto;
+            padding: 0;
+            height: auto;
+        }
+        .slo-main-page header {
+            overflow: hidden;
         }
     </style>
-    <script src="https://cdn.lr-ingest.io/LogRocket.min.js" crossorigin="anonymous"></script>
+    <!-- script src="https://cdn.lr-ingest.io/LogRocket.min.js" crossorigin="anonymous"></script -->
     <script>
         window.LogRocket && window.LogRocket.init('muze/entiteiten-editor');
     </script>
@@ -111,9 +263,9 @@
             OpenData Portal: Entiteit toevoegen
         </div>
         <div class="slo-navbar-right slo-profile">
-        	<img class="slo-avatar" data-simply-field="user.avatar_url">
-        	<div class="slo-username" data-simply-field="user.name"></div>
-        	<a href="#" class="slo-logoff" data-simply-command="logoff">Afmelden</a>
+            <img class="slo-avatar" data-simply-field="user.avatar_url">
+            <div class="slo-username" data-simply-field="user.name"></div>
+            <a href="#" class="slo-logoff" data-simply-command="logoff">Afmelden</a>
         </div>
     </header>
     <div class="slo-navbar slo-navbar-side bg-gray">
@@ -121,25 +273,25 @@
             <button data-simply-command="new" class="slo-button slo-new">Nieuwe entiteit</button>
             <p>
                 Aangepaste Entiteiten
-		<div data-simply-field="changeCount" data-simply-content="template" data-simply-default-template="default">
-			<template data-simply-template="0">
-		                <textarea disabled placeholder="Commit message" data-simply-field="commitMessage"></textarea>
-			</template>
-			<template data-simply-template="default">
-				<textarea placeholder="Commit message" data-simply-field="commitMessage"></textarea>
-			</template>
-		</div>
+        <div data-simply-field="changeCount" data-simply-content="template" data-simply-default-template="default">
+            <template data-simply-template="0">
+                        <textarea disabled placeholder="Commit message" data-simply-field="commitMessage"></textarea>
+            </template>
+            <template data-simply-template="default">
+                <textarea placeholder="Commit message" data-simply-field="commitMessage"></textarea>
+            </template>
+        </div>
             </p>
             <p>
                 <span data-simply-field="changeCount">0</span> aanpassingen
-		<div data-simply-field="changeCount" data-simply-content="template" data-simply-default-template="default">
-			<template data-simply-template="0">
-		                <button disabled class="slo-button slo-commit">Verwerken</button>
-			</template>
-			<template data-simply-template="default">
-		                <button data-simply-command="commit-changes" class="slo-button slo-commit">Verwerken</button>
-			</template>
-		</div>
+        <div data-simply-field="changeCount" data-simply-content="template" data-simply-default-template="default">
+            <template data-simply-template="0">
+                        <button disabled class="slo-button slo-commit">Verwerken</button>
+            </template>
+            <template data-simply-template="default">
+                        <button data-simply-command="commit-changes" class="slo-button slo-commit">Verwerken</button>
+            </template>
+        </div>
             </p>
             <div class="slo-entiteit-changes" data-simply-list="changes">
                 <template>
@@ -169,7 +321,7 @@
             </button>
             <span data-simply-field="relatie" data-simply-transformer="idToTitle"></span><br>
             <span class="slo-tag">
-            	<a class="slo-tag-label" href="#" data-simply-field="relatie" data-simply-transformer="opendatalink" data-simply-content="fixed" target="_blank">
+                <a class="slo-tag-label" href="#" data-simply-field="relatie" data-simply-transformer="opendatalink" data-simply-content="fixed" target="_blank">
                     <svg class="slo-icon slo-icon-feather"><use xlink:href="/files/feather-sprite.svg#link"></use></svg>
                 </a>
                 <a class="slo-id" href="#" data-simply-field="relatie" data-simply-transformer="editlink"></a>
@@ -1327,7 +1479,6 @@
                 <button data-simply-command="search" class="slo-button slo-button-nomargin" data-simply-command="search">Toon entiteit</button>
             </form>
             <div class="slo-grid slo-grid-2 slo-space">
-                <span></span><button class="slo-button slo-right" data-simply-command="save">Bewaar</button>
             </div>
         </div>
         <div class="slo-grid slo-grid-4">
@@ -1335,8 +1486,14 @@
             <template data-simply-template="edit">
                 <article class="slo-card slo-grid-span-3">
                     <header class="slo-card-header slo-space">
+                        <a href="#" class="slo-tag" data-simply-command="toggleTree">
+                            <span class="slo-tag-label">
+                                <svg class="slo-icon slo-icon-feather"><use xlink:href="/files/feather-sprite.svg#folder"></use></svg>
+                            </span>
+                            <span>Boomweergave</span>
+                        </a>
                         <span class="slo-tag">
-                        	<a class="slo-tag-label" href="#" data-simply-field="entity.id" data-simply-transformer="opendatalink" data-simply-content="fixed" target="_blank">
+                            <a class="slo-tag-label" href="#" data-simply-field="entity.id" data-simply-transformer="opendatalink" data-simply-content="fixed" target="_blank">
                                 <svg class="slo-icon slo-icon-feather"><use xlink:href="/files/feather-sprite.svg#link"></use></svg>
                             </a>
                             <span class="slo-id" data-simply-field="entity.id"></span>
@@ -1345,24 +1502,27 @@
                             <label class="slo-tag-label">Type</label>
                             <span data-simply-field="entity.section"></span>
                         </span>
-						<span class="slo-right" data-simply-field="entity.deleted" data-simply-content="template" data-simply-default-template="0" data-simply-default-value="0">
-							<template data-simply-template="1">
-								<span class="slo-tag">Verwijderd</span>
-							</template>
-							<template data-simply-template="0">
-		                        <span data-simply-field="entity.dirty" data-simply-content="template">
-		                            <template data-simply-template="1">
-		                                <span class="slo-tag">Inhoudelijk gewijzigd</span>
-		                            </template>                                    
-		                        </span>
-		                        <button class="slo-button slo-right slo-button-nomargin" data-simply-command="deprecate">
-		                            <svg class="slo-icon slo-icon-feather">
-		                                <use xlink:href="/files/feather-sprite.svg#trash">
-		                                </use>
-		                            </svg>
-		                        </button>
-							</template>
-						</span>
+                        <span class="slo-right" data-simply-field="entity.deleted" data-simply-content="template" data-simply-default-template="0" data-simply-default-value="0">
+                            <template data-simply-template="1">
+                                <span class="slo-tag">Verwijderd</span>
+                            </template>
+                            <template data-simply-template="0">
+                                <span data-simply-field="entity.dirty" data-simply-content="template">
+                                    <template data-simply-template="1">
+                                        <span class="slo-tag">Inhoudelijk gewijzigd</span>
+                                    </template>                                    
+                                </span>
+                                <button class="slo-button slo-right slo-button-nomargin" data-simply-command="deprecate">
+                                    <svg class="slo-icon slo-icon-feather">
+                                        <use xlink:href="/files/feather-sprite.svg#trash">
+                                        </use>
+                                    </svg>
+                                </button>
+                            </template>
+                        </span>
+                        <span class="slo-right">
+                            <button class="slo-button slo-right" data-simply-command="save">Bewaar</button>
+                        </span>
                         <ul class="slo-nav-crumbs slo-space" data-simply-list="entity.parents">
                             <template>
                                 <li>
@@ -1371,52 +1531,72 @@
                             </template>
                         </ul>
                     </header>
-                    <div class="slo-card-body" data-simply-field="entity.section" data-simply-content="template" data-simply-default-value="default">
-                        <template data-simply-template="vakkencluster" rel="entiteit-vakkencluster"></template>
-                        <template data-simply-template="leerlijn" rel="entiteit-leerlijn"></template>
-                        <template data-simply-template="vak" rel="entiteit-vak"></template>
-                        <template data-simply-template="vakkern" rel="entiteit-vakkern"></template>
-                        <template data-simply-template="vaksubkern" rel="entiteit-vaksubkern"></template>
-                        <template data-simply-template="vakinhoud" rel="entiteit-vakinhoud"></template>
-                        <template data-simply-template="doelniveau" rel="entiteit-doelniveau"></template>
-                        <template data-simply-template="doel" rel="entiteit-doel"></template>
-                        <template data-simply-template="niveau" rel="entiteit-niveau"></template>
-                        <template data-simply-template="examenprogramma" rel="entiteit-examenprogramma"></template>
-                        <template data-simply-template="examenprogramma_domein" rel="entiteit-examenprogramma_domein"></template>
-                        <template data-simply-template="examenprogramma_subdomein" rel="entiteit-examenprogramma_subdomein"></template>
-                        <template data-simply-template="examenprogramma_eindterm" rel="entiteit-examenprogramma_eindterm"></template>
-                        <template data-simply-template="examenprogramma_kop1" rel="entiteit-examenprogramma_kop1"></template>
-                        <template data-simply-template="examenprogramma_kop2" rel="entiteit-examenprogramma_kop2"></template>
-                        <template data-simply-template="examenprogramma_kop3" rel="entiteit-examenprogramma_kop3"></template>
-                        <template data-simply-template="examenprogramma_kop4" rel="entiteit-examenprogramma_kop4"></template>
-                        <template data-simply-template="examenprogramma_body" rel="entiteit-examenprogramma_body"></template>
-                        <template data-simply-template="examenprogramma_vakleergebied" rel="entiteit-examenprogramma_vakleergebied"></template>
+                    <div class="slo-treeview slo-hidden">
+                        <div class="slo-treeview-filters">
+                            <select class="slo-treeview-niveau" data-simply-list="niveaus" data-simply-command="filterNiveau">
+                                <template>
+                                    <option data-simply-field="niveau"></option>
+                                </template>
+                            </select>
+                            <select class="slo-treeview-schemas" data-simply-activate="context-select" data-simply-list="schemas" data-simply-data="schemas" data-simply-command="filterSchemas" multiple>
+                                <template>
+                                    <option data-simply-field="schema"></option>
+                                </template>
+                            </select>
+                        </div>
+                        <div class="slo-treeview-tree"></div>
+                    </div>
+                    <div class="slo-card-body">
+                        <div data-simply-field="entity.section" data-simply-content="template" data-simply-default-value="default">
+                            <template data-simply-template="vakkencluster" rel="entiteit-vakkencluster"></template>
+                            <template data-simply-template="leerlijn" rel="entiteit-leerlijn"></template>
+                            <template data-simply-template="vak" rel="entiteit-vak"></template>
+                            <template data-simply-template="vakkern" rel="entiteit-vakkern"></template>
+                            <template data-simply-template="vaksubkern" rel="entiteit-vaksubkern"></template>
+                            <template data-simply-template="vakinhoud" rel="entiteit-vakinhoud"></template>
+                            <template data-simply-template="doelniveau" rel="entiteit-doelniveau"></template>
+                            <template data-simply-template="doel" rel="entiteit-doel"></template>
+                            <template data-simply-template="niveau" rel="entiteit-niveau"></template>
+                            <template data-simply-template="examenprogramma" rel="entiteit-examenprogramma"></template>
+                            <template data-simply-template="examenprogramma_domein" rel="entiteit-examenprogramma_domein"></template>
+                            <template data-simply-template="examenprogramma_subdomein" rel="entiteit-examenprogramma_subdomein"></template>
+                            <template data-simply-template="examenprogramma_eindterm" rel="entiteit-examenprogramma_eindterm"></template>
+                            <template data-simply-template="examenprogramma_kop1" rel="entiteit-examenprogramma_kop1"></template>
+                            <template data-simply-template="examenprogramma_kop2" rel="entiteit-examenprogramma_kop2"></template>
+                            <template data-simply-template="examenprogramma_kop3" rel="entiteit-examenprogramma_kop3"></template>
+                            <template data-simply-template="examenprogramma_kop4" rel="entiteit-examenprogramma_kop4"></template>
+                            <template data-simply-template="examenprogramma_body" rel="entiteit-examenprogramma_body"></template>
+                            <template data-simply-template="examenprogramma_vakleergebied" rel="entiteit-examenprogramma_vakleergebied"></template>
 
-                        <template data-simply-template="examenprogramma_bg_profiel" rel="entiteit-examenprogramma_bg_profiel"></template>
-                        <template data-simply-template="examenprogramma_bg_kern" rel="entiteit-examenprogramma_bg_kern"></template>
-                        <template data-simply-template="examenprogramma_bg_module" rel="entiteit-examenprogramma_bg_module"></template>
-                        <template data-simply-template="examenprogramma_bg_keuzevak" rel="entiteit-examenprogramma_bg_keuzevak"></template>
-                        <template data-simply-template="examenprogramma_bg_kerndeel" rel="entiteit-examenprogramma_bg_kerndeel"></template>
-                        <template data-simply-template="examenprogramma_bg_deeltaak" rel="entiteit-examenprogramma_bg_deeltaak"></template>
-                        <template data-simply-template="examenprogramma_bg_moduletaak" rel="entiteit-examenprogramma_bg_moduletaak"></template>
-                        <template data-simply-template="examenprogramma_bg_keuzevaktaak" rel="entiteit-examenprogramma_bg_keuzevaktaak"></template>
-                        <template data-simply-template="examenprogramma_bg_globale_eindterm" rel="entiteit-examenprogramma_bg_globale_eindterm"></template>
+                            <template data-simply-template="examenprogramma_bg_profiel" rel="entiteit-examenprogramma_bg_profiel"></template>
+                            <template data-simply-template="examenprogramma_bg_kern" rel="entiteit-examenprogramma_bg_kern"></template>
+                            <template data-simply-template="examenprogramma_bg_module" rel="entiteit-examenprogramma_bg_module"></template>
+                            <template data-simply-template="examenprogramma_bg_keuzevak" rel="entiteit-examenprogramma_bg_keuzevak"></template>
+                            <template data-simply-template="examenprogramma_bg_kerndeel" rel="entiteit-examenprogramma_bg_kerndeel"></template>
+                            <template data-simply-template="examenprogramma_bg_deeltaak" rel="entiteit-examenprogramma_bg_deeltaak"></template>
+                            <template data-simply-template="examenprogramma_bg_moduletaak" rel="entiteit-examenprogramma_bg_moduletaak"></template>
+                            <template data-simply-template="examenprogramma_bg_keuzevaktaak" rel="entiteit-examenprogramma_bg_keuzevaktaak"></template>
+                            <template data-simply-template="examenprogramma_bg_globale_eindterm" rel="entiteit-examenprogramma_bg_globale_eindterm"></template>
 
-                        <template data-simply-template="kerndoel" rel="entiteit-kerndoel"></template>
-                        <template data-simply-template="kerndoel_domein" rel="entiteit-kerndoel_domein"></template>
-                        <template data-simply-template="kerndoel_uitstroomprofiel" rel="entiteit-kerndoel_uitstroomprofiel"></template>
-                        <template data-simply-template="kerndoel_vakleergebied" rel="entiteit-kerndoel_vakleergebied"></template>
-                        <template data-simply-template="syllabus" rel="entiteit-syllabus"></template>
-                        <template data-simply-template="syllabus_vakbegrip" rel="entiteit-syllabus_vakbegrip"></template>
-                        <template data-simply-template="syllabus_toelichting" rel="entiteit-syllabus_toelichting"></template>
-                        <template data-simply-template="syllabus_specifieke_eindterm" rel="entiteit-syllabus_specifieke_eindterm"></template>
-                        <template data-simply-template="leerlingtekst" rel="entiteit-leerlingtekst"></template>
+                            <template data-simply-template="kerndoel" rel="entiteit-kerndoel"></template>
+                            <template data-simply-template="kerndoel_domein" rel="entiteit-kerndoel_domein"></template>
+                            <template data-simply-template="kerndoel_uitstroomprofiel" rel="entiteit-kerndoel_uitstroomprofiel"></template>
+                            <template data-simply-template="kerndoel_vakleergebied" rel="entiteit-kerndoel_vakleergebied"></template>
+                            <template data-simply-template="syllabus" rel="entiteit-syllabus"></template>
+                            <template data-simply-template="syllabus_vakbegrip" rel="entiteit-syllabus_vakbegrip"></template>
+                            <template data-simply-template="syllabus_toelichting" rel="entiteit-syllabus_toelichting"></template>
+                            <template data-simply-template="syllabus_specifieke_eindterm" rel="entiteit-syllabus_specifieke_eindterm"></template>
+                            <template data-simply-template="leerlingtekst" rel="entiteit-leerlingtekst"></template>
+                        </div>
                     </div>
                 </article>
             </template>
             <template data-simply-template="new">
                 <article class="slo-card slo-grid-span-3">
                     <header class="slo-card-header slo-space">
+                        <span class="slo-right">
+                              <button class="slo-button slo-right" data-simply-command="save">Bewaar</button>
+                        </span>
                         <span class="slo-tag">
                             <label class="slo-tag-label">
                                 <svg class="slo-icon slo-icon-feather">
@@ -1514,17 +1694,17 @@
             </div>
             <div class="">
                 <div class="slo-form-field" data-simply-field="entity.deleted" data-simply-content="template" data-simply-default-template="0" data-simply-default-value="0">
-					<template data-simply-template="0">
-	                    <label class="slo-form-checkbox">
-	                        <input type="checkbox" name="dirty" id="dirty" value="1" data-simply-field="entity.dirty"> <span class="slo-label">Inhoudelijk gewijzigd sinds de vorige release.</span>
-	                    </label>
-	                    <div class="slo-form-help">
-	                        Als dit vinkje aan staat, betekend het dat deze entiteit bij de volgende release een nieuwe UUID krijgt. Het is belangrijk dat dit altijd gebeurd bij inhoudelijke wijzigingen. Alleen als je bijv. een typefout corrigeert mag je dit vinkje uitzetten. Let erop dat je dit alleen doet als
-	                        het vinkje voor de correctie al uit stond.
-	                    </div>
-					</template>
-					<template data-simply-template="1">
-					</template>
+                    <template data-simply-template="0">
+                        <label class="slo-form-checkbox">
+                            <input type="checkbox" name="dirty" id="dirty" value="1" data-simply-field="entity.dirty"> <span class="slo-label">Inhoudelijk gewijzigd sinds de vorige release.</span>
+                        </label>
+                        <div class="slo-form-help">
+                            Als dit vinkje aan staat, betekend het dat deze entiteit bij de volgende release een nieuwe UUID krijgt. Het is belangrijk dat dit altijd gebeurd bij inhoudelijke wijzigingen. Alleen als je bijv. een typefout corrigeert mag je dit vinkje uitzetten. Let erop dat je dit alleen doet als
+                            het vinkje voor de correctie al uit stond.
+                        </div>
+                    </template>
+                    <template data-simply-template="1">
+                    </template>
                 </div>
             </div>
         </div>
@@ -1570,18 +1750,20 @@
 <script src="https://canary.simplyedit.io/1/simply-edit.js" xsrc="https://yvo.muze.nl/simply-edit/js/simply-edit.js" xsrc="https://cdn.simplyedit.io/1/simply-edit.js" data-simply-storage="none"></script>
 <script src="js/GitHub.bundle.js"></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
-<script src="/assets/simplyview/js/simply.activate.js"></script>
+<!-- script>
+    simply.route.init({
+        root: '/entiteiten-editor/'
+    });
+</script -->
+
+<script src="https://unpkg.com/json-schema-ref-parser@6.0.0/dist/ref-parser.min.js"></script>
+<script src="https://unpkg.com/lodash@4.17.11/lodash.min.js"></script>
 <script src="js/curriculum.js"></script>
 <script>
     simply.bind = false;
-    var gotoHash = function() {
-        var path = document.location.pathname + document.location.hash;
-        path = path.replace(/\/$/, '');
-        simply.route.match(path);
-    };
-    
-    window.addEventListener("hashchange", gotoHash);
 
+    var niveauIndex = [];
+    var reverseNiveauIndex = {};
 
     var reverseDoelIndex = {};
     var hierarchies = {
@@ -1639,12 +1821,12 @@
         },
         "opendatalink" : {
             "render" : function(data) {
-            	this._data = data;
-            	data = "https://opendata.slo.nl/curriculum/api-acpt/v1/uuid/"+data;
+                this._data = data;
+                data = "https://opendata.slo.nl/curriculum/api-acpt/v1/uuid/"+data;
                 return data;
             },
             "extract": function() {
-            	return this._data;
+                return this._data;
             }
         },
         "editlink" : {
@@ -1667,15 +1849,15 @@
         "idToTitle": {
             "render" : function(data) {
                 this.sloId = data;
-                var entity = curriculum.index.id[data];
+                var entity = clone(curriculum.index.id[data]);
                 if (curriculum.index.type[data] == "doelniveau") {
                     if (entity.doel_id && entity.doel_id[0]) {
-                        var doel = curriculum.index.id[entity.doel_id[0]];
+                        var doel = clone(curriculum.index.id[entity.doel_id[0]]);
                     } else if (entity.kerndoel_id && entity.kerndoel_id[0]) {
-                        var doel = curriculum.index.id[entity.kerndoel_id[0]];
+                        var doel = clone(curriculum.index.id[entity.kerndoel_id[0]]);
                     }
                     if (entity.niveau_id && entity.niveau_id[0]) {
-                        var niveau = curriculum.index.id[entity.niveau_id[0]];
+                        var niveau = clone(curriculum.index.id[entity.niveau_id[0]]);
                     }
                     var result = '';
                     if (niveau && niveau.title ) {
@@ -1690,7 +1872,10 @@
                     }
                     return result;
                 } else {
-                    return curriculum.index.id[data].title ? curriculum.index.id[data].title : "";
+                    if (typeof curriculum.index.id[data] == 'undefined') {
+                        return 'missing';
+                    }
+                    return curriculum.index.id[data].title ? clone(curriculum.index.id[data].title) : "";
                 }
             },
             "extract" : function(el) {
@@ -1718,12 +1903,13 @@
         },
         "searchoption" : {
             render : function(entity) {
+                entity = clone(entity);
                 this.data = entity;
                 var option = entity.title + " " + entity.id;
 
                 if (curriculum.index.type[entity.id]=="doelniveau") {
-                    var doel = curriculum.index.id[entity.doel_id[0]];
-                    var niveau = curriculum.index.id[entity.niveau_id[0]];
+                    var doel = clone(curriculum.index.id[entity.doel_id[0]]);
+                    var niveau = clone(curriculum.index.id[entity.niveau_id[0]]);
                     option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
                 }
 
@@ -1749,40 +1935,71 @@
             section: null,
             id: null,
             dirty: 0,
-			deleted: 0
+            deleted: 0
         };
     };
+    
+    var originalEntities = {}; // store to keep unchanged originals so we can revert with delete-change
+    
     
     var entityEditor = simply.app({
         container: document.body,
         routes : {
             '/#edit/:id' : function(params) {
-                // reset page;
-                editor.pageData.entity = emptyEntity();
-                editor.pageData.entity = clone(curriculum.index.id[params.id]);
-                if (typeof editor.pageData.entity.dirty === "undefined") {
-                    editor.pageData.entity.dirty = 0;
-                }
+                entityEditor.actions.showEntity(params.id);
                 editor.pageData.page = "edit";
+                editor.pageData.rootEntity = params.id;
+                entityEditor.actions.hideTreeView();
                 window.scrollTo(0,0);
             },
             '/#edit/' : function(params) {
                 // reset page;
                 editor.pageData.entity = emptyEntity();
                 editor.pageData.page = "edit";
+                editor.pageData.rootEntity = null;
+                entityEditor.actions.hideTreeView();
                 window.scrollTo(0,0);
             },
             '/#new/' : function(params) {
                 // reset page;
                 editor.pageData.entity = emptyEntity();
                 editor.pageData.page = "new";
+                editor.pageData.rootEntity = null;
+                entityEditor.actions.hideTreeView();
                 window.scrollTo(0,0);
             }
         },
         commands: {
+            toggleAddRelation: function(el, value) {
+                el.closest('.slo-treeview-title').nextElementSibling.querySelector('.slo-treeview-add-relation').classList.toggle('slo-hidden');
+            },
+            toggleRelation: function(el, value) {
+                // remove this entity as a child from its tree parent
+                var ids = value.split(':');
+                var childId = ids[1];
+                var parentId = ids[0];
+                if (entityEditor.actions.toggleRelation(parentId, childId)) {
+                    el.closest('.slo-treeview-title').classList.remove('slo-removed');
+                } else {
+                    el.closest('.slo-treeview-title').classList.add('slo-removed');
+                }
+            },
+            showEntity: function(el, value) {
+                var selected = Array.from(document.querySelectorAll('.slo-treeview-title.slo-selected'));
+                if (selected.length) {
+                    selected.forEach(function(el) {
+                        el.classList.remove('slo-selected');
+                    });
+                }
+                entityEditor.actions.showEntity(value);
+                var selected = document.querySelector('.slo-treeview-title[data-simply-value="'+value+'"]');
+                if (selected) {
+                    selected.classList.add('slo-selected');
+                }
+            },
             logoff: function() {
-        	localStorage.removeItem('login');
-        	location.reload(true);
+            localStorage.removeItem('login');
+            location.reload(true);
             },
             login: function(form, values) {
                 document.body.dataset.loading="true";
@@ -1817,6 +2034,16 @@
                     }
                 });
             },
+            'toggleTree': function(el) {
+                if (!editor.pageData.schemas.length) {
+                    var section = curriculum.index.type[editor.pageData.rootEntity];
+                    editor.pageData.schemas = [curriculum.getSchemaFromType(section)];
+                }
+                entityEditor.actions.renderTree(curriculum.index.id[editor.pageData.rootEntity],editor.pageData.niveau)
+                .then(function() {
+                    document.body.querySelector('.slo-treeview').classList.toggle('slo-hidden');
+                });
+            },
             'search': function(el) {
                 var searchInput = el.parentElement.querySelector('input');
                 var searchText = searchInput.value;
@@ -1827,7 +2054,7 @@
                 simply.route.goto(document.location.pathname + '#new');
             },
             'delete-relation' : function(el) {
-				rememberScrollPosition();
+                rememberScrollPosition();
                 el.parentNode.parentNode.removeChild(el.parentNode);
             },
             'add-relation' : function(el) {
@@ -1845,34 +2072,53 @@
                     if (curriculum.index.id[relationId]) {
                         rememberScrollPosition();
                         editor.pageData.entity[relation].push(relationId);
-		                relationInput.value = '';
+                        relationInput.value = '';
                     } else {
-                        alert(relationId+' niet gevonden');
+                        // add new entity first
+                        entityEditor.actions.newEntityForm(relation, editor.pageData.entity.id);
+
                     }
                 }
             },
             'delete-change' : function(el) {
                 // find the id of the entity;
-                var id = el.parentNode.parentNode.querySelector("a").innerHTML;
-                if (curriculum.index.id[id]) {
-                    // find the original entity from the dataset;
-                    var original = curriculum.data[curriculum.index.type[id]].find(function(entry) {
-                        if (entry.id == id) {
-                            return true;
-                        }
-                        return false;
-                    });
-                    curriculum.index.id[id] = original; 
+                var id = el.closest('.slo-entiteit-change').querySelector("a").innerHTML;
+                if (originalEntities[id]) {
+                    var original = clone(originalEntities[id]);
+                    delete originalEntities[id];
+                       curriculum.index.id[id] = original;
+                    //FIXME: update curriculum.data as well?
+                } else {
+                    delete curriculum.index.id[id];
+                    if (editor.pageData.entity && editor.pageData.entity.id == id) {
+                        editor.pageData.entity = {};
+                    }
                 }
-
+                
                 el.parentNode.parentNode.removeChild(el.parentNode);
                 editor.pageData.changeCount = editor.pageData.changes.length;
                 localStorage.changes = JSON.stringify(editor.pageData.changes);
 
+                  if (editor.pageData.rootEntity) {
+                       var root = curriculum.index.id[editor.pageData.rootEntity];
+                    entityEditor.actions.renderTree(root, editor.pageData.niveau, editor.pageData.schemas);
+                }
+                
                 // reload the page to show the changes;
-                var entityId = editor.pageData.entity.id;
-                simply.route.goto(document.location.pathname + "#edit/");
-                simply.route.goto(document.location.pathname + "#edit/" + entityId);
+                if (editor.pageData.entity) {
+                    var entityId = editor.pageData.entity.id;
+                    if (entityId == id) {
+                        if (curriculum.index.id[id]) {
+                            entityEditor.actions.showEntity(id);
+                        } else if (editor.pageData.rootEntity) {
+                            entityEditor.actions.showEntity(editor.pageData.rootEntity);
+                        } else {
+                            simply.route.goto(document.location.pathname + '#new/');
+                        }
+                    }                                    
+                } else {
+                    simply.route.goto(document.location.pathname + '#new/');
+                }
             },
             'commit-changes' : function() {
                 document.body.dataset.loading="true";
@@ -1886,6 +2132,12 @@
                     editor.pageData.commitMessage = '';
                     document.body.dataset.loading="false";
                 })
+                .then(function() {
+                    if (editor.pageData.rootEntity) {
+                        var root = curriculum.index.id[editor.pageData.rootEntity];
+                        entityEditor.actions.renderTree(root, editor.pageData.niveau, editor.pageData.schemas);
+                    }
+                })
                 .catch(function(error) {
                     document.body.dataset.loading="false";
                     alert(error);
@@ -1896,19 +2148,145 @@
                     editor.pageData.entity.id = curriculum.uuidv4();
                 }
                 entityEditor.actions.save(clone(editor.pageData.entity));
-                
+                   if (editor.pageData.rootEntity) {
+                       var root = curriculum.index.id[editor.pageData.rootEntity];
+                    entityEditor.actions.renderTree(root, editor.pageData.niveau, editor.pageData.schemas);
+                }                
             },
             deprecate: function() {
                 if (editor.pageData.entity.id) {
                     if (confirm('Weet u zeker dat u deze entiteit wil verwijderen?')) {
                         var changedEntity = clone(editor.pageData.entity);
-						changedEntity.deleted = 1;
+                        changedEntity.deleted = 1;
                         entityEditor.actions.save(changedEntity);          
                     }
                 }
+            },
+            filterNiveau: function(select, value) {
+                var entity = clone(editor.pageData.entity);
+                editor.pageData.niveau = value;
+                entityEditor.actions.renderTree(entity, value, editor.pageData.schemas);
+            },
+            filterSchemas: function(select, values) {
+                var entity = clone(editor.pageData.entity);
+                editor.pageData.schemas = values;
+                entityEditor.actions.renderTree(entity, editor.pageData.niveau, values);
             }
         },
         actions: {
+            toggleRelation: function(parentId, childId) {
+                // fetch entity
+                var entity = clone(curriculum.index.id[parentId]);
+                var childType = curriculum.index.type[childId];
+                // update
+                if (!entity[childType+'_id'] || entity[childType+'_id'].indexOf(childId)===-1) { // restore
+                    entity[childType+'_id'].push(childId);
+                    entity.children.push(childId);
+                    // add to changes
+                    entityEditor.actions.save(entity);
+                    return true;
+                } else { // remove
+                    entity[childType+'_id'] = entity[childType+'_id'].filter(function(id) {
+                        return id!=childId;
+                    });
+                    entity.children = entity.children.filter(function(id) {
+                        return id!=childId;
+                    });
+                    // add to changes
+                    entityEditor.actions.save(entity);
+                    return false;
+                }
+            },
+            hideTreeView: function() {
+                var tree = document.querySelector('.slo-treeview');
+                if (tree) {
+                    tree.classList.add('slo-hidden');
+                }
+            },
+            showEntity: function(id) {
+                editor.pageData.entity = emptyEntity();
+                if (curriculum.index.id[id]) {
+                    editor.pageData.entity = clone(curriculum.index.id[id]);
+                    //show the edit entity form
+                     if (typeof editor.pageData.entity.dirty === "undefined") {
+                           editor.pageData.entity.dirty = 0;
+                    }
+                } else {
+                    alert('Onbekend id '+id);
+                }
+            },
+            newEntityForm: function(relation, parentId) {
+                if (editor.pageData.entity.parent) {
+                    entityEditor.actions.save(clone(editor.pageData.entity));
+                }
+                var entity = emptyEntity();
+                entity.id = curriculum.uuidv4();
+                entity.section = relation.substr(0, relation.length-3);
+                entity.dirty = 0;
+                entity.parent = parentId;
+                //show the new entity form
+                editor.pageData.entity = entity;
+            },
+            'renderTree': function(entity, niveau=null, contexts=null) {
+                document.body.dataset.loading="true";
+                if (niveau) {
+                    var niveauIndexData = niveauIndex.filter(function(niveauData) {
+                        return niveauData.niveau_id == niveau;
+                    }).pop();
+                }
+                var getContextFromId = function(id) {
+                    var section = curriculum.index.type[id];
+                    var context = Object.keys(curriculum.schemas).filter(function(schema) {
+                        return typeof curriculum.schemas[schema].properties[section]!='undefined';
+                    }).pop();
+                    return context;
+                };
+                var render = function(e,contexts,niveau=null,parent) {
+                    if (!e) {
+                        return '<span class="slo-treeview-title"><span class="slo-tag"></span>Missing</span>';
+                    }
+                    if (niveau && !e.niveau_id && (!reverseNiveauIndex[e.id] || reverseNiveauIndex[e.id].indexOf(niveau)===-1)) {
+                        if (!reverseNiveauIndex[e.id]) {
+                            console.error('missing reverse niveau index for '+e.id);
+                            console.log(e);
+                        }
+                        return '';
+                    }
+                    if (niveau && e.niveau_id && e.niveau_id.indexOf(niveau)===-1) {
+                        return '';
+                    }
+                    var title = (e.prefix ? e.prefix + ' ' + e.title : (e.title ? e.title : e.id));
+                    var result = '<span class="slo-treeview-title" data-simply-command="showEntity" data-simply-value="'+e.id+'">';
+                    if (parent) {
+                        result += '<a class="slo-remove-button slo-button slo-button-naked';
+                        result += '" data-simply-command="toggleRelation" data-simply-value="'+parent.id+':'+e.id+'">×</a>';
+                    }
+                    
+                    result += '<span class="slo-tag">'+e.section+'</span><span class="slo-title">'+title+'</span></span>';
+                    if (!contexts) {
+                        contexts = [];
+                        contexts.push(getContextFromId(e.id));
+                    }
+                    $('.slo-treeview-schemas').val(contexts);
+                    $('.slo-treeview-schemas').trigger("chosen:updated");
+                    result += '<div class="slo-treeview-children">';
+                    if (!e.children) {
+                        e.children = [];
+                    }
+                    e.children.forEach(function(c) {
+                        if (contexts.indexOf(getContextFromId(c))!=-1) {
+                            result += render(curriculum.index.id[c], contexts, niveau, e);
+                        }
+                    });
+                    result += '</div>';
+                    return result;
+                };
+                var tree = document.querySelector('.slo-treeview-tree');
+                var treeHTML = render(entity, contexts, niveau);
+                tree.innerHTML = treeHTML;
+                document.body.dataset.loading="false";
+                return Promise.resolve(true);
+            },
             'showLogin': function() {
                  document.getElementById('login').setAttribute('open','open');
                  entityEditor.view['login-error'] = '';
@@ -1945,18 +2323,43 @@
                       simply.route.goto(document.location.pathname + "#edit/" + searchText);
                   }
             },
-            save: function(entity) {
+            addChangedEntity: function(entity) {
                 editor.pageData.changes = editor.pageData.changes.filter(function(entry) {
                     if (entity.id == entry.id) {
                         return false;
                     }
                     return true;
                 });
-                editor.pageData.changes.push(entity);
+                editor.pageData.changes.push(clone(entity));
+                if (curriculum.index.id[entity.id] && !originalEntities[entity.id]) {
+                    // keep the unchanged version in case we need to revert
+                    var original = curriculum.data[curriculum.index.type[entity.id]]
+                        .filter(function(e) {return e.id == entity.id; })
+                        .pop();
+                    if (original) {
+                        originalEntities[entity.id] = clone(original);
+                    }
+                }
                 curriculum.index.id[entity.id] = entity;
                 curriculum.index.type[entity.id] = entity.section;
+                
                 editor.pageData.changeCount = editor.pageData.changes.length;
-                localStorage.changes = JSON.stringify(editor.pageData.changes);
+                localStorage.changes = JSON.stringify(editor.pageData.changes);    
+            },
+            save: function(entity) {
+                if (entity.parent) {
+                    var parent = clone(curriculum.index.id[entity.parent]);
+                    if (parent) {
+                        if (typeof parent[entity.section+'_id'] == 'undefined') {
+                            parent[entity.section+'_id'] = [];
+                        }
+                        parent[entity.section+'_id'].push(entity.id);
+                        parent.children.push(entity.id);
+                        entityEditor.actions.addChangedEntity(parent);
+                    }
+                    delete entity.parent;
+                }
+                entityEditor.actions.addChangedEntity(entity);
             },
             'commit-changes': function(changes, message) {
                 if (!message) {
@@ -1996,6 +2399,21 @@
                     dataset.forEach(function(entity) {
                         delete entity.section;
                         delete entity.parents;
+                        delete entity.children;
+                        delete entity.commit;
+                        if (!entity.dirty) {
+                            delete entity.dirty;
+                        }
+                        if (!entity.deleted) {
+                            delete entity.deleted;
+                        }
+                        Object.keys(entity).forEach(function(p) {
+                            if (Array.isArray(entity[p]) && entity[p].length==0) {
+                                delete entity[p];
+                            }
+                        });
+                        //FIXME: remove any properties that aren't part of the schema
+                        //except dirty and deleted?
                     });
                     return dataset;
                 };
@@ -2020,9 +2438,15 @@
                         var file = files.shift();
                         return curriculum.sources[file.schema].writeFile(file.path, file.data, message).then(writeFile);
                     }
-                    writeFile();
+                    return writeFile();
+                }).then(function() {
+                    // clear originals because revert is no longer an option
+                    originalEntities = {};
                 });
 //              return curriculum.sources[schema].writeFiles(files, message);
+            },
+            filterNiveau: function(niveauId) {
+                entityEditor.actions.renderTree(editor.pageData.entityId,niveauId);
             },
             start: function(user, pass) {
                 var schemas = {
@@ -2045,22 +2469,28 @@
                     );
                 });
 
-               	// get user info
-               	// put it in the editor.pageData.user
-               	// name and avatar_url
-               	var gh = new GitHub({username:user, password: pass});
-               	return gh.getUser().getProfile()
-               	.then(function(profile) {
-               		editor.pageData.user = profile.data;
-              		document.body.classList.add('slo-logged-on');
-              		return profile;
-               	})
+                   // get user info
+                   // put it in the editor.pageData.user
+                   // name and avatar_url
+                   var gh = new GitHub({username:user, password: pass});
+                   return gh.getUser().getProfile()
+                   .then(function(profile) {
+                       editor.pageData.user = profile.data;
+                      document.body.classList.add('slo-logged-on');
+                      return profile;
+                   })
                 .then(function(profile) {
- 	               return Promise.all(loading);
- 	            })
+                    return Promise.all(loading);
+                 })
                 .then(function() {
                     Object.values(curriculum.index.id).forEach(function(entity) {
                         entity.section = curriculum.index.type[entity.id];
+                        entity.children = [];
+                        Object.keys(entity).forEach(function(prop) {
+                            if (prop.substr(prop.length-3)=='_id' && prop!='niveau_id') {
+                                entity.children = entity.children.concat(entity[prop]);
+                            }
+                        });
                     });
 
                     var counter = 1000;
@@ -2200,17 +2630,125 @@
                             });
                         }
                     });
+
+                    function getNiveauIndex(niveauId) {
+                        var niveauOb = niveauIndex.filter(function(niveauOb) {
+                            return niveauOb.niveau_id == niveauId;
+                        }).pop();
+                        if (!niveauOb) {
+                            niveauOb = {
+                                niveau_id: niveauId,
+                            };
+                            niveauIndex.push(niveauOb);
+                        }
+                        return niveauOb;
+                    }
+
+                    function onlyUnique(value, index, self) {
+                        return self.indexOf(value)===index;
+                    }
+
+                    function addParentsToNiveauIndex(parents, niveaus) {
+                        if (!niveaus || !niveaus.forEach) {
+                            return;
+                        }
+                        niveaus.forEach(function(niveauId) {
+                            var niveau = getNiveauIndex(niveauId);
+                            parents.forEach(function(parentEntry) {
+                                var parentId = parentEntry.id;
+                                var parent = curriculum.index.id[parentId];
+                                if (!parent) {
+                                    console.log('missing parent '+parentId);
+                                    return;
+                                }
+                                if (!niveau[parent.section+'_id']) {
+                                    niveau[parent.section+'_id'] = [];
+                                }
+                                if (niveau[parent.section+'_id'].indexOf(parentId)==-1) {
+                                    niveau[parent.section+'_id'].push(parentId);
+                                }
+                                if (typeof parent.parents != 'undefined') {
+                                    addParentsToNiveauIndex(parent.parents, niveaus);
+                                }
+                            });
+                        });
+                        parents.forEach(function(parentEntry) {
+                            var parentId = parentEntry.id;
+                            if (!reverseNiveauIndex[parentId]) {
+                                reverseNiveauIndex[parentId] = [];
+                            }
+                            reverseNiveauIndex[parentId] = reverseNiveauIndex[parentId].concat(niveaus).filter(onlyUnique);
+                        });
+                    }
+
+                    //FIXME: examenprogramma_eindterm ook aan niveauIndex toevoegen
+                    curriculum.data.doelniveau
+                    .concat(curriculum.data.examenprogramma_eindterm)
+                    .forEach(function(entity) {
+                        if (entity.niveau_id && entity.parents) {
+                            addParentsToNiveauIndex(entity.parents, entity.niveau_id);
+                            entity.niveau_id.forEach(function(niveauId) {
+                                var index = getNiveauIndex(niveauId);
+                                if (typeof index.doel_id == 'undefined') {
+                                    index.doel_id = [];
+                                }
+                                if (entity.doel_id) {
+                                    entity.doel_id.forEach(function(doelId) {
+                                        if (index.doel_id.indexOf(doelId)==-1) {
+                                            index.doel_id.push(doelId);
+                                        }
+                                    });
+                                }
+                                if (entity.kerndoel_id) {
+                                    entity.kerndoel_id.forEach(function(doelId) {
+                                        //FIXME: make index.kerndoel_id?
+                                        if (index.doel_id.indexOf(doelId)==-1) {
+                                            index.doel_id.push(doelId);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+
+                    editor.pageData.niveaus = [{ niveau: { value: '', innerHTML: 'Selecteer niveau'} }]
+                        .concat(niveauIndex.map(function(n) {
+                            return {
+                                niveau: {
+                                    value: n.niveau_id,
+                                    innerHTML: curriculum.index.id[n.niveau_id].title
+                                }
+                            };
+                        }));
+                    editor.addDataSource('schemas', {
+                        load: Object.keys(curriculum.schemas).map(function(s) {
+                            return {
+                                schema: {
+                                    value: s,
+                                    innerHTML: s
+                                }
+                            };
+                        })
+                    });
+                    
+                    simply.activate.addListener('context-select', function() {
+                        var s = new vanillaSelectBox('.slo-treeview-schemas', {'placeHolder':'Selecteer contexten'});
+                    });
                     // restore changes from localstorage;
                     if (localStorage.changes) {
                         editor.pageData.changes = JSON.parse(localStorage.changes);
                         editor.pageData.changeCount = editor.pageData.changes.length;
                         editor.pageData.changes.forEach(function(entry) {
+                            if (curriculum.index.id[entry.id]) {
+                                originalEntities[entry.id] = clone(curriculum.index.id[entry.id]);
+                            }
                             curriculum.index.id[entry.id] = clone(entry);
                             curriculum.index.type[entry.id] = entry.section;
                         });
                     }
                     document.body.dataset.loading = "false";
-                    gotoHash();
+                    simply.route.handleEvents();
+                    simply.route.match();
                     return true;
                 });
             }
@@ -2331,18 +2869,18 @@
         });
     }
 
-	/* Code to remember scroll position when the lists are changed and redrawn */
+    /* Code to remember scroll position when the lists are changed and redrawn */
     function rememberScrollPosition() {
         window.scrollPosition = {
-			y: window.scrollY,
-			x: window.scrollX
-		};
+            y: window.scrollY,
+            x: window.scrollX
+        };
     }
-	window.addEventListener("databind:elementresolved", function(evt) {
-		window.setTimeout(function() {
-	        delete window.scrollPosition;
-		}, 200);
-	});
+    window.addEventListener("databind:elementresolved", function(evt) {
+        window.setTimeout(function() {
+            delete window.scrollPosition;
+        }, 200);
+    });
 
     window.addEventListener("scroll", function(evt) {
         if (typeof window.scrollPosition !== "undefined") {
