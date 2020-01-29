@@ -248,6 +248,10 @@
         .slo-main-page header {
             overflow: hidden;
         }
+        .slo-parent-ids a ~ a:before {
+            content: '';
+            display: block;
+        }
     </style>
     <!-- script src="https://cdn.lr-ingest.io/LogRocket.min.js" crossorigin="anonymous"></script -->
     <script>
@@ -1525,8 +1529,10 @@
                         </span>
                         <ul class="slo-nav-crumbs slo-space" data-simply-list="entity.parents">
                             <template>
-                                <li>
-                                    <a href="#" data-simply-field="id" data-simply-transformer="editlink" data-simply-content="fixed"><span data-simply-field="id" data-simply-transformer="idToTitle"></span></a>
+                                <li data-simply-list="ids" class="slo-parent-ids">
+                                    <template>
+                                        <a href="#" data-simply-field="id" data-simply-transformer="editlink" data-simply-content="fixed"><span data-simply-field="id" data-simply-transformer="idToTitle"></span></a>
+                                    </template>
                                 </li>
                             </template>
                         </ul>
@@ -2072,14 +2078,14 @@
                     if (curriculum.index.id[relationId]) {
                         rememberScrollPosition();
                         editor.pageData.entity[relation].push(relationId);
-						// fix for a bug in simply edit where the list / binding gets broken somehow;
-						for (var i=0; i<editor.pageData.entity._bindings_[relation].elements.length; i++) {
-							editor.pageData.entity._bindings_[relation].bind(editor.pageData.entity._bindings_[relation].elements[i]);
-						}
-						window.setTimeout(function() {
-							window.scrollPosition = undefined;
-						}, 350);
-		                relationInput.value = '';
+                        // fix for a bug in simply edit where the list / binding gets broken somehow;
+                        for (var i=0; i<editor.pageData.entity._bindings_[relation].elements.length; i++) {
+                            editor.pageData.entity._bindings_[relation].bind(editor.pageData.entity._bindings_[relation].elements[i]);
+                        }
+                        window.setTimeout(function() {
+                            window.scrollPosition = undefined;
+                        }, 350);
+                        relationInput.value = '';
                     } else {
                         // add new entity first
                         entityEditor.actions.newEntityForm(relation, editor.pageData.entity.id);
@@ -2554,10 +2560,32 @@
                     Object.keys(parentInfo).forEach(function(section) {
                         curriculum.data[section].forEach(function(vakEntity) {
                             walk(parentInfo[section], vakEntity, [], function(entity, parents) {
-                                entity.parents = parents.map(function(parent) {
-                                    return clone(parent.id);
-                                }).filter(Boolean).map(function(id) {
-                                    return { id: id }
+                                if (!entity.parents) {
+                                    entity.parents = [];
+                                }
+                                parents.map(function(parent) {
+                                    if (parent.id) {
+                                        return {
+                                            id : clone(parent.id),
+                                            type : clone(parent.section),
+                                            ids : [{id : clone(parent.id)}]
+                                        }
+                                    }
+                                })
+                                .filter(Boolean)
+                                .map(function(parent) {
+                                    var add = true;
+                                    entity.parents.forEach(function(item) {
+                                        if (item.type == parent.type) {
+                                            if (item.id != parent.id) {
+                                                item.ids.push({id : parent.id});
+                                            }
+                                            add = false;
+                                        }
+                                    });
+                                    if (add) {
+                                        entity.parents.push(parent);
+                                    }
                                 });
                             });
                         });
