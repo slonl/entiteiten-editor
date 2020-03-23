@@ -275,6 +275,7 @@
     <div class="slo-navbar slo-navbar-side bg-gray">
         <div class="slo-space">
             <button data-simply-command="new" class="slo-button slo-new">Nieuwe entiteit</button>
+            <!-- button data-simply-command="multipleparents" class="slo-button slo-new">Toon meerdere parents</button -->
             <p>
                 Aangepaste Entiteiten
         <div data-simply-field="changeCount" data-simply-content="template" data-simply-default-template="default">
@@ -537,6 +538,12 @@
             <label>Titel
                 <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Bron
+                <input type="text" data-simply-field="entity.bron" placeholder="Bron">
+            </label>
         </div>
     </template>
     <template id="entiteit-niveau">
@@ -555,8 +562,109 @@
             </label>
         </div>
     </template>
+
+    <template id="entiteit-ldk_vak">
+        <div class="slo-entity">
+            <label>Titel
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Vakkernen</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.ldk_vakkern_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="ldk_vakkern_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="ldk_vakkern">
+                <button data-simply-command="add-relation" data-slo-relation="ldk_vakkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>DoelNiveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-ldk_vakkern">
+        <div class="slo-entity">
+            <label>Titel
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Vaksubkernen</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.ldk_vaksubkern_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="ldk_vaksubkern" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="ldk_vaksubkern">
+                <button data-simply-command="add-relation" data-slo-relation="ldk_vaksubkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>DoelNiveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-ldk_vaksubkern">
+        <div class="slo-entity">
+            <label>Titel
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Vakinhouden</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.ldk_vakinhoud_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="ldk_vakinhoud" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="ldk_vakinhoud">
+                <button data-simply-command="add-relation" data-slo-relation="ldk_vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>DoelNiveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-ldk_vakinhoud">
+        <div class="slo-entity">
+            <label>Titel
+                <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>DoelNiveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+
     <template id="entiteit-examenprogramma">
         <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
             <label>Titel
                 <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
@@ -628,6 +736,9 @@
     </template>
     <template id="entiteit-examenprogramma_subdomein">
         <div class="slo-entity">
+            <label>Prefix
+                <input type="text" data-simply-field="entity.prefix" placeholder="Entiteit prefix">
+            </label>
             <label>Titel
                 <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
@@ -1457,6 +1568,11 @@
     <datalist id="doel" data-simply-list="dataset.doel" data-simply-data="doel" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="niveau" data-simply-list="dataset.niveau" data-simply-data="niveau" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
 
+    <datalist id="ldk_vak" data-simply-list="dataset.ldk_vak" data-simply-data="ldk_vak" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="ldk_vakkern" data-simply-list="dataset.ldk_vakkern" data-simply-data="ldk_vakkern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="ldk_vaksubkern" data-simply-list="dataset.ldk_vaksubkern" data-simply-data="ldk_vaksubkern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="ldk_vakinhoud" data-simply-list="dataset.ldk_vakinhoud" data-simply-data="ldk_vakinhoud" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+
     <datalist id="examenprogramma" data-simply-list="dataset.examenprogramma" data-simply-data="examenprogramma" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="examenprogramma_domein" data-simply-list="dataset.examenprogramma_domein" data-simply-data="examenprogramma_domein" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="examenprogramma_subdomein" data-simply-list="dataset.examenprogramma_subdomein" data-simply-data="examenprogramma_subdomein" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
@@ -1563,6 +1679,12 @@
                             <template data-simply-template="doelniveau" rel="entiteit-doelniveau"></template>
                             <template data-simply-template="doel" rel="entiteit-doel"></template>
                             <template data-simply-template="niveau" rel="entiteit-niveau"></template>
+
+                            <template data-simply-template="ldk_vak" rel="entiteit-vak"></template>
+                            <template data-simply-template="ldk_vakkern" rel="entiteit-vakkern"></template>
+                            <template data-simply-template="ldk_vaksubkern" rel="entiteit-vaksubkern"></template>
+                            <template data-simply-template="ldk_vakinhoud" rel="entiteit-vakinhoud"></template>
+
                             <template data-simply-template="examenprogramma" rel="entiteit-examenprogramma"></template>
                             <template data-simply-template="examenprogramma_domein" rel="entiteit-examenprogramma_domein"></template>
                             <template data-simply-template="examenprogramma_subdomein" rel="entiteit-examenprogramma_subdomein"></template>
@@ -1697,6 +1819,10 @@
                     </div>
                 </article>
             </template>
+            <template data-simply-template="multipleparents">
+                <div data-simply-list="multipleparents" data-simply-data="multipleparents">
+                </div>
+            </template>
             </div>
             <div class="">
                 <div class="slo-form-field" data-simply-field="entity.deleted" data-simply-content="template" data-simply-default-template="0" data-simply-default-value="0">
@@ -1756,11 +1882,11 @@
 <script src="https://canary.simplyedit.io/1/simply-edit.js" xsrc="https://yvo.muze.nl/simply-edit/js/simply-edit.js" xsrc="https://cdn.simplyedit.io/1/simply-edit.js" data-simply-storage="none"></script>
 <script src="js/GitHub.bundle.js"></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
-<!-- script>
+<script>
     simply.route.init({
         root: '/entiteiten-editor/'
     });
-</script -->
+</script>
 
 <script src="https://unpkg.com/json-schema-ref-parser@6.0.0/dist/ref-parser.min.js"></script>
 <script src="https://unpkg.com/lodash@4.17.11/lodash.min.js"></script>
@@ -1780,6 +1906,14 @@
             'vakinhoud':['doelniveau_id'],
             'doelniveau':['doel_id'] // ,'niveau_id']
         },
+		'leerdoelenkaarten': {
+			'ldk_vak': ['ldk_vakkern_id','doelniveau_id'],
+            'ldk_vakkern':['ldk_vaksubkern_id','doelniveau_id'],
+            'ldk_vaksubkern':['ldk_vakinhoud_id','doelniveau_id'],
+            'ldk_vakinhoud':['doelniveau_id'],
+            'doelniveau':['doel_id'] // ,'niveau_id']
+
+		},
         'examenprogramma': {
             'examenprogramma':['examenprogramma_domein_id','examenprogramma_kop1_id'],
             'examenprogramma_domein':['examenprogramma_eindterm_id', 'examenprogramma_subdomein_id'],
@@ -1935,6 +2069,9 @@
             vakkern_id : [],
             vaksubkern_id : [],
             vakinhoud_id : [],
+			ldk_vakkern_id: [],
+			ldk_vaksubkern_id: [],
+			ldk_vakinhoud_id: [],
             doelniveau_id : [],
             doel_id : [],
             niveau_id : [],
@@ -1946,7 +2083,6 @@
     };
     
     var originalEntities = {}; // store to keep unchanged originals so we can revert with delete-change
-    
     
     var entityEditor = simply.app({
         container: document.body,
@@ -1970,6 +2106,14 @@
                 // reset page;
                 editor.pageData.entity = emptyEntity();
                 editor.pageData.page = "new";
+                editor.pageData.rootEntity = null;
+                entityEditor.actions.hideTreeView();
+                window.scrollTo(0,0);
+            },
+            '/#multipleparents/' : function(params) {
+                // reset page;
+                editor.pageData.entity = emptyEntity();
+                editor.pageData.page = "multipleparents";
                 editor.pageData.rootEntity = null;
                 entityEditor.actions.hideTreeView();
                 window.scrollTo(0,0);
@@ -2058,6 +2202,9 @@
             },
             'new': function(el) {
                 simply.route.goto(document.location.pathname + '#new');
+            },
+            'multipleparents': function(el) {
+                simply.route.goto(document.location.pathname + '#multipleparents');
             },
             'delete-relation' : function(el) {
                 rememberScrollPosition();
@@ -2469,7 +2616,8 @@
                     'curriculum-examenprogramma': 'slonl/curriculum-examenprogramma',
                     'curriculum-examenprogramma-bg': 'slonl/curriculum-examenprogramma-bg',
                     'curriculum-syllabus': 'slonl/curriculum-syllabus',
-                    'curriculum-doelgroepteksten': 'slonl/curriculum-doelgroepteksten'
+                    'curriculum-doelgroepteksten': 'slonl/curriculum-doelgroepteksten',
+					'curriculum-leerdoelenkaarten': 'slonl/curriculum-leerdoelenkaarten'
                 };
                 var branch = 'editor';
                 var loading = [];
@@ -2555,7 +2703,8 @@
                         'vak' : 'doel',
                         'examenprogramma' : 'examenprogramma',
                         'kerndoel_vakleergebied': 'kerndoelen',
-                        'examenprogramma_bg_profiel': 'examenprogramma_bg'
+                        'examenprogramma_bg_profiel': 'examenprogramma_bg',
+						'ldk_vak': 'doel'
                     };
                     Object.keys(parentInfo).forEach(function(section) {
                         curriculum.data[section].forEach(function(vakEntity) {
@@ -2577,7 +2726,13 @@
                                     var add = true;
                                     entity.parents.forEach(function(item) {
                                         if (item.type == parent.type) {
-                                            if (item.id != parent.id) {
+                                            // check if the new parent already is in the ids list;
+                                            var dups = item.ids.filter(function(el) {
+                                                if (el.id == parent.id) {
+                                                    return true;
+                                                }
+                                            });
+                                            if (dups.length == 0) {
                                                 item.ids.push({id : parent.id});
                                             }
                                             add = false;
@@ -2601,7 +2756,8 @@
                                 "vak" : 4,
                                 "leerlijn" : 3,
                                 "examenprogramma" : 2,
-                                "examenprogramma_bg": 1
+                                "examenprogramma_bg": 1,
+								"ldk_vak": 0
                             };
 
                             var isChrome = navigator.userAgent.indexOf('Chrome/')!==-1;
@@ -2764,6 +2920,27 @@
                                 }
                             };
                         })
+                    });
+                    editor.addDataSource('multipleparents', {
+                        load: function(el, callback) {
+                            var result = Object.values(curriculum.index.id)
+                            .filter(function(entry) {
+                                if(
+                                    entry.parents &&
+                                    entry.parents.length &&
+                                    entry.parents[entry.parents.length-1].ids.length > 1
+                                ) {
+                                    return true;
+                                } else {
+                                    return false;
+                                }
+                            })
+							var newHtml = '';
+							result.forEach(function(item) {
+								newHtml += '<a href="#edit/' + item.id + '">' + item.id + '</a><br>';
+							});
+							el.innerHTML = newHtml;
+                        }
                     });
                     
                     simply.activate.addListener('context-select', function() {
