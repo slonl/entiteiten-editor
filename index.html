@@ -1946,7 +1946,12 @@
             hier[type].forEach(function(prop) {
                 if (node[prop]) {
                     node[prop].forEach(function(childId) {
-                        walk(hierarchy, curriculum.index.id[childId], childParents, callback);
+                        var child = curriculum.index.id[childId];
+                        if (!child) {
+                            console.error('Missing child id: '+childId+' in '+prop, node);
+                        } else {
+                            walk(hierarchy, curriculum.index.id[childId], childParents, callback);
+                        }
                     });
                 }
             });
@@ -2069,9 +2074,9 @@
             vakkern_id : [],
             vaksubkern_id : [],
             vakinhoud_id : [],
-			ldk_vakkern_id: [],
-			ldk_vaksubkern_id: [],
-			ldk_vakinhoud_id: [],
+            ldk_vakkern_id: [],
+            ldk_vaksubkern_id: [],
+            ldk_vakinhoud_id: [],
             doelniveau_id : [],
             doel_id : [],
             niveau_id : [],
@@ -2617,7 +2622,7 @@
                     'curriculum-examenprogramma-bg': 'slonl/curriculum-examenprogramma-bg',
                     'curriculum-syllabus': 'slonl/curriculum-syllabus',
                     'curriculum-doelgroepteksten': 'slonl/curriculum-doelgroepteksten',
-					'curriculum-leerdoelenkaarten': 'slonl/curriculum-leerdoelenkaarten'
+                    'curriculum-leerdoelenkaarten': 'slonl/curriculum-leerdoelenkaarten'
                 };
                 var branch = 'editor';
                 var loading = [];
@@ -2704,7 +2709,7 @@
                         'examenprogramma' : 'examenprogramma',
                         'kerndoel_vakleergebied': 'kerndoelen',
                         'examenprogramma_bg_profiel': 'examenprogramma_bg',
-						'ldk_vak': 'doel'
+                    	'ldk_vak': 'doel'
                     };
                     Object.keys(parentInfo).forEach(function(section) {
                         curriculum.data[section].forEach(function(vakEntity) {
