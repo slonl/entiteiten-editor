@@ -2566,10 +2566,10 @@
                         delete entity.parents;
                         delete entity.children;
                         delete entity.commit;
-                        if (!entity.dirty) {
+                        if (!entity.dirty || entity.dirty==="0") {
                             delete entity.dirty;
                         }
-                        if (!entity.deleted) {
+                        if (!entity.deleted || entity.deleted==="0") {
                             delete entity.deleted;
                         }
                         Object.keys(entity).forEach(function(p) {
@@ -2607,6 +2607,7 @@
                 }).then(function() {
                     // clear originals because revert is no longer an option
                     originalEntities = {};
+                    return done;
                 });
 //              return curriculum.sources[schema].writeFiles(files, message);
             },
