@@ -252,6 +252,12 @@
             content: '';
             display: block;
         }
+        ul.slo-nav-crumbs-block li {
+            display: block;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
     </style>
     <!-- script src="https://cdn.lr-ingest.io/LogRocket.min.js" crossorigin="anonymous"></script -->
     <script>
@@ -1643,7 +1649,7 @@
                         <span class="slo-right">
                             <button class="slo-button slo-right" data-simply-command="save">Bewaar</button>
                         </span>
-                        <ul class="slo-nav-crumbs slo-space" data-simply-list="entity.parents">
+                        <ul class="slo-nav-crumbs slo-nav-crumbs-block slo-space" data-simply-list="entity.parents">
                             <template>
                                 <li data-simply-list="ids" class="slo-parent-ids">
                                     <template>
@@ -2793,7 +2799,7 @@
                                 }
                                 return 0;
                             }).forEach(function(entity) {
-                                var option = entity.title;
+                                var option = curriculum.index.type[entity.id]+': '+entity.title;
 
                                 if (curriculum.index.type[entity.id] == "doelniveau") {
                                     var doel;
