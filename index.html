@@ -138,7 +138,7 @@
             display: none;
         }
         .slo-treeview {
-            width: 35vw;
+            width: 50vw;
             height: 75vh;
             overflow-x: hidden;
             overflow-y: auto;
@@ -348,12 +348,12 @@
                 <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Vakken</label>
-            <div class="slo-entiteit-relaties" data-simply-list="entity.vak_id" data-simply-entry="relatie">
+            <div class="slo-entiteit-relaties" data-simply-list="entity.vakleergebied_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
             </div>
-            <form data-simply-command="add-relation" data-slo-relation="vak_id" class="slo-search slo-grid slo-grid-3">
-                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vak">
-                <button data-simply-command="add-relation" data-slo-relation="vak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            <form data-simply-command="add-relation" data-slo-relation="vakleergebied_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakleergebied">
+                <button data-simply-command="add-relation" data-slo-relation="vakleergebeid_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
             <label>Niveaus</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
@@ -374,12 +374,12 @@
                 <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Vakken</label>
-            <div class="slo-entiteit-relaties" data-simply-list="entity.vak_id" data-simply-entry="relatie">
+            <div class="slo-entiteit-relaties" data-simply-list="entity.vakleergebied_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
             </div>
-            <form data-simply-command="add-relation" data-slo-relation="vak_id" class="slo-search slo-grid slo-grid-3">
-                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vak">
-                <button data-simply-command="add-relation" data-slo-relation="vak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            <form data-simply-command="add-relation" data-slo-relation="vakleergebied_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakleergebied">
+                <button data-simply-command="add-relation" data-slo-relation="vakleergebied_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
             <label>Niveaus</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
@@ -398,16 +398,16 @@
                 <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
             <label>Vakinhouden</label>
-            <div class="slo-entiteit-relaties" data-simply-list="entity.vakinhoud_id" data-simply-entry="relatie">
+            <div class="slo-entiteit-relaties" data-simply-list="entity.lpib_vakinhoud_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
             </div>
-            <form data-simply-command="add-relation" data-slo-relation="vakinhoud" class="slo-search slo-grid slo-grid-3">
-                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakinhoud">
-                <button data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            <form data-simply-command="add-relation" data-slo-relation="lpib_vakinhoud" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="lpib_vakinhoud">
+                <button data-simply-command="add-relation" data-slo-relation="lpib_vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
         </div>
     </template>
-    <template id="entiteit-vak">
+    <template id="entiteit-vakleergebied">
         <div class="slo-entity">
             <label>Titel
                 <textarea data-simply-activate="autosize"  data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
@@ -416,12 +416,12 @@
                 <textarea data-simply-activate="autosize"  data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Vakkernen</label>
-            <div class="slo-entiteit-relaties" data-simply-list="entity.vakkern_id" data-simply-entry="relatie">
+            <div class="slo-entiteit-relaties" data-simply-list="entity.lpib_vakkern_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
             </div>
-            <form data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-search slo-grid slo-grid-3">
-                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakkern">
-                <button data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            <form data-simply-command="add-relation" data-slo-relation="lpib_vakkern_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="lpib_vakkern">
+                <button data-simply-command="add-relation" data-slo-relation="lpib_vakkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
             <label>Niveaus</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
@@ -441,7 +441,7 @@
             </form>
         </div>
     </template>
-    <template id="entiteit-vakkern">
+    <template id="entiteit-lpib_vakkern">
         <div class="slo-entity">
             <label>Titel
                 <textarea data-simply-activate="autosize"  data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
@@ -449,13 +449,21 @@
             <label>Omschrijving
                 <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
-            <label>Vaksubkernen</label>
-            <div class="slo-entiteit-relaties" data-simply-list="entity.vaksubkern_id" data-simply-entry="relatie">
+            <label>Vakleergebieden</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.vakleergebied_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
             </div>
-            <form data-simply-command="add-relation" data-slo-relation="vaksubkern" class="slo-search slo-grid slo-grid-3">
-                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vaksubkern">
-                <button data-simply-command="add-relation" data-slo-relation="vaksubkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            <form data-simply-command="add-relation" data-slo-relation="vakleergebied_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakleergebied">
+                <button data-simply-command="add-relation" data-slo-relation="vakleergebied_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Vaksubkernen</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.lpib_vaksubkern_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="lpib_vaksubkern" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="lpib_vaksubkern">
+                <button data-simply-command="add-relation" data-slo-relation="lpib_vaksubkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
             <label>DoelNiveaus</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
@@ -467,7 +475,7 @@
             </form>
         </div>
     </template>
-    <template id="entiteit-vaksubkern">
+    <template id="entiteit-lpib_vaksubkern">
         <div class="slo-entity">
             <label>Titel
                 <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
@@ -476,12 +484,12 @@
                 <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Vakinhouden</label>
-            <div class="slo-entiteit-relaties" data-simply-list="entity.vakinhoud_id" data-simply-entry="relatie">
+            <div class="slo-entiteit-relaties" data-simply-list="entity.lpib_vakinhoud_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
             </div>
-            <form data-simply-command="add-relation" data-slo-relation="vakinhoud" class="slo-search slo-grid slo-grid-3">
-                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakinhoud">
-                <button data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            <form data-simply-command="add-relation" data-slo-relation="lpib_vakinhoud" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="lpib_vakinhoud">
+                <button data-simply-command="add-relation" data-slo-relation="lpib_vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
             <label>DoelNiveaus</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
@@ -493,7 +501,7 @@
             </form>
         </div>
     </template>
-    <template id="entiteit-vakinhoud">
+    <template id="entiteit-lpib_vakinhoud">
         <div class="slo-entity">
             <label>Titel
                 <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
@@ -569,7 +577,7 @@
         </div>
     </template>
 
-    <template id="entiteit-ldk_vak">
+    <template id="entiteit-ldk_vakleergebied">
         <div class="slo-entity">
             <label>Titel
                 <textarea data-simply-activate="autosize"  data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
@@ -807,12 +815,12 @@
                 <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
             <label>Vak</label>
-            <div class="slo-entiteit-relaties" data-simply-list="entity.vak_id" data-simply-entry="relatie">
+            <div class="slo-entiteit-relaties" data-simply-list="entity.vakleergebied_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
             </div>
-            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="vak_id">
-                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vak">
-                <button data-simply-command="add-relation" data-slo-relation="vak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="vakleergebied_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakleergebied">
+                <button data-simply-command="add-relation" data-slo-relation="vakleergebied_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
     </div>
     </template>
@@ -1289,12 +1297,12 @@
                 <button data-simply-command="add-relation" data-slo-relation="kerndoel_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
             <label>Vak</label>
-            <div class="slo-entiteit-relaties" data-simply-list="entity.vak_id" data-simply-entry="relatie">
+            <div class="slo-entiteit-relaties" data-simply-list="entity.vakleergebied_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
             </div>
-            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="vak_id">
-                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vak">
-                <button data-simply-command="add-relation" data-slo-relation="vak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            <form class="slo-search slo-grid slo-grid-3" data-slo-relation="vakleergebied_id">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakleergebied">
+                <button data-simply-command="add-relation" data-slo-relation="vakleergebied_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
         </div>
     </template>
@@ -1480,36 +1488,36 @@
                 <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
             <label>Vakken</label>
-            <div class="slo-entiteit-relaties" data-simply-list="entity.vak_id" data-simply-entry="relatie">
+            <div class="slo-entiteit-relaties" data-simply-list="entity.vakleergebied_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
             </div>
-            <form data-simply-command="add-relation" data-slo-relation="vak_id" class="slo-search slo-grid slo-grid-3">
-                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vak">
-                <button data-simply-command="add-relation" data-slo-relation="vak_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            <form data-simply-command="add-relation" data-slo-relation="vakleergebied_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakleergebied">
+                <button data-simply-command="add-relation" data-slo-relation="vakleergebied_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
             <label>Vakkernen</label>
-            <div class="slo-entiteit-relaties" data-simply-list="entity.vakkern_id" data-simply-entry="relatie">
+            <div class="slo-entiteit-relaties" data-simply-list="entity.lpib_vakkern_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
             </div>
-            <form data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-search slo-grid slo-grid-3">
-                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakkern">
-                <button data-simply-command="add-relation" data-slo-relation="vakkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            <form data-simply-command="add-relation" data-slo-relation="lpib_vakkern_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="lpib_vakkern">
+                <button data-simply-command="add-relation" data-slo-relation="lpib_vakkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
             <label>Vaksubkernen</label>
-            <div class="slo-entiteit-relaties" data-simply-list="entity.vaksubkern_id" data-simply-entry="relatie">
+            <div class="slo-entiteit-relaties" data-simply-list="entity.lpib_vaksubkern_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
             </div>
-            <form data-simply-command="add-relation" data-slo-relation="vaksubkern_id" class="slo-search slo-grid slo-grid-3">
-                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vaksubkern">
-                <button data-simply-command="add-relation" data-slo-relation="vaksubkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            <form data-simply-command="add-relation" data-slo-relation="lpib_vaksubkern_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="lpib_vaksubkern">
+                <button data-simply-command="add-relation" data-slo-relation="lpib_vaksubkern_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
             <label>Vakinhouden</label>
-            <div class="slo-entiteit-relaties" data-simply-list="entity.vakinhoud_id" data-simply-entry="relatie">
+            <div class="slo-entiteit-relaties" data-simply-list="entity.lpib_vakinhoud_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
             </div>
-            <form data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-search slo-grid slo-grid-3">
-                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="vakinhoud">
-                <button data-simply-command="add-relation" data-slo-relation="vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            <form data-simply-command="add-relation" data-slo-relation="lpib_vakinhoud_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="lpib_vakinhoud">
+                <button data-simply-command="add-relation" data-slo-relation="lpib_vakinhoud_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
             <label>DoelNiveaus</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
@@ -1566,15 +1574,15 @@
         </div>
     </template>
     <datalist id="entities" data-simply-list="dataset.entities" data-simply-data="entities" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
-    <datalist id="vak" data-simply-list="dataset.vak" data-simply-data="vak" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
-    <datalist id="vakkern" data-simply-list="dataset.vakkern" data-simply-data="vakkern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
-    <datalist id="vaksubkern" data-simply-list="dataset.vaksubkern" data-simply-data="vaksubkern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
-    <datalist id="vakinhoud" data-simply-list="dataset.vakinhoud" data-simply-data="vakinhoud" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="vakleergebied" data-simply-list="dataset.vakleergebied" data-simply-data="vakleergebied" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="lpib_vakkern" data-simply-list="dataset.lpib_vakkern" data-simply-data="lpib_vakkern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="lpib_vaksubkern" data-simply-list="dataset.lpib_vaksubkern" data-simply-data="lpib_vaksubkern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="lpib_vakinhoud" data-simply-list="dataset.lpib_vakinhoud" data-simply-data="lpib_vakinhoud" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="doelniveau" data-simply-list="dataset.doelniveau" data-simply-data="doelniveau" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="doel" data-simply-list="dataset.doel" data-simply-data="doel" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="niveau" data-simply-list="dataset.niveau" data-simply-data="niveau" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
 
-    <datalist id="ldk_vak" data-simply-list="dataset.ldk_vak" data-simply-data="ldk_vak" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="ldk_vakleergebied" data-simply-list="dataset.ldk_vakleergebied" data-simply-data="ldk_vakleergebied" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="ldk_vakkern" data-simply-list="dataset.ldk_vakkern" data-simply-data="ldk_vakkern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="ldk_vaksubkern" data-simply-list="dataset.ldk_vaksubkern" data-simply-data="ldk_vaksubkern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="ldk_vakinhoud" data-simply-list="dataset.ldk_vakinhoud" data-simply-data="ldk_vakinhoud" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
@@ -1608,7 +1616,7 @@
             </div>
         </div>
         <div class="slo-grid slo-grid-4">
-            <div class="slo-grid-span-3" data-simply-field="page" data-simply-content="template" data-simply-default-value="new">
+            <div class="slo-grid-span-4" data-simply-field="page" data-simply-content="template" data-simply-default-value="new">
             <template data-simply-template="edit">
                 <article class="slo-card slo-grid-span-3">
                     <header class="slo-card-header slo-space">
@@ -1678,18 +1686,18 @@
                         <div data-simply-field="entity.section" data-simply-content="template" data-simply-default-value="default">
                             <template data-simply-template="vakkencluster" rel="entiteit-vakkencluster"></template>
                             <template data-simply-template="leerlijn" rel="entiteit-leerlijn"></template>
-                            <template data-simply-template="vak" rel="entiteit-vak"></template>
-                            <template data-simply-template="vakkern" rel="entiteit-vakkern"></template>
-                            <template data-simply-template="vaksubkern" rel="entiteit-vaksubkern"></template>
-                            <template data-simply-template="vakinhoud" rel="entiteit-vakinhoud"></template>
+                            <template data-simply-template="vakleergebied" rel="entiteit-vakleergebied"></template>
+                            <template data-simply-template="lpib_vakkern" rel="entiteit-lpib_vakkern"></template>
+                            <template data-simply-template="lpib_vaksubkern" rel="entiteit-lpib_vaksubkern"></template>
+                            <template data-simply-template="lpib_vakinhoud" rel="entiteit-lpib_vakinhoud"></template>
                             <template data-simply-template="doelniveau" rel="entiteit-doelniveau"></template>
                             <template data-simply-template="doel" rel="entiteit-doel"></template>
                             <template data-simply-template="niveau" rel="entiteit-niveau"></template>
 
-                            <template data-simply-template="ldk_vak" rel="entiteit-vak"></template>
-                            <template data-simply-template="ldk_vakkern" rel="entiteit-vakkern"></template>
-                            <template data-simply-template="ldk_vaksubkern" rel="entiteit-vaksubkern"></template>
-                            <template data-simply-template="ldk_vakinhoud" rel="entiteit-vakinhoud"></template>
+                            <template data-simply-template="ldk_vakleergebied" rel="entiteit-vak"></template>
+                            <template data-simply-template="ldk_vakkern" rel="entiteit-lpib_vakkern"></template>
+                            <template data-simply-template="ldk_vaksubkern" rel="entiteit-lpib_vaksubkern"></template>
+                            <template data-simply-template="ldk_vakinhoud" rel="entiteit-lpib_vakinhoud"></template>
 
                             <template data-simply-template="examenprogramma" rel="entiteit-examenprogramma"></template>
                             <template data-simply-template="examenprogramma_domein" rel="entiteit-examenprogramma_domein"></template>
@@ -1744,10 +1752,10 @@
                             <select class="slo-entity-select" data-simply-field="entity.section">
                                 <option value="leerlijn">leerlijn</option>
                                 <option value="vakkencluster">vakkencluster</option>
-                                <option value="vak">vak</option>
-                                <option value="vakkern">vakkern</option>
-                                <option value="vaksubkern">vaksubkern</option>
-                                <option value="vakinhoud">vakinhoud</option>
+                                <option value="vakleergebied">vakleergebied</option>
+                                <option value="lpib_vakkern">lpib_vakkern</option>
+                                <option value="lpib_vaksubkern">lpib_vaksubkern</option>
+                                <option value="lpib_vakinhoud">lpib_vakinhoud</option>
                                 <option value="doelniveau">doelniveau</option>
                                 <option value="doel">doel</option>
                                 <option value="niveau">niveau</option>
@@ -1787,10 +1795,10 @@
                     <div class="slo-card-body" data-simply-field="entity.section" data-simply-content="template" data-simply-default-value="default">
                         <template data-simply-template="vakkencluster" rel="entiteit-vakkencluster"></template>
                         <template data-simply-template="leerlijn" rel="entiteit-leerlijn"></template>
-                        <template data-simply-template="vak" rel="entiteit-vak"></template>
-                        <template data-simply-template="vakkern" rel="entiteit-vakkern"></template>
-                        <template data-simply-template="vaksubkern" rel="entiteit-vaksubkern"></template>
-                        <template data-simply-template="vakinhoud" rel="entiteit-vakinhoud"></template>
+                        <template data-simply-template="vakleergebied" rel="entiteit-vakleergebied"></template>
+                        <template data-simply-template="lpib_vakkern" rel="entiteit-lpib_vakkern"></template>
+                        <template data-simply-template="lpib_vaksubkern" rel="entiteit-lpib_vaksubkern"></template>
+                        <template data-simply-template="lpib_vakinhoud" rel="entiteit-lpib_vakinhoud"></template>
                         <template data-simply-template="doelniveau" rel="entiteit-doelniveau"></template>
                         <template data-simply-template="doel" rel="entiteit-doel"></template>
                         <template data-simply-template="niveau" rel="entiteit-niveau"></template>
@@ -1830,7 +1838,7 @@
                 </div>
             </template>
             </div>
-            <div class="">
+            <!-- div class="">
                 <div class="slo-form-field" data-simply-field="entity.deleted" data-simply-content="template" data-simply-default-template="0" data-simply-default-value="0">
                     <template data-simply-template="0">
                         <label class="slo-form-checkbox">
@@ -1844,7 +1852,7 @@
                     <template data-simply-template="1">
                     </template>
                 </div>
-            </div>
+            </div -->
         </div>
     </main>
 
@@ -1906,19 +1914,18 @@
     var reverseDoelIndex = {};
     var hierarchies = {
         'doel': {
-            'vak':['vakkern_id','doelniveau_id'],
-            'vakkern':['vaksubkern_id','doelniveau_id'],
-            'vaksubkern':['vakinhoud_id','doelniveau_id'],
-            'vakinhoud':['doelniveau_id'],
+            //'vakleergebied':['lpib_vakkern_id','doelniveau_id'],
+            'lpib_vakkern':['lpib_vaksubkern_id','doelniveau_id'],
+            'lpib_vaksubkern':['lpib_vakinhoud_id','doelniveau_id'],
+            'lpib_vakinhoud':['doelniveau_id'],
             'doelniveau':['doel_id'] // ,'niveau_id']
         },
 		'leerdoelenkaarten': {
-			'ldk_vak': ['ldk_vakkern_id','doelniveau_id'],
+			'ldk_vakleergebied': ['ldk_vakkern_id','doelniveau_id'],
             'ldk_vakkern':['ldk_vaksubkern_id','doelniveau_id'],
             'ldk_vaksubkern':['ldk_vakinhoud_id','doelniveau_id'],
             'ldk_vakinhoud':['doelniveau_id'],
             'doelniveau':['doel_id'] // ,'niveau_id']
-
 		},
         'examenprogramma': {
             'examenprogramma':['examenprogramma_domein_id','examenprogramma_kop1_id'],
@@ -2077,9 +2084,9 @@
 
     var emptyEntity = function() {
         return {
-            vakkern_id : [],
-            vaksubkern_id : [],
-            vakinhoud_id : [],
+            lpib_vakkern_id : [],
+            lpib_vaksubkern_id : [],
+            lpib_vakinhoud_id : [],
             ldk_vakkern_id: [],
             ldk_vaksubkern_id: [],
             ldk_vakinhoud_id: [],
@@ -2427,7 +2434,10 @@
                         return '';
                     }
                     var title = (e.prefix ? e.prefix + ' ' + e.title : (e.title ? e.title : e.id));
-                    var result = '<span class="slo-treeview-title" data-simply-command="showEntity" data-simply-value="'+e.id+'">';
+                    if (curriculum.index.type[e.id]=='doelniveau') {
+                    	title = getDoelNiveauTitle(e);                    	
+                    }
+                    var result = '<span class="slo-treeview-title" data-simply-command="showEntity" data-simply-value="'+e.id+'" title="'+escapeQuotes(title)+'">';
                     if (parent) {
                         result += '<a class="slo-remove-button slo-button slo-button-naked';
                         result += '" data-simply-command="toggleRelation" data-simply-value="'+parent.id+':'+e.id+'">×</a>';
@@ -2438,14 +2448,12 @@
                         contexts = [];
                         contexts.push(getContextFromId(e.id));
                     }
-                    $('.slo-treeview-schemas').val(contexts);
-                    $('.slo-treeview-schemas').trigger("chosen:updated");
                     result += '<div class="slo-treeview-children">';
                     if (!e.children) {
                         e.children = [];
                     }
                     e.children.forEach(function(c) {
-                        if (contexts.indexOf(getContextFromId(c))!=-1) {
+                        if (contexts.indexOf(getContextFromId(c))!=-1 && curriculum.index.type[c]!='vakleergebied') {
                             result += render(curriculum.index.id[c], contexts, niveau, e);
                         }
                     });
@@ -2454,6 +2462,8 @@
                 };
                 var tree = document.querySelector('.slo-treeview-tree');
                 var treeHTML = render(entity, contexts, niveau);
+                $('.slo-treeview-schemas').val(contexts);
+                $('.slo-treeview-schemas').trigger("chosen:updated");
                 tree.innerHTML = treeHTML;
                 document.body.dataset.loading="false";
                 return Promise.resolve(true);
@@ -2622,8 +2632,8 @@
             },
             start: function(user, pass) {
                 var schemas = {
-                    'curriculum-inhouden': 'slonl/curriculum-inhouden',
-                    'curriculum-doelen': 'slonl/curriculum-doelen',
+                    'curriculum-lpib': 'slonl/curriculum-lpib',
+                    'curriculum-basis': 'slonl/curriculum-basis',
                     'curriculum-kerndoelen': 'slonl/curriculum-kerndoelen',
                     'curriculum-examenprogramma': 'slonl/curriculum-examenprogramma',
                     'curriculum-examenprogramma-bg': 'slonl/curriculum-examenprogramma-bg',
@@ -2712,11 +2722,11 @@
                     });
                     
                     var parentInfo = {
-                        'vak' : 'doel',
+                        'lpib_vakkern' : 'doel',
                         'examenprogramma' : 'examenprogramma',
                         'kerndoel_vakleergebied': 'kerndoelen',
                         'examenprogramma_bg_profiel': 'examenprogramma_bg',
-                    	'ldk_vak': 'doel'
+                    	'ldk_vakleergebied': 'doel'
                     };
                     Object.keys(parentInfo).forEach(function(section) {
                         curriculum.data[section].forEach(function(vakEntity) {
@@ -2757,7 +2767,23 @@
                             });
                         });
                     });
-
+					// add fake parent and children links for vakleergebied in each lpib_vakkern
+					curriculum.data['lpib_vakkern'].forEach(function(vakkern) {
+						if (vakkern.vakleergebied_id && vakkern.vakleergebied_id.length) {
+							vakkern.vakleergebied_id.forEach(function(vakleergebied_id) {
+								vakkern.parents.push({
+									id: vakleergebied_id,
+									ids: [ vakleergebied_id ],
+									type: curriculum.index.type[vakleergebied_id]
+								});
+								var vak = curriculum.index.id[vakleergebied_id];
+								if (!vak.children) {
+									vak.children = [];
+								}
+								vak.children.push(vakkern.id);
+							});
+						}
+					});
                     editor.addDataSource("entities", {
                         load : function(el, callback) {
                             document.body.dataset.loading = "true";
@@ -2765,11 +2791,11 @@
 
                             // Priorities for sorting - we want the higher level entities to come first in the list.
                             var priorities = {
-                                "vak" : 4,
+                                "vakleergebied" : 4,
                                 "leerlijn" : 3,
                                 "examenprogramma" : 2,
                                 "examenprogramma_bg": 1,
-								"ldk_vak": 0
+								"ldk_vakleergebied": 0
                             };
 
                             var isChrome = navigator.userAgent.indexOf('Chrome/')!==-1;
@@ -2979,6 +3005,29 @@
         }
     });
 
+	function escapeQuotes(s) {
+		return s.replace('"','\x22').replace("'",'\x27');
+	}
+	
+	function getDoelNiveauTitle(entity) {
+		if (!entity.niveau_id || !Array.isArray(entity.niveau_id) || !entity.niveau_id.length) {
+			var niveau = 'geen';
+		} else {
+			var niveau = entity.niveau_id.map(function(id) {
+				return  curriculum.index.id[id].title;
+			}).join(',');
+		}
+		var title = [];
+		['doel_id','kerndoel_id','examenprogramma_eindterm_id','examenprogramma_subdomein_id','examenprogramma_domeid_id'].forEach(function(prop) {
+			if (entity[prop] && Array.isArray(entity[prop]) && entity[prop].length) {
+				entity[prop].forEach(function(childId) {
+					title.push(prop.substr(0,prop.length-3)+': '+curriculum.index.id[childId].title);
+				});
+			}
+		});
+		return '('+niveau+') '+'['+(title.length)+'] '+title.join(',');
+	}
+	
     (function() {
         var login;
         var loginString = localStorage.getItem('login');
