@@ -39,6 +39,7 @@
             left: 10px !important;
             border-radius: 0;
         }
+        
     </style>
     <script src="js/vanillaSelectBox.js"></script>
     <link rel="stylesheet" href="css/styles.css">
@@ -1913,12 +1914,13 @@
     <div class="slo-dialog-overlay"></div>
 
 
+<script src="/js/error.js"></script>
 <script src="https://canary.simplyedit.io/1/simply-edit.js" xsrc="https://yvo.muze.nl/simply-edit/js/simply-edit.js" xsrc="https://cdn.simplyedit.io/1/simply-edit.js" data-simply-storage="none"></script>
 <script src="js/GitHub.bundle.js"></script>
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
 <script>
     simply.route.init({
-        root: '/entiteiten-editor/'
+        root: '/curriculum/beheer/entiteiten-editor/'
     });
 </script>
 
@@ -1981,7 +1983,7 @@
                     node[prop].forEach(function(childId) {
                         var child = curriculum.index.id[childId];
                         if (!child) {
-                            console.error('Missing child id: '+childId+' in '+prop, node);
+//                            console.error('Missing child id: '+childId+' in '+prop, node);
                         } else {
                             walk(hierarchy, curriculum.index.id[childId], childParents, callback);
                         }
@@ -2813,11 +2815,11 @@
                             // Priorities for sorting - we want the higher level entities to come first in the list.
                             var priorities = {
                                 "vakleergebied" : 5,
-								"lpib_vakleergebied" : 4,
+                                "lpib_vakleergebied" : 4,
                                 "leerlijn" : 3,
                                 "examenprogramma" : 2,
                                 "examenprogramma_bg": 1,
-								"ldk_vakleergebied": 0
+                                "ldk_vakleergebied": 0
                             };
 
                             var isChrome = navigator.userAgent.indexOf('Chrome/')!==-1;
