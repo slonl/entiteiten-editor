@@ -1658,11 +1658,11 @@
                                 <span class="slo-tag">Verwijderd</span>
                             </template>
                             <template data-simply-template="0">
-                                <span data-simply-field="entity.dirty" data-simply-content="template">
+                                <!-- span data-simply-field="entity.dirty" data-simply-content="template">
                                     <template data-simply-template="1">
                                         <span class="slo-tag">Inhoudelijk gewijzigd</span>
                                     </template>                                    
-                                </span>
+                                </span -->
                                 <button class="slo-button slo-right slo-button-nomargin" data-simply-command="deprecate">
                                     <svg class="slo-icon slo-icon-feather">
                                         <use xlink:href="/files/feather-sprite.svg#trash">
@@ -1858,21 +1858,21 @@
                 </div>
             </template>
             </div>
-            <!-- div class="">
+            <div style="position: absolute; right: 12em; margin-top: .5em;">
                 <div class="slo-form-field" data-simply-field="entity.deleted" data-simply-content="template" data-simply-default-template="0" data-simply-default-value="0">
                     <template data-simply-template="0">
                         <label class="slo-form-checkbox">
                             <input type="checkbox" name="dirty" id="dirty" value="1" data-simply-field="entity.dirty"> <span class="slo-label">Inhoudelijk gewijzigd sinds de vorige release.</span>
                         </label>
-                        <div class="slo-form-help">
+                        <!-- div class="slo-form-help">
                             Als dit vinkje aan staat, betekend het dat deze entiteit bij de volgende release een nieuwe UUID krijgt. Het is belangrijk dat dit altijd gebeurd bij inhoudelijke wijzigingen. Alleen als je bijv. een typefout corrigeert mag je dit vinkje uitzetten. Let erop dat je dit alleen doet als
                             het vinkje voor de correctie al uit stond.
-                        </div>
+                        </div -->
                     </template>
                     <template data-simply-template="1">
                     </template>
                 </div>
-            </div -->
+            </div>
         </div>
     </main>
 
