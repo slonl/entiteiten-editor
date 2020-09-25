@@ -2594,7 +2594,9 @@
                     if (!schemas[schema]) {
                         schemas[schema] = [];
                     }
-                    schemas[schema].push(section);
+                    if (schemas[schema].indexOf(section)===-1) {
+                        schemas[schema].push(section);
+                    }
                     done.push(changeIndex);
                 });
                 var clean = function(dataset) {
