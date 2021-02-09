@@ -535,6 +535,12 @@
     </template>
     <template id="entiteit-doelniveau">
         <div class="slo-entity">
+            <label>Prefix
+            	<input data-simply-field="entity.prefix">
+            </label>
+            <label>CE;SE
+            	<input data-simply-field="entity.ce_se">
+            </label>
             <label>Doelen</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.doel_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
@@ -571,6 +577,9 @@
             </label>
             <label>Bron
                 <input type="text" data-simply-field="entity.bron" placeholder="Bron">
+            </label>
+            <label>AanbodID
+                <input type="text" data-simply-field="entity.aanbodid" placeholder="">
             </label>
         </div>
     </template>
@@ -676,6 +685,27 @@
             </label>
             <label>Omschrijving
                 <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>DoelNiveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-ldk_vakbegrip">
+        <div class="slo-entity">
+            <label>Titel
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize" data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>CE; SE
+                <input type="text" data-simply-field="entity.ce_se" placeholder="">
             </label>
             <label>DoelNiveaus</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
@@ -1590,6 +1620,125 @@
             </div>
         </div>
     </template>
+    
+    <!-- inhoudslijnen -->
+    <template id="entiteit-inh_vakleergebied">
+        <div class="slo-entity">
+            <label>Prefix
+            	<input data-simply-field="entity.prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Inhoudslijnen</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.inh_inhoudslijn_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="inh_inhoudslijn_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="inh_inhoudslijn">
+                <button data-simply-command="add-relation" data-slo-relation="inh_inhoudslijn_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>Niveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
+                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>DoelNiveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-inh_inhoudslijn">
+        <div class="slo-entity">
+            <label>Prefix
+            	<input data-simply-field="entity.prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Clusters</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.inh_cluster_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="inh_cluster_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="inh_cluster">
+                <button data-simply-command="add-relation" data-slo-relation="inh_cluster_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>DoelNiveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-inh_cluster">
+        <div class="slo-entity">
+            <label>Prefix
+            	<input data-simply-field="entity.prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>SubClusters</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.inh_subcluster_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="inh_subcluster_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="inh_subcluster">
+                <button data-simply-command="add-relation" data-slo-relation="inh_subcluster_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+            <label>DoelNiveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+    <template id="entiteit-inh_subcluster">
+        <div class="slo-entity">
+            <label>Prefix
+            	<input data-simply-field="entity.prefix">
+            </label>
+            <label>Titel
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
+            </label>
+            <label>Omschrijving
+                <textarea data-simply-activate="autosize"  data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>DoelNiveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.doelniveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="doelniveau" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="doelniveau">
+                <button data-simply-command="add-relation" data-slo-relation="doelniveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+        </div>
+    </template>
+
     <datalist id="entities" data-simply-list="dataset.entities" data-simply-data="entities" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="vakleergebied" data-simply-list="dataset.vakleergebied" data-simply-data="vakleergebied" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="lpib_vakleergebied" data-simply-list="dataset.lpib_vakleergebied" data-simply-data="lpib_vakleergebied" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
@@ -1604,6 +1753,7 @@
     <datalist id="ldk_vakkern" data-simply-list="dataset.ldk_vakkern" data-simply-data="ldk_vakkern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="ldk_vaksubkern" data-simply-list="dataset.ldk_vaksubkern" data-simply-data="ldk_vaksubkern" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="ldk_vakinhoud" data-simply-list="dataset.ldk_vakinhoud" data-simply-data="ldk_vakinhoud" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="ldk_vakbegrip" data-simply-list="dataset.ldk_vakbegrip" data-simply-data="ldk_vakbegrip" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
 
     <datalist id="examenprogramma" data-simply-list="dataset.examenprogramma" data-simply-data="examenprogramma" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="examenprogramma_domein" data-simply-list="dataset.examenprogramma_domein" data-simply-data="examenprogramma_domein" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
@@ -1623,6 +1773,10 @@
     <datalist id="syllabus_vakbegrip" data-simply-list="dataset.syllabus_vakbegrip" data-simply-data="syllabus_vakbegrip" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="syllabus_toelichting" data-simply-list="dataset.syllabus_toelichting" data-simply-data="syllabus_toelichting" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
     <datalist id="syllabus_specifieke_eindterm" data-simply-list="dataset.syllabus_specifieke_eindterm" data-simply-data="syllabus_specifieke_eindterm" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+
+    <datalist id="inh_inhoudslijn" data-simply-list="dataset.inh_inhoudslijn" data-simply-data="inh_inhoudslijn" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="inh_cluster" data-simply-list="dataset.inh_cluster" data-simply-data="inh_cluster" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
+    <datalist id="inh_subcluster" data-simply-list="dataset.inh_subcluster" data-simply-data="inh_subcluster" data-simply-entry="entry"><template><option data-simply-transformer="searchoption" data-simply-field="entry"></option></template></datalist>
 
     <main class="slo-main slo-space-vertical">
         <div class="slo-grid slo-grid-4">
@@ -1717,7 +1871,8 @@
                             <template data-simply-template="ldk_vakkern" rel="entiteit-ldk_vakkern"></template>
                             <template data-simply-template="ldk_vaksubkern" rel="entiteit-ldk_vaksubkern"></template>
                             <template data-simply-template="ldk_vakinhoud" rel="entiteit-ldk_vakinhoud"></template>
-
+							<template data-simply-template="ldk_vakbegrip" rel="entiteit-ldk_vakbegrip"></template>
+							
                             <template data-simply-template="examenprogramma" rel="entiteit-examenprogramma"></template>
                             <template data-simply-template="examenprogramma_domein" rel="entiteit-examenprogramma_domein"></template>
                             <template data-simply-template="examenprogramma_subdomein" rel="entiteit-examenprogramma_subdomein"></template>
@@ -1748,6 +1903,12 @@
                             <template data-simply-template="syllabus_toelichting" rel="entiteit-syllabus_toelichting"></template>
                             <template data-simply-template="syllabus_specifieke_eindterm" rel="entiteit-syllabus_specifieke_eindterm"></template>
                             <template data-simply-template="leerlingtekst" rel="entiteit-leerlingtekst"></template>
+                            
+                            <template data-simply-template="inh_vakleergebied" rel="entiteit-inh_vakleergebied"></template>
+                            <template data-simply-template="inh_inhoudslijn" rel="entiteit-inh_inhoudslijn"></template>
+                            <template data-simply-template="inh_cluster" rel="entiteit-inh_cluster"></template>
+                            <template data-simply-template="inh_subcluster" rel="entiteit-inh_subcluster"></template>
+                            
                         </div>
                     </div>
                 </article>
@@ -1807,6 +1968,10 @@
                                 <option value="syllabus_toelichting">syllabus_toelichting</option>
                                 <option value="syllabus_specifieke_eindterm">syllabus_specifieke_eindterm</option>
                                 <option value="leerlingtekst">leerlingtekst</option>
+                                <option value="inh_vakleergebied">inh_vakleergebied</option>
+                                <option value="inh_inhoudslijn">inh_inhoudslijn</option>
+                                <option value="inh_cluster">inh_cluster</option>
+                                <option value="inh_subcluster">inh_subcluster</option>
                                 <option value=""></option>
 
                             </select>
@@ -1851,6 +2016,10 @@
                         <template data-simply-template="syllabus_toelichting" rel="entiteit-syllabus_toelichting"></template>
                         <template data-simply-template="syllabus_specifieke_eindterm" rel="entiteit-syllabus_specifieke_eindterm"></template>
                         <template data-simply-template="leerlingtekst" rel="entiteit-leerlingtekst"></template>
+                        <template data-simply-template="inh_vakleergebied" rel="entiteit-inh_vakleergebied"></template>
+                        <template data-simply-template="inh_inhoudslijn" rel="entiteit-inh_inhoudslijn"></template>
+                        <template data-simply-template="inh_cluster" rel="entiteit-inh_cluster"></template>
+                        <template data-simply-template="inh_subcluster" rel="entiteit-inh_subcluster"></template>
                     </div>
                 </article>
             </template>
@@ -1920,7 +2089,7 @@
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
 <script>
     simply.route.init({
-        root: '/curriculum/beheer/entiteiten-editor/'
+        root: '/entiteiten-editor/'
     });
 </script>
 
@@ -1947,6 +2116,7 @@
             'ldk_vakkern':['ldk_vaksubkern_id','doelniveau_id'],
             'ldk_vaksubkern':['ldk_vakinhoud_id','doelniveau_id'],
             'ldk_vakinhoud':['doelniveau_id'],
+            'ldk_vakbegrip':['doelniveau_id'],
             'doelniveau':['doel_id'] // ,'niveau_id']
 		},
         'examenprogramma': {
@@ -1969,6 +2139,12 @@
         'kerndoelen': {
             'kerndoel_domein' : ['kerndoel_id'],
             'kerndoel_vakleergebied' : ['kerndoel_uitstroomprofiel_id', 'kerndoel_id', 'kerndoel_domein_id']
+        },
+        'inhoudslijnen': {
+        	'inh_vakleergebied': ['inh_inhoudslijn_id','doelniveau_id'],
+        	'inh_inhoudslijn': ['inh_cluster_id','doelniveau_id'],
+        	'inh_cluster': ['inh_subcluster_id','doelniveau_id'],
+        	'doelniveau': ['doel_id']
         }
     };
     function walk(hierarchy, node, parents, callback) {
@@ -2112,6 +2288,9 @@
             ldk_vakkern_id: [],
             ldk_vaksubkern_id: [],
             ldk_vakinhoud_id: [],
+            inh_inhoudslijn_id: [],
+            inh_cluster_id:[],
+            inh_subcluster_id:[],
             doelniveau_id : [],
             doel_id : [],
             niveau_id : [],
@@ -2663,7 +2842,8 @@
                     'curriculum-examenprogramma-bg': 'slonl/curriculum-examenprogramma-bg',
                     'curriculum-syllabus': 'slonl/curriculum-syllabus',
                     'curriculum-doelgroepteksten': 'slonl/curriculum-doelgroepteksten',
-                    'curriculum-leerdoelenkaarten': 'slonl/curriculum-leerdoelenkaarten'
+                    'curriculum-leerdoelenkaarten': 'slonl/curriculum-leerdoelenkaarten',
+					'curriculum-inhoudslijnen': 'slonl/curriculum-inhoudslijnen'
                 };
                 var branch = 'editor';
                 var loading = [];
@@ -2750,7 +2930,8 @@
                         'examenprogramma' : 'examenprogramma',
                         'kerndoel_vakleergebied': 'kerndoelen',
                         'examenprogramma_bg_profiel': 'examenprogramma_bg',
-                    	'ldk_vakleergebied': 'doel'
+                    	'ldk_vakleergebied': 'doel',
+                    	'inh_vakleergebied': 'doel'
                     };
                     Object.keys(parentInfo).forEach(function(section) {
                         curriculum.data[section].forEach(function(vakEntity) {
@@ -2821,7 +3002,8 @@
                                 "leerlijn" : 3,
                                 "examenprogramma" : 2,
                                 "examenprogramma_bg": 1,
-                                "ldk_vakleergebied": 0
+                                "ldk_vakleergebied": 0,
+                                "inh_vakleergebied": 0
                             };
 
                             var isChrome = navigator.userAgent.indexOf('Chrome/')!==-1;
