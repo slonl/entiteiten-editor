@@ -602,6 +602,9 @@
 
     <template id="entiteit-ldk_vakleergebied">
         <div class="slo-entity">
+            <label>Prefix
+            	<input data-simply-field="entity.prefix">
+            </label>
             <label>Titel
                 <textarea data-simply-activate="autosize"  data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
@@ -628,6 +631,9 @@
     </template>
     <template id="entiteit-ldk_vakkern">
         <div class="slo-entity">
+            <label>Prefix
+            	<input data-simply-field="entity.prefix">
+            </label>
             <label>Titel
                 <textarea data-simply-activate="autosize"  data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
@@ -654,6 +660,9 @@
     </template>
     <template id="entiteit-ldk_vaksubkern">
         <div class="slo-entity">
+            <label>Prefix
+            	<input data-simply-field="entity.prefix">
+            </label>
             <label>Titel
                 <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
@@ -680,6 +689,9 @@
     </template>
     <template id="entiteit-ldk_vakinhoud">
         <div class="slo-entity">
+            <label>Prefix
+            	<input data-simply-field="entity.prefix">
+            </label>
             <label>Titel
                 <textarea data-simply-activate="autosize" data-simply-field="entity.title" placeholder="Entiteit titel"></textarea>
             </label>
@@ -735,6 +747,7 @@
             <label>Versie
                 <input type="text" data-simply-field="entity.versie" placeholder="Examenprogramma Versie">
             </label>
+
             <label>Domein</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_domein_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
@@ -743,6 +756,16 @@
                 <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_domein">
                 <button data-simply-command="add-relation" data-slo-relation="examenprogramma_domein_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
+
+            <label>Niveaus</label>
+            <div class="slo-entiteit-relaties" data-simply-list="entity.niveau_id" data-simply-entry="relatie">
+                <template rel="relatie"></template>
+            </div>
+            <form data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-search slo-grid slo-grid-3">
+                <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="niveau">
+                <button data-simply-command="add-relation" data-slo-relation="niveau_id" class="slo-button-nomargin slo-button">Toevoegen</button>
+            </form>
+
             <label>Vakleergebied</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_vakleergebied_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
@@ -751,6 +774,7 @@
                 <input type="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="examenprogramma_vakleergebied">
                 <button data-simply-command="add-relation" data-slo-relation="examenprogramma_vakleergebied_id" class="slo-button-nomargin slo-button">Toevoegen</button>
             </form>
+
             <label>Kop 1</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.examenprogramma_kop1_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
