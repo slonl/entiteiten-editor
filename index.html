@@ -437,6 +437,10 @@
             <label>Omschrijving
                 <textarea data-simply-activate="autosize"  data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
             </label>
+            <label>Vakleergebied
+                <div data-simply-field="entity.vakleergebied_id" data-simply-transformer="idToTitle"></div>
+            	<input data-simply-field="entity.vakleergebied_id" list="vakleergebied">
+            </label>
             <label>Vakkernen</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.lpib_vakkern_id" data-simply-entry="relatie">
                 <template rel="relatie"></template>
@@ -610,6 +614,10 @@
             </label>
             <label>Omschrijving
                 <textarea data-simply-activate="autosize"  data-simply-field="entity.description" placeholder="Entiteit omschrijving"></textarea>
+            </label>
+            <label>Vakleergebied
+                <div data-simply-field="entity.vakleergebied_id" data-simply-transformer="idToTitle"></div>
+            	<input data-simply-field="entity.vakleergebied_id" list="vakleergebied">
             </label>
             <label>Vakkernen</label>
             <div class="slo-entiteit-relaties" data-simply-list="entity.ldk_vakkern_id" data-simply-entry="relatie">
@@ -2113,7 +2121,7 @@
 <script src="/assets/simplyview/dist/simply.everything.js"></script>
 <script>
     simply.route.init({
-        root: '/entiteiten-editor/'
+        root: '/curriculum/beheer/entiteiten-editor/'
     });
 </script>
 
@@ -2250,13 +2258,13 @@
                     } else {
                         result += 'geen doel';
                     }
-                    return result;
                 } else {
                     if (typeof curriculum.index.id[data] == 'undefined') {
                         return 'missing';
                     }
-                    return curriculum.index.id[data].title ? clone(curriculum.index.id[data].title) : "";
+                    result = curriculum.index.id[data].title ? clone(curriculum.index.id[data].title) : "";
                 }
+                return result + ' ('+curriculum.index.type[data]+')';
             },
             "extract" : function(el) {
                 return this.sloId;
@@ -2527,7 +2535,7 @@
                 document.body.dataset.loading="true";
                 entityEditor.actions['commit-changes'](editor.pageData.changes, editor.pageData.commitMessage)
                 .then(function(done) {
-                    done.sort().reverse().forEach(function(changeIndex) {
+                    done.sort((a,b)=>b-a).forEach(function(changeIndex) {
                         editor.pageData.changes.splice(changeIndex, 1);
                     })
                     editor.pageData.changeCount = editor.pageData.changes.length;
@@ -2607,6 +2615,12 @@
                 }
             },
             showEntity: function(id) {
+                if (!editor.pageData) {
+                    window.setTimeout(function() {
+                        entityEditor.actions.showEntity(id);
+                    }, 500);
+                    return;
+                }
                 editor.pageData.entity = emptyEntity();
                 if (curriculum.index.id[id]) {
                     editor.pageData.entity = clone(curriculum.index.id[id]);
@@ -2614,7 +2628,7 @@
                      if (typeof editor.pageData.entity.dirty === "undefined") {
                            editor.pageData.entity.dirty = 0;
                     }
-                } else {
+                } else if (!document.body.dataset.loading) {
                     alert('Onbekend id '+id);
                 }
             },
