@@ -21,6 +21,9 @@
             font-size: inherit;
             padding: 0.5em;
         }
+        .slo-export-tree {
+        	position: absolute;
+        }
         .slo-treeview .vsb-main {
             width: 50% !important;
             flex-shrink: 0;
@@ -1884,6 +1887,7 @@
                                 </template>
                             </select>
                         </div>
+                        <button class="slo-button slo-right slo-tree-export" data-simply-command="export-tree">Exporteer</button>
                         <div class="slo-treeview-tree"></div>
                     </div>
                     <div class="slo-card-body">
@@ -2176,6 +2180,7 @@
         	'inh_vakleergebied': ['inh_inhoudslijn_id','doelniveau_id'],
         	'inh_inhoudslijn': ['inh_cluster_id','doelniveau_id'],
         	'inh_cluster': ['inh_subcluster_id','doelniveau_id'],
+        	'inh_subcluster': ['doelniveau_id'],
         	'doelniveau': ['doel_id']
         }
     };
@@ -2445,6 +2450,9 @@
                     document.body.querySelector('.slo-treeview').classList.toggle('slo-hidden');
                 });
             },
+            'export-tree': function(el) {
+            	entityEditor.actions['export-tree'](curriculum.index.id[editor.pageData.rootEntity],editor.pageData.niveau,editor.pageData.schemas);
+            },
             'search': function(el) {
                 var searchInput = el.parentElement.querySelector('input');
                 var searchText = searchInput.value;
@@ -2662,14 +2670,14 @@
                     if (!e) {
                         return '<span class="slo-treeview-title"><span class="slo-tag"></span>Missing</span>';
                     }
-                    if (niveau && !e.niveau_id && (!reverseNiveauIndex[e.id] || reverseNiveauIndex[e.id].indexOf(niveau)===-1)) {
+                    if (niveau && (!e.niveau_id || !e.niveau_id.length) && (!reverseNiveauIndex[e.id] || reverseNiveauIndex[e.id].indexOf(niveau)===-1)) {
                         if (!reverseNiveauIndex[e.id]) {
                             console.error('missing reverse niveau index for '+e.id);
                             console.log(e);
                         }
                         return '';
                     }
-                    if (niveau && e.niveau_id && e.niveau_id.indexOf(niveau)===-1) {
+                    if (niveau && e.niveau_id && e.niveau_id.length && e.niveau_id.indexOf(niveau)===-1) {
                         return '';
                     }
                     var title = (e.prefix ? e.prefix + ' ' + e.title : (e.title ? e.title : e.id));
@@ -2706,6 +2714,104 @@
                 tree.innerHTML = treeHTML;
                 document.body.dataset.loading="false";
                 return Promise.resolve(true);
+            },
+            'export-tree': function(root, niveau, schemas) {
+                document.body.dataset.loading="true";
+                if (niveau) {
+                    var niveauIndexData = niveauIndex.filter(function(niveauData) {
+                        return niveauData.niveau_id == niveau;
+                    }).pop();
+                }
+                var getContextFromId = function(id) {
+                    var section = curriculum.index.type[id];
+                    var context = Object.keys(curriculum.schemas).filter(function(schema) {
+                        return typeof curriculum.schemas[schema].properties[section]!='undefined';
+                    }).pop();
+                    return context;
+                };
+	
+                var json = [];
+                
+                var getLevels = function(niveaus) {
+                	return (niveaus && niveaus.length ? niveaus.map(id => curriculum.index.id[id].title).join(',') : '');
+                };
+                
+                var exportTree = function(e,contexts,niveau,parent) {
+                    if (!e) {
+                        return; //FIXME: throw error? '<span class="slo-treeview-title"><span class="slo-tag"></span>Missing</span>';
+                    }
+                    if (niveau && !e.niveau_id && (!reverseNiveauIndex[e.id] || reverseNiveauIndex[e.id].indexOf(niveau)===-1)) {
+                        if (!reverseNiveauIndex[e.id]) {
+                            console.error('missing reverse niveau index for '+e.id);
+                            console.log(e);
+                        }
+                        return;
+                    }
+                    if (niveau && e.niveau_id && e.niveau_id.indexOf(niveau)===-1) {
+                        return;
+                    }
+                    var title = (e.prefix ? e.prefix + ' ' + e.title : (e.title ? e.title : e.id));
+                    if (curriculum.index.type[e.id]=='doelniveau') {
+                    	title = getDoelNiveauTitle(e);                    	
+                    }
+					// add row for entity
+					if (e.title) {
+						json.push({
+							ID: e.id,
+							ParentID: (parent ? parent.id : ''),
+							Prefix: (e.prefix ? e.prefix : ''),
+							Titel: e.title,
+							Omschrijving: e.description,
+							Type: curriculum.index.type[e.id]
+						});
+					} else { //FIXME: check if this is a doelniveau	
+						// TODO: for doelniveau use id, title and levels from doel
+						if (e.children && e.children.length) {
+							var children = e.children;
+							var first = children.shift();
+							if (!first.id) {
+								first = curriculum.index.id[first];
+							}
+							json.push({
+								ID: first.id,
+								ParentID: (parent ? parent.id : ''),
+								Prefix: e.prefix,
+								Titel: first.title,
+								Type: curriculum.index.type[first.id],
+								Levels: getLevels(e.niveau_id)
+							});
+                            children.forEach(function(c) {
+                                if (contexts.indexOf(getContextFromId(c))!=-1 && curriculum.index.type[c]!='vakleergebied') {
+                                    exportTree(curriculum.index.id[c], contexts, niveau, first);
+                                }
+                            });
+                            return;
+						}
+					}
+					// TODO: extra doelniveau child entities use first entity as parent
+					 
+                    if (!contexts) {
+                        contexts = [];
+                        contexts.push(getContextFromId(e.id));
+                    }
+                    if (!e.children) {
+                        e.children = [];
+                    }
+                    e.children.forEach(function(c) {
+                        if (contexts.indexOf(getContextFromId(c))!=-1 && curriculum.index.type[c]!='vakleergebied') {
+                            exportTree(curriculum.index.id[c], contexts, niveau, e);
+                        }
+                    });
+                };
+                exportTree(root, schemas, niveau);
+				var ws = XLSX.utils.json_to_sheet(json, {
+					header: ["ID", "ParentID", "Prefix", "Titel", "Omschrijving", "Type", "Levels"]
+				});
+				var wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Sheet 1");
+				XLSX.writeFile(wb, 'export.xlsx'); //FIXME: use title from root entity
+                document.body.dataset.loading="";
+                return Promise.resolve(true);            	
             },
             'showLogin': function() {
                  document.getElementById('login').setAttribute('open','open');
@@ -2968,8 +3074,8 @@
                         'examenprogramma' : 'examenprogramma',
                         'kerndoel_vakleergebied': 'kerndoelen',
                         'examenprogramma_bg_profiel': 'examenprogramma_bg',
-                    	'ldk_vakleergebied': 'doel',
-                    	'inh_vakleergebied': 'doel'
+                    	'ldk_vakleergebied': 'leerdoelenkaarten',
+                    	'inh_vakleergebied': 'inhoudslijnen'
                     };
                     Object.keys(parentInfo).forEach(function(section) {
                         curriculum.data[section].forEach(function(vakEntity) {
@@ -3156,7 +3262,6 @@
                         });
                     }
 
-                    //FIXME: examenprogramma_eindterm ook aan niveauIndex toevoegen
                     curriculum.data.doelniveau
                     .concat(curriculum.data.examenprogramma_eindterm)
                     .forEach(function(entity) {
@@ -3407,5 +3512,13 @@
         }
     });
 </script>
+<script type="text/javascript" src="//unpkg.com/xlsx/dist/shim.min.js"></script>
+<script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+
+<script type="text/javascript" src="//unpkg.com/blob.js@1.0.1/Blob.js"></script>
+<script type="text/javascript" src="//unpkg.com/file-saver@1.3.3/FileSaver.js"></script>
+<!-- script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.0/jszip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.14.0/xlsx.js"></script
+-->
 </body>
 </html>
