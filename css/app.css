@@ -256,3 +256,6 @@ ul.slo-nav-crumbs-block li {
     text-overflow: ellipsis;
     direction: rtl;
 }
+label {
+	font-weight: bold;
+}

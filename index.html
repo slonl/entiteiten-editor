@@ -11,10 +11,6 @@
     <script src="js/vanillaSelectBox.js"></script>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/app.css">
-    <!-- script src="https://cdn.lr-ingest.io/LogRocket.min.js" crossorigin="anonymous"></script -->
-    <script>
-        window.LogRocket && window.LogRocket.init('muze/entiteiten-editor');
-    </script>
 </head>
 <body class="slo-main-page" data-loading=true>
     <header class="slo-navbar">
@@ -74,8 +70,6 @@
             </div>
         </div>
     </div>
-	<link rel="simply-include" href="index.templates.html">
-	<link rel="simply-include" href="index.datalists.html">
 
     <main class="slo-main slo-space-vertical">
         <div class="slo-grid slo-grid-4">
@@ -156,8 +150,8 @@
                     </div>
                     <div class="slo-card-body">
                         <div data-simply-field="entity.section" data-simply-content="template" data-simply-default-value="default">
-                            <template data-simply-template="vakkencluster" rel="entiteit-vakkencluster"></template>
-                            <template data-simply-template="leerlijn" rel="entiteit-leerlijn"></template>
+                            <template data-simply-template="vakkencluster" rel="entiteit-lpib_vakkencluster"></template>
+                            <template data-simply-template="leerlijn" rel="entiteit-lpib_leerlijn"></template>
                             <template data-simply-template="vakleergebied" rel="entiteit-vakleergebied"></template>
                             <template data-simply-template="lpib_vakleergebied" rel="entiteit-lpib_vakleergebied"></template>
                             <template data-simply-template="lpib_vakkern" rel="entiteit-lpib_vakkern"></template>
@@ -290,8 +284,8 @@
                         </span>
                     </header>
                     <div class="slo-card-body" data-simply-field="entity.section" data-simply-content="template" data-simply-default-value="default">
-                        <template data-simply-template="vakkencluster" rel="entiteit-vakkencluster"></template>
-                        <template data-simply-template="leerlijn" rel="entiteit-leerlijn"></template>
+                        <template data-simply-template="vakkencluster" rel="entiteit-lpib_vakkencluster"></template>
+                        <template data-simply-template="leerlijn" rel="entiteit-lpib_leerlijn"></template>
                         <template data-simply-template="vakleergebied" rel="entiteit-vakleergebied"></template>
                         <template data-simply-template="lpib_vakleergebied" rel="entiteit-lpib_vakleergebied"></template>
                         <template data-simply-template="lpib_vakkern" rel="entiteit-lpib_vakkern"></template>
@@ -400,9 +394,57 @@
     
     <div class="slo-dialog-overlay"></div>
 
+    <template id="relatie">
+        <div class="slo-entiteit-relatie">
+            <button data-simply-command="delete-relation" class="slo-button slo-right">
+                <svg class="slo-icon slo-icon-feather">
+                    <use xlink:href="/files/feather-sprite.svg#trash">
+                    </use>
+                </svg>
+            </button>
+            <span data-simply-field="relatie" data-simply-transformer="idToTitle"></span><br>
+            <span class="slo-tag">
+                <a class="slo-tag-label" href="#" data-simply-field="relatie" data-simply-transformer="opendatalink" data-simply-content="fixed" target="_blank">
+                    <svg class="slo-icon slo-icon-feather"><use xlink:href="/files/feather-sprite.svg#link"></use></svg>
+                </a>
+                <a class="slo-id" href="#" data-simply-field="relatie" data-simply-transformer="editlink"></a>
+            </span>
+        </div>
+    </template>
 
-<script src="/js/error.js"></script>
-<script src="https://cdn.simplyedit.io/1/simply-edit.js" data-simply-storage="none"></script>
+<template id="slo-string">
+    <label>{{label}}
+        <textarea data-simply-activate="autosize" data-simply-field="{{property}}"></textarea>
+    </label>
+</template>
+
+<template id="slo-link-multiple">
+    <div>
+        <label>{{label}}</label>
+        <div class="slo-entiteit-relaties" data-simply-list="{{property}}" data-simply-entry="relatie">
+            <template rel="relatie"></template>
+        </div>
+        <form data-simply-command="add-relation" data-slo-relation="{{relation}}" class="slo-search slo-grid slo-grid-3">
+            <input class="slo-grid-span-2" placeholder="Entiteit UUID / tekst" list="{{datalist}}">
+            <button data-simply-command="add-relation" data-slo-relation="{{relation}}" class="slo-button-nomargin slo-button">Toevoegen</button>
+        </form>
+    </div>
+</template>
+
+<template id="slo-link-singular">
+   <label>{{label}}
+        <div data-simply-field="{{property}}" data-simply-transformer="idToTitle"></div>
+        <input data-simply-field="{{property}}" list="{{datalist}}">
+    </label>
+</template>
+
+<!-- @TODO: minimum/maximum (en stepsize?) -->
+<template id="slo-integer">
+    <label>{{label}}
+        <input type="number" data-simply-field="{{property}}">
+    </label>
+</template>
+
 <script src="js/GitHub.bundle.js"></script>
 <script src="https://unpkg.com/simplyview@2.0.1/dist/simply.everything.js"></script>
 <script>

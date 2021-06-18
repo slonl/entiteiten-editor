@@ -78,117 +78,6 @@
         }
     }
 
-    editor.transformers = {
-        "round" : {
-            "render" : function(data) {
-                return Math.round(100 * (1-data),2) + "%";
-            }
-        },
-        "opendatalink" : {
-            "render" : function(data) {
-                this._data = data;
-                data = "https://opendata.slo.nl/curriculum/api-acpt/v1/uuid/"+data;
-                return data;
-            },
-            "extract": function() {
-                return this._data;
-            }
-        },
-        "editlink" : {
-            "render" : function(data) {
-                return {
-                    innerHTML : data,
-                    href : document.location.pathname + "#edit/" + data
-                };
-            },
-            "extract" : function(el) {
-                return el.innerHTML;
-            }
-        },
-        "uuid": {
-            "render": function(data) {
-                this.id = data;
-                return data;
-            }
-        },
-        "idToTitle": {
-            "render" : function(data) {
-                this.sloId = data;
-                var entity = clone(curriculum.index.id[data]);
-                if (curriculum.index.type[data] == "doelniveau") {
-                    if (entity.doel_id && entity.doel_id[0]) {
-                        var doel = clone(curriculum.index.id[entity.doel_id[0]]);
-                    } else if (entity.kerndoel_id && entity.kerndoel_id[0]) {
-                        var doel = clone(curriculum.index.id[entity.kerndoel_id[0]]);
-                    }
-                    if (entity.niveau_id && entity.niveau_id[0]) {
-                        var niveau = clone(curriculum.index.id[entity.niveau_id[0]]);
-                    }
-                    var result = '';
-                    if (niveau && niveau.title ) {
-                        result += '['+niveau.title+'] ';
-                    } else {
-                        result += '[geen niveau]';
-                    }
-                    if (doel && doel.title) {
-                        result += doel.title;
-                    } else {
-                        result += 'geen doel';
-                    }
-                } else {
-                    if (typeof curriculum.index.id[data] == 'undefined') {
-                        return 'missing';
-                    }
-                    result = curriculum.index.id[data].title ? clone(curriculum.index.id[data].title) : "";
-                }
-                return result + ' ('+curriculum.index.type[data]+')';
-            },
-            "extract" : function(el) {
-                return this.sloId;
-            }
-        },
-        "hasDescription" : {
-            render : function(data) {
-                return (typeof data.description !== "undefined");
-            }
-        },
-        "hasTitle" : {
-            render : function(data) {
-                return (typeof data.title !== "undefined");
-            }
-        },
-        "isarray" : {
-            render : function(data) {
-                this.data = data;
-                return Array.isArray(data);
-            },
-            extract : function(el) {
-                return this.data;
-            }
-        },
-        "searchoption" : {
-            render : function(entity) {
-                entity = clone(entity);
-                this.data = entity;
-                var option = entity.title + " " + entity.id;
-
-                if (curriculum.index.type[entity.id]=="doelniveau") {
-                    var doel = clone(curriculum.index.id[entity.doel_id[0]]);
-                    var niveau = clone(curriculum.index.id[entity.niveau_id[0]]);
-                    option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
-                }
-
-                return {
-                    innerHTML : option,
-                    value : entity.id
-                };
-            },
-            extract : function(el) {
-                return this.data;
-            }
-        }
-    };
-
     var emptyEntity = function() {
         return {
             lpib_vakkern_id : [],
@@ -208,8 +97,8 @@
             doelniveau_id : [],
             doel_id : [],
             niveau_id : [],
-            section: null,
-            id: null,
+            section: '',
+            id: 0,
             dirty: 0,
             deleted: 0
         };
@@ -222,32 +111,32 @@
         routes : {
             '#edit/:id' : function(params) {
                 entityEditor.actions.showEntity(params.id);
-                editor.pageData.page = "edit";
-                editor.pageData.rootEntity = params.id;
+                entityEditor.view.page = "edit";
+                entityEditor.view.rootEntity = params.id;
                 entityEditor.actions.hideTreeView();
                 window.scrollTo(0,0);
             },
             '#edit/' : function(params) {
                 // reset page;
-                editor.pageData.entity = emptyEntity();
-                editor.pageData.page = "edit";
-                editor.pageData.rootEntity = null;
+                entityEditor.view.entity = emptyEntity();
+                entityEditor.view.page = "edit";
+                entityEditor.view.rootEntity = null;
                 entityEditor.actions.hideTreeView();
                 window.scrollTo(0,0);
             },
             '#new/' : function(params) {
                 // reset page;
-                editor.pageData.entity = emptyEntity();
-                editor.pageData.page = "new";
-                editor.pageData.rootEntity = null;
+                entityEditor.view.entity = emptyEntity();
+                entityEditor.view.page = "new";
+                entityEditor.view.rootEntity = null;
                 entityEditor.actions.hideTreeView();
                 window.scrollTo(0,0);
             },
             '#multipleparents/' : function(params) {
                 // reset page;
-                editor.pageData.entity = emptyEntity();
-                editor.pageData.page = "multipleparents";
-                editor.pageData.rootEntity = null;
+                entityEditor.view.entity = emptyEntity();
+                entityEditor.view.page = "multipleparents";
+                entityEditor.view.rootEntity = null;
                 entityEditor.actions.hideTreeView();
                 window.scrollTo(0,0);
             }
@@ -318,17 +207,17 @@
                 });
             },
             'toggleTree': function(el) {
-                if (!editor.pageData.schemas.length) {
-                    var section = curriculum.index.type[editor.pageData.rootEntity];
-                    editor.pageData.schemas = [curriculum.getSchemaFromType(section)];
+                if (!entityEditor.view.schemas.length) {
+                    var section = curriculum.index.type[entityEditor.view.rootEntity];
+                    entityEditor.view.schemas = [curriculum.getSchemaFromType(section)];
                 }
-                entityEditor.actions.renderTree(curriculum.index.id[editor.pageData.rootEntity],editor.pageData.niveau)
+                entityEditor.actions.renderTree(curriculum.index.id[entityEditor.view.rootEntity],entityEditor.view.niveau)
                 .then(function() {
                     document.body.querySelector('.slo-treeview').classList.toggle('slo-hidden');
                 });
             },
             'export-tree': function(el) {
-            	entityEditor.actions['export-tree'](curriculum.index.id[editor.pageData.rootEntity],editor.pageData.niveau,editor.pageData.schemas);
+            	entityEditor.actions['export-tree'](curriculum.index.id[entityEditor.view.rootEntity],entityEditor.view.niveau,entityEditor.view.schemas);
             },
             'search': function(el) {
                 var searchInput = el.parentElement.querySelector('input');
@@ -350,20 +239,20 @@
                 var relationInput = el.parentNode.querySelector("input");
                 var relationId = relationInput.value;
                 var relation = el.getAttribute("data-slo-relation");
-                if (editor.pageData.entity[relation] == null) {
-                    editor.pageData.entity[relation] = [];
+                if (entityEditor.view.entity[relation] == null) {
+                    entityEditor.view.entity[relation] = [];
                 }
 
-                var exists = editor.pageData.entity[relation].filter(function(id) {
+                var exists = entityEditor.view.entity[relation].filter(function(id) {
                     return (''+id) == relationId;
                 });
                 if (!exists.length) {
                     if (curriculum.index.id[relationId]) {
                         rememberScrollPosition();
-                        editor.pageData.entity[relation].push(relationId);
+                        entityEditor.view.entity[relation].push(relationId);
                         // fix for a bug in simply edit where the list / binding gets broken somehow;
-                        for (var i=0; i<editor.pageData.entity._bindings_[relation].elements.length; i++) {
-                            editor.pageData.entity._bindings_[relation].bind(editor.pageData.entity._bindings_[relation].elements[i]);
+                        for (var i=0; i<entityEditor.view.entity._bindings_[relation].elements.length; i++) {
+                            entityEditor.view.entity._bindings_[relation].bind(entityEditor.view.entity._bindings_[relation].elements[i]);
                         }
                         window.setTimeout(function() {
                             window.scrollPosition = undefined;
@@ -371,7 +260,7 @@
                         relationInput.value = '';
                     } else {
                         // add new entity first
-                        entityEditor.actions.newEntityForm(relation, editor.pageData.entity.id);
+                        entityEditor.actions.newEntityForm(relation, entityEditor.view.entity.id);
 
                     }
                 }
@@ -386,28 +275,28 @@
                     //FIXME: update curriculum.data as well?
                 } else {
                     delete curriculum.index.id[id];
-                    if (editor.pageData.entity && editor.pageData.entity.id == id) {
-                        editor.pageData.entity = {};
+                    if (entityEditor.view.entity && entityEditor.view.entity.id == id) {
+                        entityEditor.view.entity = {};
                     }
                 }
                 
                 el.parentNode.parentNode.removeChild(el.parentNode);
-                editor.pageData.changeCount = editor.pageData.changes.length;
-                localStorage.changes = JSON.stringify(editor.pageData.changes);
+                entityEditor.view.changeCount = entityEditor.view.changes.length;
+                localStorage.changes = JSON.stringify(entityEditor.view.changes);
 
-                  if (editor.pageData.rootEntity) {
-                       var root = curriculum.index.id[editor.pageData.rootEntity];
-                    entityEditor.actions.renderTree(root, editor.pageData.niveau, editor.pageData.schemas);
+                  if (entityEditor.view.rootEntity) {
+                       var root = curriculum.index.id[entityEditor.view.rootEntity];
+                    entityEditor.actions.renderTree(root, entityEditor.view.niveau, entityEditor.view.schemas);
                 }
                 
                 // reload the page to show the changes;
-                if (editor.pageData.entity) {
-                    var entityId = editor.pageData.entity.id;
+                if (entityEditor.view.entity) {
+                    var entityId = entityEditor.view.entity.id;
                     if (entityId == id) {
                         if (curriculum.index.id[id]) {
                             entityEditor.actions.showEntity(id);
-                        } else if (editor.pageData.rootEntity) {
-                            entityEditor.actions.showEntity(editor.pageData.rootEntity);
+                        } else if (entityEditor.view.rootEntity) {
+                            entityEditor.actions.showEntity(entityEditor.view.rootEntity);
                         } else {
                             simply.route.goto(document.location.pathname + '#new/');
                         }
@@ -418,20 +307,20 @@
             },
             'commit-changes' : function() {
                 document.body.dataset.loading="true";
-                entityEditor.actions['commit-changes'](editor.pageData.changes, editor.pageData.commitMessage)
+                entityEditor.actions['commit-changes'](entityEditor.view.changes, entityEditor.view.commitMessage)
                 .then(function(done) {
                     done.sort((a,b)=>b-a).forEach(function(changeIndex) {
-                        editor.pageData.changes.splice(changeIndex, 1);
+                        entityEditor.view.changes.splice(changeIndex, 1);
                     })
-                    editor.pageData.changeCount = editor.pageData.changes.length;
-                    localStorage.changes = JSON.stringify(editor.pageData.changes);
-                    editor.pageData.commitMessage = '';
+                    entityEditor.view.changeCount = entityEditor.view.changes.length;
+                    localStorage.changes = JSON.stringify(entityEditor.view.changes);
+                    entityEditor.view.commitMessage = '';
                     document.body.dataset.loading="false";
                 })
                 .then(function() {
-                    if (editor.pageData.rootEntity) {
-                        var root = curriculum.index.id[editor.pageData.rootEntity];
-                        entityEditor.actions.renderTree(root, editor.pageData.niveau, editor.pageData.schemas);
+                    if (entityEditor.view.rootEntity) {
+                        var root = curriculum.index.id[entityEditor.view.rootEntity];
+                        entityEditor.actions.renderTree(root, entityEditor.view.niveau, entityEditor.view.schemas);
                     }
                 })
                 .catch(function(error) {
@@ -440,33 +329,33 @@
                 });
             },
             'save' : function() {
-                if (!editor.pageData.entity.id) {
-                    editor.pageData.entity.id = curriculum.uuidv4();
+                if (!entityEditor.view.entity.id) {
+                    entityEditor.view.entity.id = curriculum.uuidv4();
                 }
-                entityEditor.actions.save(clone(editor.pageData.entity));
-                   if (editor.pageData.rootEntity) {
-                       var root = curriculum.index.id[editor.pageData.rootEntity];
-                    entityEditor.actions.renderTree(root, editor.pageData.niveau, editor.pageData.schemas);
+                entityEditor.actions.save(clone(entityEditor.view.entity));
+                   if (entityEditor.view.rootEntity) {
+                       var root = curriculum.index.id[entityEditor.view.rootEntity];
+                    entityEditor.actions.renderTree(root, entityEditor.view.niveau, entityEditor.view.schemas);
                 }                
             },
             deprecate: function() {
-                if (editor.pageData.entity.id) {
+                if (entityEditor.view.entity.id) {
                     if (confirm('Weet u zeker dat u deze entiteit wil verwijderen?')) {
-                        var changedEntity = clone(editor.pageData.entity);
+                        var changedEntity = clone(entityEditor.view.entity);
                         changedEntity.deleted = 1;
                         entityEditor.actions.save(changedEntity);          
                     }
                 }
             },
             filterNiveau: function(select, value) {
-                var entity = clone(editor.pageData.entity);
-                editor.pageData.niveau = value;
-                entityEditor.actions.renderTree(entity, value, editor.pageData.schemas);
+                var entity = clone(entityEditor.view.entity);
+                entityEditor.view.niveau = value;
+                entityEditor.actions.renderTree(entity, value, entityEditor.view.schemas);
             },
             filterSchemas: function(select, values) {
-                var entity = clone(editor.pageData.entity);
-                editor.pageData.schemas = values;
-                entityEditor.actions.renderTree(entity, editor.pageData.niveau, values);
+                var entity = clone(entityEditor.view.entity);
+                entityEditor.view.schemas = values;
+                entityEditor.actions.renderTree(entity, entityEditor.view.niveau, values);
             }
         },
         actions: {
@@ -500,26 +389,26 @@
                 }
             },
             showEntity: function(id) {
-                if (!editor.pageData) {
+                if (!entityEditor.view) {
                     window.setTimeout(function() {
                         entityEditor.actions.showEntity(id);
                     }, 500);
                     return;
                 }
-                editor.pageData.entity = emptyEntity();
+                entityEditor.view.entity = emptyEntity();
                 if (curriculum.index.id[id]) {
-                    editor.pageData.entity = clone(curriculum.index.id[id]);
+                    entityEditor.view.entity = clone(curriculum.index.id[id]);
                     //show the edit entity form
-                     if (typeof editor.pageData.entity.dirty === "undefined") {
-                           editor.pageData.entity.dirty = 0;
+                     if (typeof entityEditor.view.entity.dirty === "undefined") {
+                           entityEditor.view.entity.dirty = 0;
                     }
                 } else if (!document.body.dataset.loading) {
                     alert('Onbekend id '+id);
                 }
             },
             newEntityForm: function(relation, parentId) {
-                if (editor.pageData.entity.parent) {
-                    entityEditor.actions.save(clone(editor.pageData.entity));
+                if (entityEditor.view.entity.parent) {
+                    entityEditor.actions.save(clone(entityEditor.view.entity));
                 }
                 var entity = emptyEntity();
                 entity.id = curriculum.uuidv4();
@@ -527,7 +416,7 @@
                 entity.dirty = 0;
                 entity.parent = parentId;
                 //show the new entity form
-                editor.pageData.entity = entity;
+                entityEditor.view.entity = entity;
             },
             'renderTree': function(entity, niveau=null, contexts=null) {
                 document.body.dataset.loading="true";
@@ -727,13 +616,13 @@
                   }
             },
             addChangedEntity: function(entity) {
-                editor.pageData.changes = editor.pageData.changes.filter(function(entry) {
+                entityEditor.view.changes = entityEditor.view.changes.filter(function(entry) {
                     if (entity.id == entry.id) {
                         return false;
                     }
                     return true;
                 });
-                editor.pageData.changes.push(clone(entity));
+                entityEditor.view.changes.push(clone(entity));
                 if (curriculum.index.id[entity.id] && !originalEntities[entity.id]) {
                     // keep the unchanged version in case we need to revert
                     var original = curriculum.data[curriculum.index.type[entity.id]]
@@ -746,8 +635,8 @@
                 curriculum.index.id[entity.id] = entity;
                 curriculum.index.type[entity.id] = entity.section;
                 
-                editor.pageData.changeCount = editor.pageData.changes.length;
-                localStorage.changes = JSON.stringify(editor.pageData.changes);    
+                entityEditor.view.changeCount = entityEditor.view.changes.length;
+                localStorage.changes = JSON.stringify(entityEditor.view.changes);    
             },
             save: function(entity) {
                 if (entity.parent) {
@@ -852,7 +741,7 @@
 //              return curriculum.sources[schema].writeFiles(files, message);
             },
             filterNiveau: function(niveauId) {
-                entityEditor.actions.renderTree(editor.pageData.entityId,niveauId);
+                entityEditor.actions.renderTree(entityEditor.view.entityId,niveauId);
             },
             start: function(user, pass) {
                 var schemas = {
@@ -869,28 +758,110 @@
                 };
                 var branch = 'editor';
                 var loading = [];
+                var schemasParsed = {};
                 Object.keys(schemas).forEach(function(schema) {
                     loading.push(
                         curriculum.loadContextFromGithub(schema, schemas[schema], user, pass, branch)
                         .then(function() {
                             return curriculum.loadData(schema);
                         })
+                        .then(function() {
+                            return curriculum.parseSchema(curriculum.schemas[schema]);
+                        })
+                        .then(function(parsed) {
+                            schemasParsed[schema] = parsed;
+                            return parsed;
+                        })
                     );
                 });
 
-                   // get user info
-                   // put it in the editor.pageData.user
-                   // name and avatar_url
-                   var gh = new GitHub({username:user, password: pass});
-                   return gh.getUser().getProfile()
-                   .then(function(profile) {
-                       editor.pageData.user = profile.data;
-                      document.body.classList.add('slo-logged-on');
-                      return profile;
-                   })
+                // get user info
+                // put it in the entityEditor.view.user
+                // name and avatar_url
+                var gh = new GitHub({username:user, password: pass});
+                return gh.getUser().getProfile()
                 .then(function(profile) {
-                    return Promise.all(loading);
-                 })
+                    entityEditor.view.user = profile.data;
+                    document.body.classList.add('slo-logged-on');
+                    return profile;
+                })
+                .then(function(profile) {
+                    return Promise.all(loading)
+                })
+				// add datalist elements
+				// add templates for each entity type
+				.then(function() {
+                    var ignore = ['id','replaces','replacedBy','dirty','unreleased'];
+					Object.keys(schemasParsed).forEach(function(context) {
+						Object.keys(schemasParsed[context].properties).forEach(function(section) {
+							if (/deprecated/.exec(section)) {
+								return;
+							}
+                            var list = document.createElement('datalist');
+                            list.id = section;
+                            list.dataset.simplyList = "dataset."+section;
+                            list.dataset.simplyData = section;
+                            list.dataset.simplyEntry = 'entry';
+                            document.body.appendChild(list); // @NOTE: simply-edit requires a template in the list, but this is fixed by the datasource load method
+
+							var template = document.createElement('template');
+							template.id = 'entiteit-'+section;
+                            var html = '<div class="slo-entity">';
+                            var sortOrder = {
+                                prefix : '',
+                                title : '',
+                                description : '',
+                                url : '',
+                                ce_se : '',
+                                kern_keuze : '',
+                                vakleergebied_id : '',
+                                niveau_id : ''
+                            };
+                            Object.keys(schemasParsed[context].properties[section].items.properties).forEach(prop => {
+                                if (!ignore.includes(prop)) {
+                                    var property = schemasParsed[context].properties[section].items.properties[prop];
+                                    var replace = {
+                                        'label'    : prop,
+                                        'property' : 'entity.'+prop,
+                                        'relation' : prop,
+                                        'datalist' : prop.replace(/_id$/,'')
+                                    };
+                                    var t;
+                                    switch (property.type) {
+                                        case 'array':
+                                            t = document.getElementById('slo-link-multiple').innerHTML;
+                                        break;
+                                        case 'string':
+                                            if (/_id$/.exec(prop)) {
+                                                t = document.getElementById('slo-link-singular').innerHTML;
+                                            } else {
+                                                t = document.getElementById('slo-string').innerHTML;
+                                            }
+                                        break;
+                                        default: // e.g. array['string','null']
+                                            if (property.enum) {
+                                                t = document.getElementById('slo-string').innerHTML;
+                                            } else {
+                                                t = '<div class="unknown">'+prop+': '+JSON.stringify(property.type)+'</div>';
+                                            }
+                                        break;
+                                    }
+                                    Object.keys(replace).forEach(key => {
+                                        t = t.replaceAll('{{'+key+'}}', replace[key])
+                                    });
+                                    sortOrder[prop] = t;
+                                }
+                            });
+                            html += Object.values(sortOrder).join("\n");
+
+                            html += '</div>';
+							template.innerHTML = html;
+
+							document.body.appendChild(template);
+						});
+					});
+					return true;
+				})
                 .then(function() {
                     Object.values(curriculum.index.id).forEach(function(entity) {
                         entity.section = curriculum.index.type[entity.id];
@@ -902,50 +873,6 @@
                         });
                     });
 
-                    var counter = 1000;
-                    Object.keys(curriculum.data).forEach(function(dataset) {
-                        if (dataset!='deprecated') {
-                            editor.addDataSource(dataset, {
-                                load : function(el, callback) {
-                                    document.body.dataset.loading = "true";
-                                    var options = '';
-                                    curriculum.data[dataset].forEach(function(entity) {
-                                        var option = entity.title;
-
-                                        if (curriculum.index.type[entity.id] == "doelniveau") {
-                                            var doel;
-                                            var niveau;
-                                            if (entity.doel_id) {
-                                                doel = curriculum.index.id[entity.doel_id[0]];
-                                            }
-                                            if (entity.kerndoel_id) {
-                                                doel = curriculum.index.id[entity.kerndoel_id[0]];
-                                            }
-                                            if (entity.eindterm_id) {
-                                                doel = curriculum.index.id[entity.eindterm_id[0]];
-                                            }
-                                            if (entity.niveau_id) {
-                                                niveau = curriculum.index.id[entity.niveau_id[0]];
-                                            }
-                                            if (doel && niveau) {
-                                                option = "[" + niveau.title + "] " + doel.title;
-                                            }
-                                        }
-                                        if (navigator.userAgent.indexOf('Chrome/') === -1) {
-                                            option += ' ' + entity.id;
-                                        }
-                                        options += "<option value='" + entity.id + "'>" + option + "</option>";
-                                    });
-                                    window.setTimeout(function() {
-                                        el.innerHTML = options;
-                                        el.dataset.simplyDataName = dataset;
-                                        document.body.dataset.loading = "false";
-                                    }, counter);
-                                    counter+=1000;
-                                }
-                            });
-                        }
-                    });
                     
                     var parentInfo = {
                         'lpib_vakleergebied' : 'doel',
@@ -995,102 +922,8 @@
                             });
                         });
                     });
-					// add fake parent and children links for vakleergebied in each lpib_vakkern
-/*					curriculum.data['lpib_vakkern'].forEach(function(vakkern) {
-						if (vakkern.vakleergebied_id && vakkern.vakleergebied_id.length) {
-							vakkern.vakleergebied_id.forEach(function(vakleergebied_id) {
-								vakkern.parents.push({
-									id: vakleergebied_id,
-									ids: [ vakleergebied_id ],
-									type: curriculum.index.type[vakleergebied_id]
-								});
-								var vak = curriculum.index.id[vakleergebied_id];
-								if (!vak.children) {
-									vak.children = [];
-								}
-								vak.children.push(vakkern.id);
-							});
-						}
-					});
-*/
-                    editor.addDataSource("entities", {
-                        load : function(el, callback) {
-                            document.body.dataset.loading = "true";
-                            var options = '';
 
-                            // Priorities for sorting - we want the higher level entities to come first in the list.
-                            var priorities = {
-                                "vakleergebied" : 5,
-                                "lpib_vakleergebied" : 4,
-                                "leerlijn" : 3,
-                                "examenprogramma" : 2,
-                                "examenprogramma_bg": 1,
-                                "ldk_vakleergebied": 0,
-                                "inh_vakleergebied": 0,
-                                "ref_vakleergebied": 0
-                            };
 
-                            var isChrome = navigator.userAgent.indexOf('Chrome/')!==-1;
-                            
-                            Object.values(curriculum.index.id)
-                            .sort(function(a, b) {
-                                if (priorities[a.section]) {
-                                    if (priorities[b.section]) {
-                                        if (priorities[a.section] > priorities[b.section]) {
-                                            return -1;
-                                        }
-                                        if (priorities[a.section] < priorities[b.section]) {
-                                            return 1;
-                                        }
-                                        if (a.title > b.title) {
-                                            return 1;
-                                        }
-                                        if (a.title < b.title) {
-                                            return -1;
-                                        }
-                                    } else {
-                                        return -1;
-                                    }
-                                }
-                                if (priorities[b.section]) {
-                                    return 1;
-                                }
-                                return 0;
-                            }).forEach(function(entity) {
-                                var option = curriculum.index.type[entity.id]+': '+entity.title;
-
-                                if (curriculum.index.type[entity.id] == "doelniveau") {
-                                    var doel;
-                                    var niveau;
-                                    if (entity.doel_id) {
-                                        doel = curriculum.index.id[entity.doel_id[0]];
-                                    }
-                                    if (entity.kerndoel_id) {
-                                        doel = curriculum.index.id[entity.kerndoel_id[0]];
-                                    }
-                                    if (entity.eindterm_id) {
-                                        doel = curriculum.index.id[entity.eindterm_id[0]];
-                                    }
-                                    if (entity.niveau_id) {
-                                        niveau = curriculum.index.id[entity.niveau_id[0]];
-                                    }
-                                    if (doel && niveau) {
-                                        option = "[" + niveau.title + "] " + doel.title;
-                                    }
-                                }
-                                if (!isChrome) {
-                                    option += ' ' + entity.id;
-                                }
-                                if (!entity.deleted && curriculum.index.type[entity.id] != 'deprecated') {
-                                    options += "<option value='" + entity.id + "'>" + option + "</option>";
-                                }
-                            });
-                            window.setTimeout(function() {
-                                el.innerHTML = options;
-                                document.body.dataset.loading = "false";
-                            });
-                        }
-                    });
 
                     function getNiveauIndex(niveauId) {
                         var niveauOb = niveauIndex.filter(function(niveauOb) {
@@ -1171,7 +1004,7 @@
                         }
                     });
 
-                    editor.pageData.niveaus = [{ niveau: { value: '', innerHTML: 'Selecteer niveau'} }]
+                    entityEditor.view.niveaus = [{ niveau: { value: '', innerHTML: 'Selecteer niveau'} }]
                         .concat(niveauIndex.map(function(n) {
                             return {
                                 niveau: {
@@ -1180,6 +1013,168 @@
                                 }
                             };
                         }));
+
+                    
+                    simply.activate.addListener('context-select', function() {
+                        var s = new vanillaSelectBox('.slo-treeview-schemas', {'placeHolder':'Selecteer contexten'});
+                    });
+                    // restore changes from localstorage;
+                    if (localStorage.changes) {
+                        entityEditor.view.changes = JSON.parse(localStorage.changes);
+                        entityEditor.view.changeCount = entityEditor.view.changes.length;
+                        entityEditor.view.changes.forEach(function(entry) {
+                            if (curriculum.index.id[entry.id]) {
+                                originalEntities[entry.id] = clone(curriculum.index.id[entry.id]);
+                            }
+                            curriculum.index.id[entry.id] = clone(entry);
+                            curriculum.index.type[entry.id] = entry.section;
+                        });
+                    }
+					curriculum.loaded = true;
+					document.addEventListener('simply-content-loaded', function() {
+	                    document.body.dataset.loading = "false";
+    	                simply.route.handleEvents();
+        	            simply.route.match();
+					});
+					let script = document.createElement('script');
+					script.dataset.simplyStorage = 'none';
+					script.src = "https://canary.simplyedit.io/1/simply-edit.js";
+					document.body.appendChild(script);
+                    return true;
+                });
+            }
+        }
+    });
+
+	document.addEventListener('simply-content-loaded', initEditor);
+
+	function initEditor() {
+		if (!curriculum || !curriculum.loaded) {
+			window.setTimeout(initEditor, 500);
+			return;
+		}
+                    var counter = 1000;
+                    Object.keys(curriculum.data).forEach(function(dataset) {
+                        if (dataset!='deprecated') {
+                            editor.addDataSource(dataset, {
+                                load : function(el, callback) {
+                                    document.body.dataset.loading = "true";
+                                    var options = '';
+                                    curriculum.data[dataset].forEach(function(entity) {
+                                        var option = entity.title;
+
+                                        if (curriculum.index.type[entity.id] == "doelniveau") {
+                                            var doel;
+                                            var niveau;
+                                            if (entity.doel_id) {
+                                                doel = curriculum.index.id[entity.doel_id[0]];
+                                            }
+                                            if (entity.kerndoel_id) {
+                                                doel = curriculum.index.id[entity.kerndoel_id[0]];
+                                            }
+                                            if (entity.eindterm_id) {
+                                                doel = curriculum.index.id[entity.eindterm_id[0]];
+                                            }
+                                            if (entity.niveau_id) {
+                                                niveau = curriculum.index.id[entity.niveau_id[0]];
+                                            }
+                                            if (doel && niveau) {
+                                                option = "[" + niveau.title + "] " + doel.title;
+                                            }
+                                        }
+                                        if (navigator.userAgent.indexOf('Chrome/') === -1) {
+                                            option += ' ' + entity.id;
+                                        }
+                                        options += "<option value='" + entity.id + "'>" + option + "</option>";
+                                    });
+                                    window.setTimeout(function() {
+                                        el.innerHTML = options;
+                                        el.dataset.simplyDataName = dataset;
+                                        document.body.dataset.loading = "false";
+                                    }, counter);
+                                    counter+=1000;
+                                }
+                            });
+                        }
+                    });
+                    editor.addDataSource("entities", {
+                        load : function(el, callback) {
+                            document.body.dataset.loading = "true";
+                            var options = '';
+
+                            // Priorities for sorting - we want the higher level entities to come first in the list.
+                            var priorities = {
+                                "vakleergebied" : 5,
+                                "lpib_vakleergebied" : 4,
+                                "leerlijn" : 3,
+                                "examenprogramma" : 2,
+                                "examenprogramma_bg": 1,
+                                "ldk_vakleergebied": 0,
+                                "inh_vakleergebied": 0,
+                                "ref_vakleergebied": 0
+                            };
+
+                            var isChrome = navigator.userAgent.indexOf('Chrome/')!==-1;
+                            
+                            Object.values(curriculum.index.id)
+                            .sort(function(a, b) {
+                                if (priorities[a.section]) {
+                                    if (priorities[b.section]) {
+                                        if (priorities[a.section] > priorities[b.section]) {
+                                            return -1;
+                                        }
+                                        if (priorities[a.section] < priorities[b.section]) {
+                                            return 1;
+                                        }
+                                        if (a.title > b.title) {
+                                            return 1;
+                                        }
+                                        if (a.title < b.title) {
+                                            return -1;
+                                        }
+                                    } else {
+                                        return -1;
+                                    }
+                                }
+                                if (priorities[b.section]) {
+                                    return 1;
+                                }
+                                return 0;
+                            }).forEach(function(entity) {
+                                var option = curriculum.index.type[entity.id]+': '+entity.title;
+
+                                if (curriculum.index.type[entity.id] == "doelniveau") {
+                                    var doel;
+                                    var niveau;
+                                    if (entity.doel_id) {
+                                        doel = curriculum.index.id[entity.doel_id[0]];
+                                    }
+                                    if (entity.kerndoel_id) {
+                                        doel = curriculum.index.id[entity.kerndoel_id[0]];
+                                    }
+                                    if (entity.eindterm_id) {
+                                        doel = curriculum.index.id[entity.eindterm_id[0]];
+                                    }
+                                    if (entity.niveau_id) {
+                                        niveau = curriculum.index.id[entity.niveau_id[0]];
+                                    }
+                                    if (doel && niveau) {
+                                        option = "[" + niveau.title + "] " + doel.title;
+                                    }
+                                }
+                                if (!isChrome) {
+                                    option += ' ' + entity.id;
+                                }
+                                if (!entity.deleted && curriculum.index.type[entity.id] != 'deprecated') {
+                                    options += "<option value='" + entity.id + "'>" + option + "</option>";
+                                }
+                            });
+                            window.setTimeout(function() {
+                                el.innerHTML = options;
+                                document.body.dataset.loading = "false";
+                            });
+                        }
+                    });
                     editor.addDataSource('schemas', {
                         load: Object.keys(curriculum.schemas).map(function(s) {
                             return {
@@ -1211,30 +1206,7 @@
 							el.innerHTML = newHtml;
                         }
                     });
-                    
-                    simply.activate.addListener('context-select', function() {
-                        var s = new vanillaSelectBox('.slo-treeview-schemas', {'placeHolder':'Selecteer contexten'});
-                    });
-                    // restore changes from localstorage;
-                    if (localStorage.changes) {
-                        editor.pageData.changes = JSON.parse(localStorage.changes);
-                        editor.pageData.changeCount = editor.pageData.changes.length;
-                        editor.pageData.changes.forEach(function(entry) {
-                            if (curriculum.index.id[entry.id]) {
-                                originalEntities[entry.id] = clone(curriculum.index.id[entry.id]);
-                            }
-                            curriculum.index.id[entry.id] = clone(entry);
-                            curriculum.index.type[entry.id] = entry.section;
-                        });
-                    }
-                    document.body.dataset.loading = "false";
-                    simply.route.handleEvents();
-                    simply.route.match();
-                    return true;
-                });
-            }
-        }
-    });
+	}
 
 	function escapeQuotes(s) {
 		return s.replace('"','\x22').replace("'",'\x27');
