@@ -792,6 +792,7 @@
 				// add templates for each entity type
 				.then(function() {
                     var ignore = ['id','replaces','replacedBy','dirty','unreleased'];
+                    var datalists = [];
 					Object.keys(schemasParsed).forEach(function(context) {
 						Object.keys(schemasParsed[context].properties).forEach(function(section) {
 							if (/deprecated/.exec(section)) {
@@ -803,6 +804,8 @@
                             list.dataset.simplyData = section;
                             list.dataset.simplyEntry = 'entry';
                             document.body.appendChild(list); // @NOTE: simply-edit requires a template in the list, but this is fixed by the datasource load method
+
+                            datalists.push(section);
 
 							var template = document.createElement('template');
 							template.id = 'entiteit-'+section;
@@ -860,6 +863,8 @@
 							document.body.appendChild(template);
 						});
 					});
+                    datalists.sort();
+                    entityEditor.view.datalists = datalists;
 					return true;
 				})
                 .then(function() {
@@ -1053,159 +1058,269 @@
 			window.setTimeout(initEditor, 500);
 			return;
 		}
-                    var counter = 1000;
-                    Object.keys(curriculum.data).forEach(function(dataset) {
-                        if (dataset!='deprecated') {
-                            editor.addDataSource(dataset, {
-                                load : function(el, callback) {
-                                    document.body.dataset.loading = "true";
-                                    var options = '';
-                                    curriculum.data[dataset].forEach(function(entity) {
-                                        var option = entity.title;
+        var counter = 1000;
+        Object.keys(curriculum.data).forEach(function(dataset) {
+            if (dataset!='deprecated') {
+                editor.addDataSource(dataset, {
+                    load : function(el, callback) {
+                        document.body.dataset.loading = "true";
+                        var options = '';
+                        curriculum.data[dataset].forEach(function(entity) {
+                            var option = entity.title;
 
-                                        if (curriculum.index.type[entity.id] == "doelniveau") {
-                                            var doel;
-                                            var niveau;
-                                            if (entity.doel_id) {
-                                                doel = curriculum.index.id[entity.doel_id[0]];
-                                            }
-                                            if (entity.kerndoel_id) {
-                                                doel = curriculum.index.id[entity.kerndoel_id[0]];
-                                            }
-                                            if (entity.eindterm_id) {
-                                                doel = curriculum.index.id[entity.eindterm_id[0]];
-                                            }
-                                            if (entity.niveau_id) {
-                                                niveau = curriculum.index.id[entity.niveau_id[0]];
-                                            }
-                                            if (doel && niveau) {
-                                                option = "[" + niveau.title + "] " + doel.title;
-                                            }
-                                        }
-                                        if (navigator.userAgent.indexOf('Chrome/') === -1) {
-                                            option += ' ' + entity.id;
-                                        }
-                                        options += "<option value='" + entity.id + "'>" + option + "</option>";
-                                    });
-                                    window.setTimeout(function() {
-                                        el.innerHTML = options;
-                                        el.dataset.simplyDataName = dataset;
-                                        document.body.dataset.loading = "false";
-                                    }, counter);
-                                    counter+=1000;
+                            if (curriculum.index.type[entity.id] == "doelniveau") {
+                                var doel;
+                                var niveau;
+                                if (entity.doel_id) {
+                                    doel = curriculum.index.id[entity.doel_id[0]];
                                 }
-                            });
+                                if (entity.kerndoel_id) {
+                                    doel = curriculum.index.id[entity.kerndoel_id[0]];
+                                }
+                                if (entity.eindterm_id) {
+                                    doel = curriculum.index.id[entity.eindterm_id[0]];
+                                }
+                                if (entity.niveau_id) {
+                                    niveau = curriculum.index.id[entity.niveau_id[0]];
+                                }
+                                if (doel && niveau) {
+                                    option = "[" + niveau.title + "] " + doel.title;
+                                }
+                            }
+                            if (navigator.userAgent.indexOf('Chrome/') === -1) {
+                                option += ' ' + entity.id;
+                            }
+                            options += "<option value='" + entity.id + "'>" + option + "</option>";
+                        });
+                        window.setTimeout(function() {
+                            el.innerHTML = options;
+                            el.dataset.simplyDataName = dataset;
+                            document.body.dataset.loading = "false";
+                        }, counter);
+                        counter+=1000;
+                    }
+                });
+            }
+        });
+        editor.addDataSource("entities", {
+            load : function(el, callback) {
+                document.body.dataset.loading = "true";
+                var options = '';
+
+                // Priorities for sorting - we want the higher level entities to come first in the list.
+                var priorities = {
+                    "vakleergebied" : 5,
+                    "lpib_vakleergebied" : 4,
+                    "leerlijn" : 3,
+                    "examenprogramma" : 2,
+                    "examenprogramma_bg": 1,
+                    "ldk_vakleergebied": 0,
+                    "inh_vakleergebied": 0,
+                    "ref_vakleergebied": 0
+                };
+
+                var isChrome = navigator.userAgent.indexOf('Chrome/')!==-1;
+                
+                Object.values(curriculum.index.id)
+                .sort(function(a, b) {
+                    if (priorities[a.section]) {
+                        if (priorities[b.section]) {
+                            if (priorities[a.section] > priorities[b.section]) {
+                                return -1;
+                            }
+                            if (priorities[a.section] < priorities[b.section]) {
+                                return 1;
+                            }
+                            if (a.title > b.title) {
+                                return 1;
+                            }
+                            if (a.title < b.title) {
+                                return -1;
+                            }
+                        } else {
+                            return -1;
                         }
-                    });
-                    editor.addDataSource("entities", {
-                        load : function(el, callback) {
-                            document.body.dataset.loading = "true";
-                            var options = '';
+                    }
+                    if (priorities[b.section]) {
+                        return 1;
+                    }
+                    return 0;
+                }).forEach(function(entity) {
+                    var option = curriculum.index.type[entity.id]+': '+entity.title;
 
-                            // Priorities for sorting - we want the higher level entities to come first in the list.
-                            var priorities = {
-                                "vakleergebied" : 5,
-                                "lpib_vakleergebied" : 4,
-                                "leerlijn" : 3,
-                                "examenprogramma" : 2,
-                                "examenprogramma_bg": 1,
-                                "ldk_vakleergebied": 0,
-                                "inh_vakleergebied": 0,
-                                "ref_vakleergebied": 0
-                            };
-
-                            var isChrome = navigator.userAgent.indexOf('Chrome/')!==-1;
-                            
-                            Object.values(curriculum.index.id)
-                            .sort(function(a, b) {
-                                if (priorities[a.section]) {
-                                    if (priorities[b.section]) {
-                                        if (priorities[a.section] > priorities[b.section]) {
-                                            return -1;
-                                        }
-                                        if (priorities[a.section] < priorities[b.section]) {
-                                            return 1;
-                                        }
-                                        if (a.title > b.title) {
-                                            return 1;
-                                        }
-                                        if (a.title < b.title) {
-                                            return -1;
-                                        }
-                                    } else {
-                                        return -1;
-                                    }
-                                }
-                                if (priorities[b.section]) {
-                                    return 1;
-                                }
-                                return 0;
-                            }).forEach(function(entity) {
-                                var option = curriculum.index.type[entity.id]+': '+entity.title;
-
-                                if (curriculum.index.type[entity.id] == "doelniveau") {
-                                    var doel;
-                                    var niveau;
-                                    if (entity.doel_id) {
-                                        doel = curriculum.index.id[entity.doel_id[0]];
-                                    }
-                                    if (entity.kerndoel_id) {
-                                        doel = curriculum.index.id[entity.kerndoel_id[0]];
-                                    }
-                                    if (entity.eindterm_id) {
-                                        doel = curriculum.index.id[entity.eindterm_id[0]];
-                                    }
-                                    if (entity.niveau_id) {
-                                        niveau = curriculum.index.id[entity.niveau_id[0]];
-                                    }
-                                    if (doel && niveau) {
-                                        option = "[" + niveau.title + "] " + doel.title;
-                                    }
-                                }
-                                if (!isChrome) {
-                                    option += ' ' + entity.id;
-                                }
-                                if (!entity.deleted && curriculum.index.type[entity.id] != 'deprecated') {
-                                    options += "<option value='" + entity.id + "'>" + option + "</option>";
-                                }
-                            });
-                            window.setTimeout(function() {
-                                el.innerHTML = options;
-                                document.body.dataset.loading = "false";
-                            });
+                    if (curriculum.index.type[entity.id] == "doelniveau") {
+                        var doel;
+                        var niveau;
+                        if (entity.doel_id) {
+                            doel = curriculum.index.id[entity.doel_id[0]];
                         }
-                    });
-                    editor.addDataSource('schemas', {
-                        load: Object.keys(curriculum.schemas).map(function(s) {
-                            return {
-                                schema: {
-                                    value: s,
-                                    innerHTML: s
-                                }
-                            };
-                        })
-                    });
-                    editor.addDataSource('multipleparents', {
-                        load: function(el, callback) {
-                            var result = Object.values(curriculum.index.id)
-                            .filter(function(entry) {
-                                if(
-                                    entry.parents &&
-                                    entry.parents.length &&
-                                    entry.parents[entry.parents.length-1].ids.length > 1
-                                ) {
-                                    return true;
-                                } else {
-                                    return false;
-                                }
-                            })
-							var newHtml = '';
-							result.forEach(function(item) {
-								newHtml += '<a href="#edit/' + item.id + '">' + item.id + '</a><br>';
-							});
-							el.innerHTML = newHtml;
+                        if (entity.kerndoel_id) {
+                            doel = curriculum.index.id[entity.kerndoel_id[0]];
                         }
-                    });
+                        if (entity.eindterm_id) {
+                            doel = curriculum.index.id[entity.eindterm_id[0]];
+                        }
+                        if (entity.niveau_id) {
+                            niveau = curriculum.index.id[entity.niveau_id[0]];
+                        }
+                        if (doel && niveau) {
+                            option = "[" + niveau.title + "] " + doel.title;
+                        }
+                    }
+                    if (!isChrome) {
+                        option += ' ' + entity.id;
+                    }
+                    if (!entity.deleted && curriculum.index.type[entity.id] != 'deprecated') {
+                        options += "<option value='" + entity.id + "'>" + option + "</option>";
+                    }
+                });
+                window.setTimeout(function() {
+                    el.innerHTML = options;
+                    document.body.dataset.loading = "false";
+                });
+            }
+        });
+        editor.addDataSource('schemas', {
+            load: Object.keys(curriculum.schemas).map(function(s) {
+                return {
+                    schema: {
+                        value: s,
+                        innerHTML: s
+                    }
+                };
+            })
+        });
+        editor.addDataSource('multipleparents', {
+            load: function(el, callback) {
+                var result = Object.values(curriculum.index.id)
+                .filter(function(entry) {
+                    if(
+                        entry.parents &&
+                        entry.parents.length &&
+                        entry.parents[entry.parents.length-1].ids.length > 1
+                    ) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                })
+				var newHtml = '';
+				result.forEach(function(item) {
+					newHtml += '<a href="#edit/' + item.id + '">' + item.id + '</a><br>';
+				});
+				el.innerHTML = newHtml;
+            }
+        });
+        editor.transformers = {
+            "round" : {
+                "render" : function(data) {
+                    return Math.round(100 * (1-data),2) + "%";
+                }
+            },
+            "opendatalink" : {
+                "render" : function(data) {
+                    this._data = data;
+                    data = "https://opendata.slo.nl/curriculum/api-acpt/v1/uuid/"+data;
+                    return data;
+                },
+                "extract": function() {
+                    return this._data;
+                }
+            },
+            "editlink" : {
+                "render" : function(data) {
+                    return {
+                        innerHTML : data,
+                        href : document.location.pathname + "#edit/" + data
+                    };
+                },
+                "extract" : function(el) {
+                    return el.innerHTML;
+                }
+            },
+            "uuid": {
+                "render": function(data) {
+                    this.id = data;
+                    return data;
+                }
+            },
+            "idToTitle": {
+                "render" : function(data) {
+                    this.sloId = data;
+                    var entity = clone(curriculum.index.id[data]);
+                    if (curriculum.index.type[data] == "doelniveau") {
+                        if (entity.doel_id && entity.doel_id[0]) {
+                            var doel = clone(curriculum.index.id[entity.doel_id[0]]);
+                        } else if (entity.kerndoel_id && entity.kerndoel_id[0]) {
+                            var doel = clone(curriculum.index.id[entity.kerndoel_id[0]]);
+                        }
+                        if (entity.niveau_id && entity.niveau_id[0]) {
+                            var niveau = clone(curriculum.index.id[entity.niveau_id[0]]);
+                        }
+                        var result = '';
+                        if (niveau && niveau.title ) {
+                            result += '['+niveau.title+'] ';
+                        } else {
+                            result += '[geen niveau]';
+                        }
+                        if (doel && doel.title) {
+                            result += doel.title;
+                        } else {
+                            result += 'geen doel';
+                        }
+                    } else {
+                        if (typeof curriculum.index.id[data] == 'undefined') {
+                            return 'missing';
+                        }
+                        result = curriculum.index.id[data].title ? clone(curriculum.index.id[data].title) : "";
+                    }
+                    return result + ' ('+curriculum.index.type[data]+')';
+                },
+                "extract" : function(el) {
+                    return this.sloId;
+                }
+            },
+            "hasDescription" : {
+                render : function(data) {
+                    return (typeof data.description !== "undefined");
+                }
+            },
+            "hasTitle" : {
+                render : function(data) {
+                    return (typeof data.title !== "undefined");
+                }
+            },
+            "isarray" : {
+                render : function(data) {
+                    this.data = data;
+                    return Array.isArray(data);
+                },
+                extract : function(el) {
+                    return this.data;
+                }
+            },
+            "searchoption" : {
+                render : function(entity) {
+                    entity = clone(entity);
+                    this.data = entity;
+                    var option = entity.title + " " + entity.id;
+
+                    if (curriculum.index.type[entity.id]=="doelniveau") {
+                        var doel = clone(curriculum.index.id[entity.doel_id[0]]);
+                        var niveau = clone(curriculum.index.id[entity.niveau_id[0]]);
+                        option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
+                    }
+
+                    return {
+                        innerHTML : option,
+                        value : entity.id
+                    };
+                },
+                extract : function(el) {
+                    return this.data;
+                }
+            }
+        };
 	}
 
 	function escapeQuotes(s) {
@@ -1362,4 +1477,11 @@
         if (typeof window.scrollPosition !== "undefined") {
             window.scrollTo(window.scrollPosition.x, window.scrollPosition.y);
         }
+    });
+
+    simply.activate.addListener('updateDatalist', function() {
+        let el = this;
+        el.addEventListener('change', function(evt) {
+            document.getElementById('searchEntity').setAttribute('list',el.value);
+        });
     });
