@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/app.css">
 </head>
-<body class="slo-main-page" data-loading=true>
+<body class="slo-main-page">
     <header class="slo-navbar">
         <nav class="slo-navbar-left slo-logo bg-brand-gradient">
             <a href="/"><img src="/assets/img/slo.png"></a>
@@ -74,7 +74,12 @@
     <main class="slo-main slo-space-vertical">
         <div class="slo-grid slo-grid-4">
             <form data-simply-command="search" class="slo-grid slo-grid-span-3 slo-grid-3 slo-space">
-                <input class="slo-grid-span-2" type="text" name="search" placeholder="Entiteit UUID / tekst" list="entities">
+                <select data-simply-list="datalists" data-simply-entry="entry" data-simply-activate="updateDatalist">
+                    <template>
+                        <option data-simply-field="entry"></option>
+                    </template>
+                </select>
+                <input type="text" id="searchEntity" name="search" placeholder="Entiteit UUID / tekst" list="entities">
                 <button data-simply-command="search" class="slo-button slo-button-nomargin" data-simply-command="search">Toon entiteit</button>
             </form>
             <div class="slo-grid slo-grid-2 slo-space">
