@@ -105,7 +105,8 @@
     };
     
     var originalEntities = {}; // store to keep unchanged originals so we can revert with delete-change
-    
+    var treeviewSchemas = null;
+
     var entityEditor = simply.app({
         container: document.body,
         routes : {
@@ -207,13 +208,15 @@
                 });
             },
             'toggleTree': function(el) {
-                if (!entityEditor.view.schemas.length) {
-                    var section = curriculum.index.type[entityEditor.view.rootEntity];
-                    entityEditor.view.schemas = [curriculum.getSchemaFromType(section)];
+                var context = getContextFromId(entityEditor.view.rootEntity);
+                if (!entityEditor.view.schemas || !entityEditor.view.schemas.includes(context)) {
+                    entityEditor.view.schemas = [context];
                 }
-                entityEditor.actions.renderTree(curriculum.index.id[entityEditor.view.rootEntity],entityEditor.view.niveau)
-                .then(function() {
+                entityEditor.actions.renderTree(curriculum.index.id[entityEditor.view.rootEntity],entityEditor.view.niveau,entityEditor.view.schemas)
+                .then(function(contexts) {
                     document.body.querySelector('.slo-treeview').classList.toggle('slo-hidden');
+                    $('.slo-treeview-schemas').val(contexts);
+                    treeviewSchemas.setValue(entityEditor.view.schemas);
                 });
             },
             'export-tree': function(el) {
@@ -425,13 +428,6 @@
                         return niveauData.niveau_id == niveau;
                     }).pop();
                 }
-                var getContextFromId = function(id) {
-                    var section = curriculum.index.type[id];
-                    var context = Object.keys(curriculum.schemas).filter(function(schema) {
-                        return typeof curriculum.schemas[schema].properties[section]!='undefined';
-                    }).pop();
-                    return context;
-                };
                 var render = function(e,contexts,niveau=null,parent) {
                     if (!e) {
                         return '<span class="slo-treeview-title"><span class="slo-tag"></span>Missing</span>';
@@ -475,11 +471,9 @@
                 };
                 var tree = document.querySelector('.slo-treeview-tree');
                 var treeHTML = render(entity, contexts, niveau);
-                $('.slo-treeview-schemas').val(contexts);
-                $('.slo-treeview-schemas').trigger("chosen:updated");
                 tree.innerHTML = treeHTML;
                 document.body.dataset.loading="false";
-                return Promise.resolve(true);
+                return Promise.resolve(contexts);
             },
             'export-tree': function(root, niveau, schemas) {
                 document.body.dataset.loading="true";
@@ -502,6 +496,34 @@
                 	return (niveaus && niveaus.length ? niveaus.map(id => curriculum.index.id[id].title).join(',') : '');
                 };
                 
+				var createRowObject = function(e, parent) {
+					var row = {
+						ID: e.id,
+						ParentID: (parent ? parent.id : ''),
+						Prefix: (e.prefix ? e.prefix : ''),
+						Titel: e.title,
+						Omschrijving: e.description,
+						Type: curriculum.index.type[e.id]
+					};
+					if (row.Type=='doelniveau') {
+						row.Levels = getLevels(e.niveau_id);
+                    }
+					var context = getContextFromId(e.id);
+					var allprops = Object.keys(curriculum.schemas[context].properties[row.Type].items.properties);
+					var ignore = ['id','prefix','title','description','children','parent','section','niveau_id'];
+					allprops
+					.filter(p => !ignore.includes(p))
+					.filter(p => p.substr(-3)!='_id')
+					.forEach(p => {
+						if (typeof e[p] !== 'undefined') {
+							row[p] = e[p];
+						} else {
+							row[p] = '';
+						}
+					});
+					return row;
+				};
+
                 var exportTree = function(e,contexts,niveau,parent) {
                     if (!e) {
                         return; //FIXME: throw error? '<span class="slo-treeview-title"><span class="slo-tag"></span>Missing</span>';
@@ -516,63 +538,65 @@
                     if (niveau && e.niveau_id && e.niveau_id.indexOf(niveau)===-1) {
                         return;
                     }
-                    var title = (e.prefix ? e.prefix + ' ' + e.title : (e.title ? e.title : e.id));
-                    if (curriculum.index.type[e.id]=='doelniveau') {
-                    	title = getDoelNiveauTitle(e);                    	
-                    }
 					// add row for entity
 					if (e.title) {
-						json.push({
-							ID: e.id,
-							ParentID: (parent ? parent.id : ''),
-							Prefix: (e.prefix ? e.prefix : ''),
-							Titel: e.title,
-							Omschrijving: e.description,
-							Type: curriculum.index.type[e.id]
-						});
+						json.push(createRowObject(e, parent));
 					} else { //FIXME: check if this is a doelniveau	
 						// TODO: for doelniveau use id, title and levels from doel
+                        var children = [];
 						if (e.children && e.children.length) {
-							var children = e.children;
-							var first = children.shift();
-							if (!first.id) {
-								first = curriculum.index.id[first];
-							}
-							json.push({
-								ID: first.id,
-								ParentID: (parent ? parent.id : ''),
-								Prefix: e.prefix,
-								Titel: first.title,
-								Type: curriculum.index.type[first.id],
-								Levels: getLevels(e.niveau_id)
-							});
+							children = [...e.children];
+						} else if (e.section == 'doelniveau') {
+                            ['doel','kerndoel','examenprogramma_eindterm','examenprogramma_subdomein','examenprogramma_subdomein'].forEach(p => {
+                                if (e[p+'_id']) {
+                                    children = children.concat(e[p+'_id']);
+                                }
+                            });
+                        }
+                        if (children.length) {
+                            // use the first child as parent instead of the doelniveau itself
+                            // doelniveau's should never be included in the export excel
+                            // by using a doelniveau child as parent, an entity will be added to that doelniveau as a child in the import tool
+                            var first = children.shift();
+                            if (!first.id) {
+                                first = curriculum.index.id[first];
+                            }
+                            json.push(createRowObject(e, parent));
                             children.forEach(function(c) {
                                 if (contexts.indexOf(getContextFromId(c))!=-1 && curriculum.index.type[c]!='vakleergebied') {
                                     exportTree(curriculum.index.id[c], contexts, niveau, first);
                                 }
                             });
                             return;
-						}
+                        }
 					}
-					// TODO: extra doelniveau child entities use first entity as parent
 					 
                     if (!contexts) {
                         contexts = [];
                         contexts.push(getContextFromId(e.id));
                     }
-                    if (!e.children) {
-                        e.children = [];
+                    if (e.children && e.children.length) {
+                        e.children.forEach(function(c) {
+                            if (contexts.indexOf(getContextFromId(c))!=-1 && curriculum.index.type[c]!='vakleergebied') {
+                                exportTree(curriculum.index.id[c], contexts, niveau, e);
+                            }
+                        });
                     }
-                    e.children.forEach(function(c) {
-                        if (contexts.indexOf(getContextFromId(c))!=-1 && curriculum.index.type[c]!='vakleergebied') {
-                            exportTree(curriculum.index.id[c], contexts, niveau, e);
-                        }
-                    });
                 };
                 exportTree(root, schemas, niveau);
 				var ws = XLSX.utils.json_to_sheet(json, {
 					header: ["ID", "ParentID", "Prefix", "Titel", "Omschrijving", "Type", "Levels"]
 				});
+				ws['!cols'] = [
+					{wch: 4},
+					{wch: 4},
+					{wch: 12},
+					{wch: 60},
+					{wch: 10},
+					{wch: 10},
+					{wch: 10}
+				];
+				ws.A4.s = {alignment:{ wrapText: true }}; // FIXME: this does nothing, upgrade to pro or user xlsx-style fork
 				var wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, "Sheet 1");
 				XLSX.writeFile(wb, 'export.xlsx'); //FIXME: use title from root entity
@@ -741,7 +765,7 @@
 //              return curriculum.sources[schema].writeFiles(files, message);
             },
             filterNiveau: function(niveauId) {
-                entityEditor.actions.renderTree(entityEditor.view.entityId,niveauId);
+                entityEditor.actions.renderTree(entityEditor.view.entityId,niveauId,entityEditor.view.schemas);
             },
             start: function(user, pass) {
                 var schemas = {
@@ -1021,7 +1045,7 @@
 
                     
                     simply.activate.addListener('context-select', function() {
-                        var s = new vanillaSelectBox('.slo-treeview-schemas', {'placeHolder':'Selecteer contexten'});
+                        treeviewSchemas = new vanillaSelectBox('.slo-treeview-schemas', {'placeHolder':'Selecteer contexten'});
                     });
                     // restore changes from localstorage;
                     if (localStorage.changes) {
@@ -1181,7 +1205,7 @@
             }
         });
         editor.addDataSource('schemas', {
-            load: Object.keys(curriculum.schemas).map(function(s) {
+            load: Object.keys(curriculum.schemas).sort().map(function(s) {
                 return {
                     schema: {
                         value: s,
@@ -1485,3 +1509,11 @@
             document.getElementById('searchEntity').setAttribute('list',el.value);
         });
     });
+
+    function getContextFromId(id) {
+        var section = curriculum.index.type[id];
+        var context = Object.keys(curriculum.schemas).filter(function(schema) {
+            return typeof curriculum.schemas[schema].properties[section]!='undefined';
+        }).pop();
+        return context;
+    };
