@@ -427,6 +427,18 @@
     </label>
 </template>
 
+<template id="slo-integer">
+    <label>{{label}}
+    	<input type="number" data-simply-field="{{property}}">
+    </label>
+</template>
+
+<template id="slo-checkbox">
+    <label class="slo-checkbox">{{label}}
+    	<input type="checkbox" value="1" data-simply-field="{{property}}">
+    </label>
+</template>
+
 <template id="slo-link-multiple">
     <div>
         <label>{{label}}</label>

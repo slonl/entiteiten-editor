@@ -883,6 +883,13 @@
                                                 t = document.getElementById('slo-string').innerHTML;
                                             }
                                         break;
+										case 'integer':
+											if (property.minimum==0 && property.maximum==1) {
+												t = document.getElementById('slo-checkbox').innerHTML;
+											} else {
+												t = document.getElementById('slo-integer').innerHTML;
+											}
+										break;
                                         default: // e.g. array['string','null']
                                             if (property.enum) {
                                                 t = document.getElementById('slo-string').innerHTML;
