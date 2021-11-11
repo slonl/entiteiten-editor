@@ -106,7 +106,7 @@
     
     var originalEntities = {}; // store to keep unchanged originals so we can revert with delete-change
     var treeviewSchemas = null;
-
+    var treeviewNiveaus = null;
     var entityEditor = simply.app({
         container: document.body,
         routes : {
@@ -212,7 +212,10 @@
                 if (!entityEditor.view.schemas || !entityEditor.view.schemas.includes(context)) {
                     entityEditor.view.schemas = [context];
                 }
-                entityEditor.actions.renderTree(curriculum.index.id[entityEditor.view.rootEntity],entityEditor.view.niveau,entityEditor.view.schemas)
+                if (!entityEditor.view.entity) {
+                    entityEditor.view.entity = entityEditor.view.rootEntity;
+                }
+                entityEditor.actions.renderTree(curriculum.index.id[entityEditor.view.rootEntity],entityEditor.view.niveaus,entityEditor.view.schemas)
                 .then(function(contexts) {
                     document.body.querySelector('.slo-treeview').classList.toggle('slo-hidden');
                     $('.slo-treeview-schemas').val(contexts);
@@ -220,7 +223,7 @@
                 });
             },
             'export-tree': function(el) {
-            	entityEditor.actions['export-tree'](curriculum.index.id[entityEditor.view.rootEntity],entityEditor.view.niveau,entityEditor.view.schemas);
+            	entityEditor.actions['export-tree'](curriculum.index.id[entityEditor.view.rootEntity],entityEditor.view.niveaus,entityEditor.view.schemas);
             },
             'search': function(el) {
                 var searchInput = el.parentElement.querySelector('input');
@@ -289,7 +292,7 @@
 
                   if (entityEditor.view.rootEntity) {
                        var root = curriculum.index.id[entityEditor.view.rootEntity];
-                    entityEditor.actions.renderTree(root, entityEditor.view.niveau, entityEditor.view.schemas);
+                    entityEditor.actions.renderTree(root, entityEditor.view.niveaus, entityEditor.view.schemas);
                 }
                 
                 // reload the page to show the changes;
@@ -323,7 +326,7 @@
                 .then(function() {
                     if (entityEditor.view.rootEntity) {
                         var root = curriculum.index.id[entityEditor.view.rootEntity];
-                        entityEditor.actions.renderTree(root, entityEditor.view.niveau, entityEditor.view.schemas);
+                        entityEditor.actions.renderTree(root, entityEditor.view.niveaus, entityEditor.view.schemas);
                     }
                 })
                 .catch(function(error) {
@@ -338,7 +341,7 @@
                 entityEditor.actions.save(clone(entityEditor.view.entity));
                    if (entityEditor.view.rootEntity) {
                        var root = curriculum.index.id[entityEditor.view.rootEntity];
-                    entityEditor.actions.renderTree(root, entityEditor.view.niveau, entityEditor.view.schemas);
+                    entityEditor.actions.renderTree(root, entityEditor.view.niveaus, entityEditor.view.schemas);
                 }                
             },
             deprecate: function() {
@@ -350,15 +353,15 @@
                     }
                 }
             },
-            filterNiveau: function(select, value) {
+            filterNiveaus: function(select, values) {
                 var entity = clone(entityEditor.view.entity);
-                entityEditor.view.niveau = value;
-                entityEditor.actions.renderTree(entity, value, entityEditor.view.schemas);
+                entityEditor.view.niveaus = values;
+                entityEditor.actions.renderTree(entity, values, entityEditor.view.schemas);
             },
             filterSchemas: function(select, values) {
                 var entity = clone(entityEditor.view.entity);
                 entityEditor.view.schemas = values;
-                entityEditor.actions.renderTree(entity, entityEditor.view.niveau, values);
+                entityEditor.actions.renderTree(entity, entityEditor.view.niveaus, values);
             }
         },
         actions: {
@@ -421,17 +424,18 @@
                 //show the new entity form
                 entityEditor.view.entity = entity;
             },
-            'renderTree': function(entity, niveau=null, contexts=null) {
+            'renderTree': function(entity, niveaus=null, contexts=null) {
                 document.body.dataset.loading="true";
-                if (niveau) {
+                if (niveaus && niveaus.length) {
                     var niveauIndexData = niveauIndex.filter(function(niveauData) {
-                        return niveauData.niveau_id == niveau;
+                        return niveaus.includes(niveauData.niveau_id);
                     }).pop();
                 }
-                var render = function(e,contexts,niveau=null,parent) {
+                var render = function(e,contexts,niveaus=null,parent) {
                     if (!e) {
                         return '<span class="slo-treeview-title"><span class="slo-tag"></span>Missing</span>';
                     }
+/*
                     if (niveau && (!e.niveau_id || !e.niveau_id.length) && (!reverseNiveauIndex[e.id] || reverseNiveauIndex[e.id].indexOf(niveau)===-1)) {
                         if (!reverseNiveauIndex[e.id]) {
                             console.error('missing reverse niveau index for '+e.id);
@@ -439,7 +443,11 @@
                         }
                         return '';
                     }
-                    if (niveau && e.niveau_id && e.niveau_id.length && e.niveau_id.indexOf(niveau)===-1) {
+*/
+                    let overlaps = function(a1, a2) {
+                        return a1.filter(v => a2.includes(v)).length>0;
+                    }
+                    if (niveaus && niveaus.length && e.niveau_id && e.niveau_id.length && !overlaps(e.niveau_id, niveaus)) {
                         return '';
                     }
                     var title = (e.prefix ? e.prefix + ' ' + e.title : (e.title ? e.title : e.id));
@@ -463,20 +471,22 @@
                     }
                     e.children.forEach(function(c) {
                         if (contexts.indexOf(getContextFromId(c))!=-1 && curriculum.index.type[c]!='vakleergebied') {
-                            result += render(curriculum.index.id[c], contexts, niveau, e);
+                            result += render(curriculum.index.id[c], contexts, niveaus, e);
                         }
                     });
                     result += '</div>';
                     return result;
                 };
                 var tree = document.querySelector('.slo-treeview-tree');
-                var treeHTML = render(entity, contexts, niveau);
+                var treeHTML = render(entity, contexts, niveaus);
                 tree.innerHTML = treeHTML;
                 document.body.dataset.loading="false";
                 return Promise.resolve(contexts);
             },
-            'export-tree': function(root, niveau, schemas) {
+            'export-tree': function(root, niveaus, schemas) {
                 document.body.dataset.loading="true";
+                getExportTree(root, niveaus, schemas);
+/*
                 if (niveau) {
                     var niveauIndexData = niveauIndex.filter(function(niveauData) {
                         return niveauData.niveau_id == niveau;
@@ -564,7 +574,7 @@
                             json.push(createRowObject(e, parent));
                             children.forEach(function(c) {
                                 if (contexts.indexOf(getContextFromId(c))!=-1 && curriculum.index.type[c]!='vakleergebied') {
-                                    exportTree(curriculum.index.id[c], contexts, niveau, first);
+                                    getExportTree(curriculum.index.id[c], contexts, niveau, first);
                                 }
                             });
                             return;
@@ -578,12 +588,12 @@
                     if (e.children && e.children.length) {
                         e.children.forEach(function(c) {
                             if (contexts.indexOf(getContextFromId(c))!=-1 && curriculum.index.type[c]!='vakleergebied') {
-                                exportTree(curriculum.index.id[c], contexts, niveau, e);
+                                getExportTree(curriculum.index.id[c], contexts, niveau, e);
                             }
                         });
                     }
                 };
-                exportTree(root, schemas, niveau);
+                getExportTree(root, schemas, niveau);
 				var ws = XLSX.utils.json_to_sheet(json, {
 					header: ["ID", "ParentID", "Prefix", "Titel", "Omschrijving", "Type", "Levels"]
 				});
@@ -600,6 +610,7 @@
 				var wb = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(wb, ws, "Sheet 1");
 				XLSX.writeFile(wb, 'export.xlsx'); //FIXME: use title from root entity
+*/
                 document.body.dataset.loading="";
                 return Promise.resolve(true);            	
             },
@@ -687,31 +698,37 @@
                     if (!change.commit) {
                         return false;
                     }
-                    var id = change.id;
-                    var original = curriculum.data[curriculum.index.type[id]].find(function(entry) {
+                    let id = change.id;
+					let type = curriculum.index.type[id];
+					if (!type) {
+						return false;
+					}
+					let section = curriculum.data[type];
+					if (!section) {
+						return false;
+					}
+                    let original =section.find(function(entry) {
                         if (entry.id == id) {
                             return true;
                         }
                         return false;
                     });
-//                    delete change.section;
-//                    delete change.parents;
                     if (original) {
-                        var index = curriculum.data[curriculum.index.type[id]].indexOf(original);
-                        curriculum.data[curriculum.index.type[id]][index] = change;
+                        var index = section.indexOf(original);
+                        section[index] = change;
                     } else {
-                        curriculum.data[curriculum.index.type[id]].push(change);
+                        section.push(change);
                     }
-                    var section = curriculum.index.type[change.id];
-                    var schema = curriculum.getSchemaFromType(section);
+                    let schema = curriculum.getSchemaFromType(type);
                     if (!schemas[schema]) {
                         schemas[schema] = [];
                     }
-                    if (schemas[schema].indexOf(section)===-1) {
-                        schemas[schema].push(section);
+                    if (schemas[schema].indexOf(type)===-1) {
+                        schemas[schema].push(type);
                     }
                     done.push(changeIndex);
                 });
+
                 var clean = function(dataset) {
                     dataset = clone(dataset);
                     dataset.forEach(function(entity) {
@@ -798,6 +815,7 @@
                         })
                     );
                 });
+                window.schemasParsed = schemasParsed;
 
                 // get user info
                 // put it in the entityEditor.view.user
@@ -889,6 +907,7 @@
 					});
                     datalists.sort();
                     entityEditor.view.datalists = datalists;
+                    console.log('Datalists filled');
 					return true;
 				})
                 .then(function() {
@@ -896,12 +915,12 @@
                         entity.section = curriculum.index.type[entity.id];
                         entity.children = [];
                         Object.keys(entity).forEach(function(prop) {
-                            if (prop.substr(prop.length-3)=='_id' && prop!='niveau_id') {
+                            if (prop.substr(prop.length-3)=='_id' && Array.isArray(entity[prop]) && prop!='niveau_id') {
                                 entity.children = entity.children.concat(entity[prop]);
                             }
                         });
                     });
-
+                    console.log('Children filled');
                     
                     var parentInfo = {
                         'lpib_vakleergebied' : 'doel',
@@ -1033,17 +1052,11 @@
                         }
                     });
 
-                    entityEditor.view.niveaus = [{ niveau: { value: '', innerHTML: 'Selecteer niveau'} }]
-                        .concat(niveauIndex.map(function(n) {
-                            return {
-                                niveau: {
-                                    value: n.niveau_id,
-                                    innerHTML: curriculum.index.id[n.niveau_id].title
-                                }
-                            };
-                        }));
 
-                    
+
+                    simply.activate.addListener('niveaus-select', function() {
+                        treeviewNiveaus = new vanillaSelectBox('.slo-treeview-niveaus', {'placeHolder': 'Selecteer niveaus'});
+                    });
                     simply.activate.addListener('context-select', function() {
                         treeviewSchemas = new vanillaSelectBox('.slo-treeview-schemas', {'placeHolder':'Selecteer contexten'});
                     });
@@ -1210,6 +1223,16 @@
                     schema: {
                         value: s,
                         innerHTML: s
+                    }
+                };
+            })
+        });
+        editor.addDataSource('niveaus', {
+            load: niveauIndex.map(function(n) {
+                return {
+                    niveau: {
+                        value: n.niveau_id,
+                        innerHTML: curriculum.index.id[n.niveau_id].title
                     }
                 };
             })
