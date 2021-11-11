@@ -269,6 +269,9 @@ var curriculum = (function(curriculum){
                 data[propertyName].then(function(entities) {
                     console.log('index size '+Object.keys(curriculum.index.id).length);
                     console.log('indexing '+name+'.'+propertyName+' ('+entities.length+')');
+                    if (/deprecated/.exec(propertyName)) {
+                        propertyName = 'deprecated';
+                    }
                     if (!curriculum.data[propertyName]) {
                         curriculum.data[propertyName] = [];
                     }
@@ -329,6 +332,31 @@ var curriculum = (function(curriculum){
             }
             return acc;
         }, '');
+    };
+
+    curriculum.treewalk = function(node, options, parent=null) {
+        if (typeof options === 'function') {
+            options = {
+                topdownCallback: options
+            };
+        }
+        let stop = false;
+        if (typeof options.topdownCallback === 'function') {
+            stop = options.topdownCallback(node, parent);
+        }
+        if (!stop && Array.isArray(options.terminalTypes)) {
+            stop = options.terminalTypes.includes(curriculum.index.type[node.id]);
+        }
+        if (!stop && node.children && Array.isArray(node.children)) {
+            let children = node.children;
+            if (Array.isArray(options.limitSchemas)) {
+                children = children.filter(id => options.limitSchemas.includes(curriculum.index.schema[id]));
+            }
+            children.forEach(id => curriculum.treewalk(curriculum.index.id[id], options, node));
+        }
+        if (typeof options.bottomupCallback === 'function') {
+            options.bottomupCallback(node, parent);
+        }
     };
 
     curriculum.uuidv4 = function(options, buf, offset) {
