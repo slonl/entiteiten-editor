@@ -1302,6 +1302,9 @@
                 "render" : function(data) {
                     this.sloId = data;
                     var entity = clone(curriculum.index.id[data]);
+					if (!entity || entity.deleted || curriculum.index.type[data]=='deprecated') {
+						this.classList.add('slo-deleted');
+					}
                     if (curriculum.index.type[data] == "doelniveau") {
                         if (entity.doel_id && entity.doel_id[0]) {
                             var doel = clone(curriculum.index.id[entity.doel_id[0]]);
@@ -1317,6 +1320,11 @@
                         } else {
                             result += '[geen niveau]';
                         }
+						if (entity.prefix) {
+							result += entity.prefix+': ';
+						} else if (doel && doel.prefix) {
+							result += doel.prefix+': ';
+						}
                         if (doel && doel.title) {
                             result += doel.title;
                         } else {
@@ -1326,7 +1334,7 @@
                         if (typeof curriculum.index.id[data] == 'undefined') {
                             return 'missing';
                         }
-                        result = curriculum.index.id[data].title ? clone(curriculum.index.id[data].title) : "";
+                        result = (entity.prefix ? entity.prefix+': ' : '') + (entity.title ? entity.title : '');
                     }
                     return result + ' ('+curriculum.index.type[data]+')';
                 },

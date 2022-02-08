@@ -9,6 +9,10 @@ body {
     min-height: 100%;
 }
 
+.slo-deleted {
+	color: red;
+	text-decoration: line-through;
+}
 .slo-commit,
 .slo-new {
     width: 100%;
