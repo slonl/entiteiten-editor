@@ -4,13 +4,6 @@
 
     var reverseDoelIndex = {};
     var hierarchies = {
-        'doel': {
-            'lpib_vakleergebied':['lpib_vakkern_id','doelniveau_id'],
-            'lpib_vakkern':['lpib_vaksubkern_id','doelniveau_id'],
-            'lpib_vaksubkern':['lpib_vakinhoud_id','doelniveau_id'],
-            'lpib_vakinhoud':['doelniveau_id'],
-            'doelniveau':['doel_id'] // ,'niveau_id']
-        },
 		'leerdoelenkaarten': {
 			'ldk_vakleergebied': ['ldk_vakkern_id','doelniveau_id'],
             'ldk_vakkern':['ldk_vaksubkern_id','doelniveau_id'],
@@ -80,9 +73,6 @@
 
     var emptyEntity = function() {
         return {
-            lpib_vakkern_id : [],
-            lpib_vaksubkern_id : [],
-            lpib_vakinhoud_id : [],
             ldk_vakkern_id: [],
             ldk_vaksubkern_id: [],
             ldk_vakinhoud_id: [],
@@ -786,7 +776,6 @@
             },
             start: function(user, pass) {
                 var schemas = {
-                    'curriculum-lpib': 'slonl/curriculum-lpib',
                     'curriculum-basis': 'slonl/curriculum-basis',
                     'curriculum-kerndoelen': 'slonl/curriculum-kerndoelen',
                     'curriculum-examenprogramma': 'slonl/curriculum-examenprogramma',
@@ -930,7 +919,6 @@
                     console.log('Children filled');
                     
                     var parentInfo = {
-                        'lpib_vakleergebied' : 'doel',
                         'examenprogramma' : 'examenprogramma',
                         'kerndoel_vakleergebied': 'kerndoelen',
                         'examenprogramma_bg_profiel': 'examenprogramma_bg',
@@ -1154,7 +1142,6 @@
                 // Priorities for sorting - we want the higher level entities to come first in the list.
                 var priorities = {
                     "vakleergebied" : 5,
-                    "lpib_vakleergebied" : 4,
                     "leerlijn" : 3,
                     "examenprogramma" : 2,
                     "examenprogramma_bg": 1,
@@ -1461,66 +1448,6 @@
             },0);
         });
     });
-
-    var lpibMatches = {};
-    var reverseLpibMatches = {};
-    function checkLPIBMatch() {
-        fetch('lpib-matches.json').then(function(data) {
-            return data.json();
-        })
-        .then(function(json) {
-            lpibMatches = json;
-            // fix bk:ids, load reverse of matches
-            Object.keys(lpibMatches).forEach(function(lpibId) {
-                lpibMatches[lpibId].forEach(function(obkId, index) {
-                    if (obkId.substr(0,3)==='bk:') {
-                        obkId = obkId.substr(3);
-                        lpibMatches[lpibId][index] = obkId;
-                    }
-                    if (!reverseLpibMatches[obkId]) {
-                        reverseLpibMatches[obkId] = [];
-                    }
-                    reverseLpibMatches[obkId].push(lpibId);
-                });
-            });
-            // find matches that have n to m relations
-            // lpibMatches[x] has more than 1 entry
-            // and reverseLpibMatches[y] for at least on of those entries has more than 1 entry
-            var lpibN = Object.keys(lpibMatches).filter(function(lpibId) {
-                return lpibMatches[lpibId].length>1;
-            });
-            lpibNM = lpibN.filter(function(lpibId) {
-                var M = false;
-                lpibMatches[lpibId].forEach(function(obkId) {
-                    if (reverseLpibMatches[obkId].length>1) {
-                        M = true;
-                    }
-                });
-                return M;
-            });
-            lpibNM.forEach(function(lpibId) {
-                var lpEnt = curriculum.index.id[lpibId];
-                console.group('N to M link:')
-                console.log('From '+lpEnt.id+' '+lpEnt.title);
-                lpibMatches[lpibId].forEach(function(obkId) {
-                    if (reverseLpibMatches[obkId].length>1) {
-                        var obkEnt = curriculum.index.id[obkId];
-                        console.log('To '+obkEnt.id+' '+obkEnt.title);
-                        console.group('Which also links to:')
-                        reverseLpibMatches[obkId].forEach(function(lpibId) {
-                            var lpEnt2 = curriculum.index.id[lpibId];
-                            console.log(lpEnt2.id+' '+lpEnt2.title);
-                        });
-                        console.groupEnd();
-                    }
-                });
-                console.groupEnd();
-            });
-        })
-        .catch(function(err) {
-            console.error(err);
-        });
-    }
 
     /* Code to remember scroll position when the lists are changed and redrawn */
     function rememberScrollPosition() {
