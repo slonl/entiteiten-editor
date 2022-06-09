@@ -259,7 +259,6 @@ var curriculum = (function(curriculum){
             }
         });
 
-		var deleted = [];
         return Promise.all(Object.values(data))
         .then(function(results) {
             Object.keys(data).forEach(function(propertyName) {
@@ -282,20 +281,13 @@ var curriculum = (function(curriculum){
                             if (curriculum.index.id[entity.id]) {
                                 curriculum.errors.push('Duplicate id in '+name+'.'+propertyName+': '+entity.id);
 							} else if (entity.deleted==1 || entity.deleted==true) {
-								entity.types = [ propertyName ];
-								entity.replacedBy = [];
 								curriculum.index.id[entity.id] = entity;
 								curriculum.index.type[entity.id] = 'deprecated';
 								curriculum.index.schema[entity.id] = name;
-								deleted.push(entity.id);
                             } else {
                                 curriculum.index.id[entity.id] = entity;
                                 curriculum.index.type[entity.id] = propertyName;
                                 curriculum.index.schema[entity.id] = name;
-                            }
-                            if (entity.id=='c0f3b769-606e-488a-aeb1-405bf46df24a') {
-                                console.log(entity.id);
-                                console.log(curriculum.index.id[entity.id]);
                             }
                         } else {
                             curriculum.errors.push('Missing id in '+name+'.'+propertyName+': '+count);
@@ -305,24 +297,7 @@ var curriculum = (function(curriculum){
                 });
             });
             return data;
-        })
-		.then(function() {
-			// returns arr1 with only ids that are not in arr2
-			var arrayDiff = function(arr1, arr2) {
-				return arr1.filter(function(id) {
-					return arr2.indexOf(id)===-1;
-				});
-			};
-			Object.keys(curriculum.data).forEach(function(propertyName) {
-				curriculum.data[propertyName].forEach(function(entity) {
-					Object.keys(entity).forEach(function(prop) {
-						if (prop.substr(-3)=='_id' && Array.isArray(entity[prop])) {
-							entity[prop] = arrayDiff(entity[prop], deleted);
-						}
-					});
-				});
-			});
-		});
+        });
     };
 
     curriculum.getSchemaFromType = function(type) {
