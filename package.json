@@ -1,5 +1,5 @@
 {
-    "name": "slonl curriculum entiteiten editor",
+    "name": "entiteiten-editor",
     "dependencies": {
         "curriculum-js": "^0.3.6"
     }
