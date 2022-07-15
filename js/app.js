@@ -1,6 +1,11 @@
+import getExportTree from './export-tree.js'
+import { Octokit } from 'https://cdn.skypack.dev/octokit'
+
+let curriculum = new Curriculum();
 
     var niveauIndex = [];
     var reverseNiveauIndex = {};
+    window.reverseNiveauIndex = reverseNiveauIndex; // needed for getExportTree
 
     var reverseDoelIndex = {};
     var hierarchies = {
@@ -161,8 +166,8 @@
                 }
             },
             logoff: function() {
-            localStorage.removeItem('login');
-            location.reload(true);
+                localStorage.removeItem('login');
+                location.reload(true);
             },
             login: function(form, values) {
                 document.body.dataset.loading="true";
@@ -183,8 +188,10 @@
                     return true;
                 })
                 .catch(function(error) {
-                    if (error.path=='/user') {
+                    if (error.path=='/user' || error.status==401) {
                         entityEditor.view['login-error'] = 'Github login mislukt';
+                        // SimplyEdit is not yet loaded, so set this message manually
+                        document.querySelector('[data-simply-field="login-error"]').innerText = entityEditor.view['login-error']
                         document.body.dataset.loading="false";
                         return false;
                     } else {
@@ -265,7 +272,7 @@
                 // find the id of the entity;
                 var id = el.closest('.slo-entiteit-change').querySelector("a").innerHTML;
                 if (originalEntities[id]) {
-                    var original = clone(originalEntities[id]);
+                    var original = curriculum.clone(originalEntities[id]);
                     delete originalEntities[id];
                        curriculum.index.id[id] = original;
                     //FIXME: update curriculum.data as well?
@@ -326,9 +333,9 @@
             },
             'save' : function() {
                 if (!entityEditor.view.entity.id) {
-                    entityEditor.view.entity.id = curriculum.uuidv4();
+                    entityEditor.view.entity.id = curriculum.uuid();
                 }
-                entityEditor.actions.save(clone(entityEditor.view.entity));
+                entityEditor.actions.save(curriculum.clone(entityEditor.view.entity));
                    if (entityEditor.view.rootEntity) {
                        var root = curriculum.index.id[entityEditor.view.rootEntity];
                     entityEditor.actions.renderTree(root, entityEditor.view.niveaus, entityEditor.view.schemas);
@@ -337,19 +344,19 @@
             deprecate: function() {
                 if (entityEditor.view.entity.id) {
                     if (confirm('Weet u zeker dat u deze entiteit wil verwijderen?')) {
-                        var changedEntity = clone(entityEditor.view.entity);
+                        var changedEntity = curriculum.clone(entityEditor.view.entity);
                         changedEntity.deleted = 1;
                         entityEditor.actions.save(changedEntity);          
                     }
                 }
             },
             filterNiveaus: function(select, values) {
-                var entity = clone(entityEditor.view.entity);
+                var entity = curriculum.clone(entityEditor.view.entity);
                 entityEditor.view.niveaus = values;
                 entityEditor.actions.renderTree(entity, values, entityEditor.view.schemas);
             },
             filterSchemas: function(select, values) {
-                var entity = clone(entityEditor.view.entity);
+                var entity = curriculum.clone(entityEditor.view.entity);
                 entityEditor.view.schemas = values;
                 entityEditor.actions.renderTree(entity, entityEditor.view.niveaus, values);
             }
@@ -357,7 +364,7 @@
         actions: {
             toggleRelation: function(parentId, childId) {
                 // fetch entity
-                var entity = clone(curriculum.index.id[parentId]);
+                var entity = curriculum.clone(curriculum.index.id[parentId]);
                 var childType = curriculum.index.type[childId];
                 // update
                 if (!entity[childType+'_id'] || entity[childType+'_id'].indexOf(childId)===-1) { // restore
@@ -393,7 +400,7 @@
                 }
                 entityEditor.view.entity = emptyEntity();
                 if (curriculum.index.id[id]) {
-                    entityEditor.view.entity = clone(curriculum.index.id[id]);
+                    entityEditor.view.entity = curriculum.clone(curriculum.index.id[id]);
                     //show the edit entity form
                      if (typeof entityEditor.view.entity.dirty === "undefined") {
                            entityEditor.view.entity.dirty = 0;
@@ -404,10 +411,10 @@
             },
             newEntityForm: function(relation, parentId) {
                 if (entityEditor.view.entity.parent) {
-                    entityEditor.actions.save(clone(entityEditor.view.entity));
+                    entityEditor.actions.save(curriculum.clone(entityEditor.view.entity));
                 }
                 var entity = emptyEntity();
-                entity.id = curriculum.uuidv4();
+                entity.id = curriculum.uuid();
                 entity.section = relation.substr(0, relation.length-3);
                 entity.dirty = 0;
                 entity.parent = parentId;
@@ -425,15 +432,6 @@
                     if (!e) {
                         return '<span class="slo-treeview-title"><span class="slo-tag"></span>Missing</span>';
                     }
-/*
-                    if (niveau && (!e.niveau_id || !e.niveau_id.length) && (!reverseNiveauIndex[e.id] || reverseNiveauIndex[e.id].indexOf(niveau)===-1)) {
-                        if (!reverseNiveauIndex[e.id]) {
-                            console.error('missing reverse niveau index for '+e.id);
-                            console.log(e);
-                        }
-                        return '';
-                    }
-*/
                     let overlaps = function(a1, a2) {
                         return a1.filter(v => a2.includes(v)).length>0;
                     }
@@ -475,132 +473,7 @@
             },
             'export-tree': function(root, niveaus, schemas) {
                 document.body.dataset.loading="true";
-                getExportTree(root, niveaus, schemas);
-/*
-                if (niveau) {
-                    var niveauIndexData = niveauIndex.filter(function(niveauData) {
-                        return niveauData.niveau_id == niveau;
-                    }).pop();
-                }
-                var getContextFromId = function(id) {
-                    var section = curriculum.index.type[id];
-                    var context = Object.keys(curriculum.schemas).filter(function(schema) {
-                        return typeof curriculum.schemas[schema].properties[section]!='undefined';
-                    }).pop();
-                    return context;
-                };
-	
-                var json = [];
-                
-                var getLevels = function(niveaus) {
-                	return (niveaus && niveaus.length ? niveaus.map(id => curriculum.index.id[id].title).join(',') : '');
-                };
-                
-				var createRowObject = function(e, parent) {
-					var row = {
-						ID: e.id,
-						ParentID: (parent ? parent.id : ''),
-						Prefix: (e.prefix ? e.prefix : ''),
-						Titel: e.title,
-						Omschrijving: e.description,
-						Type: curriculum.index.type[e.id]
-					};
-					if (row.Type=='doelniveau') {
-						row.Levels = getLevels(e.niveau_id);
-                    }
-					var context = getContextFromId(e.id);
-					var allprops = Object.keys(curriculum.schemas[context].properties[row.Type].items.properties);
-					var ignore = ['id','prefix','title','description','children','parent','section','niveau_id'];
-					allprops
-					.filter(p => !ignore.includes(p))
-					.filter(p => p.substr(-3)!='_id')
-					.forEach(p => {
-						if (typeof e[p] !== 'undefined') {
-							row[p] = e[p];
-						} else {
-							row[p] = '';
-						}
-					});
-					return row;
-				};
-
-                var exportTree = function(e,contexts,niveau,parent) {
-                    if (!e) {
-                        return; //FIXME: throw error? '<span class="slo-treeview-title"><span class="slo-tag"></span>Missing</span>';
-                    }
-                    if (niveau && !e.niveau_id && (!reverseNiveauIndex[e.id] || reverseNiveauIndex[e.id].indexOf(niveau)===-1)) {
-                        if (!reverseNiveauIndex[e.id]) {
-                            console.error('missing reverse niveau index for '+e.id);
-                            console.log(e);
-                        }
-                        return;
-                    }
-                    if (niveau && e.niveau_id && e.niveau_id.indexOf(niveau)===-1) {
-                        return;
-                    }
-					// add row for entity
-					if (e.title) {
-						json.push(createRowObject(e, parent));
-					} else { //FIXME: check if this is a doelniveau	
-						// TODO: for doelniveau use id, title and levels from doel
-                        var children = [];
-						if (e.children && e.children.length) {
-							children = [...e.children];
-						} else if (e.section == 'doelniveau') {
-                            ['doel','kerndoel','examenprogramma_eindterm','examenprogramma_subdomein','examenprogramma_subdomein'].forEach(p => {
-                                if (e[p+'_id']) {
-                                    children = children.concat(e[p+'_id']);
-                                }
-                            });
-                        }
-                        if (children.length) {
-                            // use the first child as parent instead of the doelniveau itself
-                            // doelniveau's should never be included in the export excel
-                            // by using a doelniveau child as parent, an entity will be added to that doelniveau as a child in the import tool
-                            var first = children.shift();
-                            if (!first.id) {
-                                first = curriculum.index.id[first];
-                            }
-                            json.push(createRowObject(e, parent));
-                            children.forEach(function(c) {
-                                if (contexts.indexOf(getContextFromId(c))!=-1 && curriculum.index.type[c]!='vakleergebied') {
-                                    getExportTree(curriculum.index.id[c], contexts, niveau, first);
-                                }
-                            });
-                            return;
-                        }
-					}
-					 
-                    if (!contexts) {
-                        contexts = [];
-                        contexts.push(getContextFromId(e.id));
-                    }
-                    if (e.children && e.children.length) {
-                        e.children.forEach(function(c) {
-                            if (contexts.indexOf(getContextFromId(c))!=-1 && curriculum.index.type[c]!='vakleergebied') {
-                                getExportTree(curriculum.index.id[c], contexts, niveau, e);
-                            }
-                        });
-                    }
-                };
-                getExportTree(root, schemas, niveau);
-				var ws = XLSX.utils.json_to_sheet(json, {
-					header: ["ID", "ParentID", "Prefix", "Titel", "Omschrijving", "Type", "Levels"]
-				});
-				ws['!cols'] = [
-					{wch: 4},
-					{wch: 4},
-					{wch: 12},
-					{wch: 60},
-					{wch: 10},
-					{wch: 10},
-					{wch: 10}
-				];
-				ws.A4.s = {alignment:{ wrapText: true }}; // FIXME: this does nothing, upgrade to pro or user xlsx-style fork
-				var wb = XLSX.utils.book_new();
-                XLSX.utils.book_append_sheet(wb, ws, "Sheet 1");
-				XLSX.writeFile(wb, 'export.xlsx'); //FIXME: use title from root entity
-*/
+                getExportTree(curriculum, root, niveaus, schemas);
                 document.body.dataset.loading="";
                 return Promise.resolve(true);            	
             },
@@ -623,7 +496,7 @@
                     return true;
                 })
                 .catch(function(error) {
-                    if (error.path == '/user') {
+                    if (error.code==401 || error.path == '/user') {
                         document.getElementById('login').setAttribute('open','open');
                         entityEditor.view['login-error'] = '';
                         document.body.dataset.loading="false";
@@ -633,7 +506,7 @@
                         entityEditor.view['login-error'] = '';
                         throw error;
                     }
-                });
+                })
             },
             'search': function(searchText) {
                   if (curriculum.index.id[searchText]) {
@@ -647,14 +520,14 @@
                     }
                     return true;
                 });
-                entityEditor.view.changes.push(clone(entity));
+                entityEditor.view.changes.push(curriculum.clone(entity));
                 if (curriculum.index.id[entity.id] && !originalEntities[entity.id]) {
                     // keep the unchanged version in case we need to revert
                     var original = curriculum.data[curriculum.index.type[entity.id]]
                         .filter(function(e) {return e.id == entity.id; })
                         .pop();
                     if (original) {
-                        originalEntities[entity.id] = clone(original);
+                        originalEntities[entity.id] = curriculum.clone(original);
                     }
                 }
                 curriculum.index.id[entity.id] = entity;
@@ -665,7 +538,7 @@
             },
             save: function(entity) {
                 if (entity.parent) {
-                    var parent = clone(curriculum.index.id[entity.parent]);
+                    var parent = curriculum.clone(curriculum.index.id[entity.parent]);
                     if (parent) {
                         if (typeof parent[entity.section+'_id'] == 'undefined') {
                             parent[entity.section+'_id'] = [];
@@ -720,7 +593,7 @@
                 });
 
                 var clean = function(dataset) {
-                    dataset = clone(dataset);
+                    dataset = curriculum.clone(dataset);
                     dataset.forEach(function(entity) {
                         delete entity.section;
                         delete entity.parents;
@@ -775,6 +648,7 @@
                 entityEditor.actions.renderTree(entityEditor.view.entityId,niveauId,entityEditor.view.schemas);
             },
             start: function(user, pass) {
+                console.log(user,pass)
                 var schemas = {
                     'curriculum-basis': 'slonl/curriculum-basis',
                     'curriculum-kerndoelen': 'slonl/curriculum-kerndoelen',
@@ -791,7 +665,7 @@
                 var schemasParsed = {};
                 Object.keys(schemas).forEach(function(schema) {
                     loading.push(
-                        curriculum.loadContextFromGithub(schema, schemas[schema], user, pass, branch)
+                        curriculum.loadContextFromGithub(schema, schema, 'slonl', branch, pass)
                         .then(function() {
                             return curriculum.loadData(schema);
                         })
@@ -809,6 +683,7 @@
                 // get user info
                 // put it in the entityEditor.view.user
                 // name and avatar_url
+/*
                 var gh = new GitHub({username:user, password: pass});
                 return gh.getUser().getProfile()
                 .then(function(profile) {
@@ -816,7 +691,12 @@
                     document.body.classList.add('slo-logged-on');
                     return profile;
                 })
+*/
+                var gh = new Octokit({ auth: pass })
+                return gh.rest.users.getAuthenticated()
                 .then(function(profile) {
+                    console.log('profile',profile)
+                    entityEditor.view.user = profile.data
                     return Promise.all(loading)
                 })
 				// add datalist elements
@@ -935,9 +815,9 @@
                                 parents.map(function(parent) {
                                     if (parent.id) {
                                         return {
-                                            id : clone(parent.id),
-                                            type : clone(parent.section),
-                                            ids : [{id : clone(parent.id)}]
+                                            id : curriculum.clone(parent.id),
+                                            type : curriculum.clone(parent.section),
+                                            ids : [{id : curriculum.clone(parent.id)}]
                                         }
                                     }
                                 })
@@ -1061,9 +941,9 @@
                         entityEditor.view.changeCount = entityEditor.view.changes.length;
                         entityEditor.view.changes.forEach(function(entry) {
                             if (curriculum.index.id[entry.id]) {
-                                originalEntities[entry.id] = clone(curriculum.index.id[entry.id]);
+                                originalEntities[entry.id] = curriculum.clone(curriculum.index.id[entry.id]);
                             }
-                            curriculum.index.id[entry.id] = clone(entry);
+                            curriculum.index.id[entry.id] = curriculum.clone(entry);
                             curriculum.index.type[entry.id] = entry.section;
                         });
                     }
@@ -1288,18 +1168,18 @@
             "idToTitle": {
                 "render" : function(data) {
                     this.sloId = data;
-                    var entity = clone(curriculum.index.id[data]);
+                    var entity = curriculum.clone(curriculum.index.id[data]);
 					if (!entity || entity.deleted || curriculum.index.type[data]=='deprecated') {
 						this.classList.add('slo-deleted');
 					}
                     if (curriculum.index.type[data] == "doelniveau") {
                         if (entity.doel_id && entity.doel_id[0]) {
-                            var doel = clone(curriculum.index.id[entity.doel_id[0]]);
+                            var doel = curriculum.clone(curriculum.index.id[entity.doel_id[0]]);
                         } else if (entity.kerndoel_id && entity.kerndoel_id[0]) {
-                            var doel = clone(curriculum.index.id[entity.kerndoel_id[0]]);
+                            var doel = curriculum.clone(curriculum.index.id[entity.kerndoel_id[0]]);
                         }
                         if (entity.niveau_id && entity.niveau_id[0]) {
-                            var niveau = clone(curriculum.index.id[entity.niveau_id[0]]);
+                            var niveau = curriculum.clone(curriculum.index.id[entity.niveau_id[0]]);
                         }
                         var result = '';
                         if (niveau && niveau.title ) {
@@ -1350,13 +1230,13 @@
             },
             "searchoption" : {
                 render : function(entity) {
-                    entity = clone(entity);
+                    entity = curriculum.clone(entity);
                     this.data = entity;
                     var option = entity.title + " " + entity.id;
 
                     if (curriculum.index.type[entity.id]=="doelniveau") {
-                        var doel = clone(curriculum.index.id[entity.doel_id[0]]);
-                        var niveau = clone(curriculum.index.id[entity.niveau_id[0]]);
+                        var doel = curriculum.clone(curriculum.index.id[entity.doel_id[0]]);
+                        var niveau = curriculum.clone(curriculum.index.id[entity.niveau_id[0]]);
                         option = "[" + niveau.title + "] " + doel.title + " " + entity.id;
                     }
 
@@ -1411,14 +1291,6 @@
         }
     })();
     
-    function clone(ob) {
-        if (typeof ob == 'undefined' || ob == null) {
-            return null;
-        }
-        return JSON.parse(JSON.stringify(ob));
-    }
-
-
     // Yucky code, but chrome handles large datalists very poorly. This is to make it only do autocompletion
     // when enough characters have been entered. Firefox doesn't even break a sweat with this;
     if (window.chrome) {

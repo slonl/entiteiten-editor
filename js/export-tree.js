@@ -1,5 +1,7 @@
 let getExportTree = (function() {
 
+    let curriculum = null 
+
     function getSchema(e) {
         var section = curriculum.index.type[e.id];
         var schema = Object.keys(curriculum.schemas).filter(function(schema) {
@@ -175,7 +177,7 @@ let getExportTree = (function() {
         let filterByNiveaus = function(e) {
             return filterNiveaus(e, niveaus);
         }
-        options = {
+        let options = {
             topdownCallback: (e) => {
                 if (e.prefix=='ak/1/1/1') {
                     debugger;
@@ -201,7 +203,8 @@ let getExportTree = (function() {
         }
     }
 
-    function exportTree(entity, niveaus, schemas) {
+    function exportTree(curr, entity, niveaus, schemas) {
+        curriculum = curr
         // 1 create a full tree
         treeFillChildnodes(entity, niveaus, schemas);
         console.log(entity);
@@ -235,3 +238,5 @@ let getExportTree = (function() {
 
     return exportTree;
 })();
+
+export default getExportTree
