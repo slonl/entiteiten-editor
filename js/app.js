@@ -17,6 +17,12 @@ let curriculum = new Curriculum();
             'ldk_vakbegrip':['doelniveau_id'],
             'doelniveau':['doel_id'] // ,'niveau_id']
 		},
+		'erk': {
+			'erk_categorie': ['erk_taalactiviteit_id', 'erk_schaal_id'],
+			'erk_gebied': ['erk_categorie_id', 'erk_schaal_id'],
+			'erk_schaal': ['erk_candobeschrijving_id'],
+			'erk_taalactiviteit': ['erk_schaal_id'],
+		},
         'examenprogramma': {
             'examenprogramma':['examenprogramma_domein_id','examenprogramma_kop1_id'],
             'examenprogramma_domein':['examenprogramma_eindterm_id', 'examenprogramma_subdomein_id'],
@@ -652,6 +658,7 @@ let curriculum = new Curriculum();
                 var schemas = {
                     'curriculum-basis': 'slonl/curriculum-basis',
                     'curriculum-kerndoelen': 'slonl/curriculum-kerndoelen',
+					'curriculum-erk': 'slonl/curriculum-erk',
                     'curriculum-examenprogramma': 'slonl/curriculum-examenprogramma',
                     'curriculum-examenprogramma-bg': 'slonl/curriculum-examenprogramma-bg',
                     'curriculum-syllabus': 'slonl/curriculum-syllabus',
@@ -799,6 +806,7 @@ let curriculum = new Curriculum();
                     console.log('Children filled');
                     
                     var parentInfo = {
+						'erk_categorie' : 'erk',
                         'examenprogramma' : 'examenprogramma',
                         'kerndoel_vakleergebied': 'kerndoelen',
                         'examenprogramma_bg_profiel': 'examenprogramma_bg',
