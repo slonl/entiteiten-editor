@@ -654,7 +654,7 @@ let curriculum = new Curriculum();
                 entityEditor.actions.renderTree(entityEditor.view.entityId,niveauId,entityEditor.view.schemas);
             },
             start: function(user, pass) {
-                console.log(user,pass)
+                //console.log(user,pass)
                 var schemas = {
                     'curriculum-basis': 'slonl/curriculum-basis',
                     'curriculum-kerndoelen': 'slonl/curriculum-kerndoelen',
