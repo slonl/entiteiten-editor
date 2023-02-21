@@ -1,6 +1,6 @@
 {
     "name": "entiteiten-editor",
     "dependencies": {
-        "curriculum-js": "^0.3.6"
+        "curriculum-js": "^0.3.8"
     }
 }
