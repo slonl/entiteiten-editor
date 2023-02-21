@@ -4,14 +4,20 @@
 
     var reverseDoelIndex = {};
     var hierarchies = {
-		'leerdoelenkaarten': {
-			'ldk_vakleergebied': ['ldk_vakkern_id','doelniveau_id'],
+        'leerdoelenkaarten': {
+            'ldk_vakleergebied': ['ldk_vakkern_id','doelniveau_id'],
             'ldk_vakkern':['ldk_vaksubkern_id','doelniveau_id'],
             'ldk_vaksubkern':['ldk_vakinhoud_id','doelniveau_id'],
             'ldk_vakinhoud':['doelniveau_id'],
             'ldk_vakbegrip':['doelniveau_id'],
             'doelniveau':['doel_id'] // ,'niveau_id']
-		},
+        },
+        'erk': {
+            'erk_categorie': ['erk_taalactiviteit_id', 'erk_schaal_id'],
+            'erk_gebied': ['erk_categorie_id', 'erk_schaal_id'],
+            'erk_schaal': ['erk_candobeschrijving_id'],
+            'erk_taalactiviteit': ['erk_schaal_id'],
+	},
         'examenprogramma': {
             'examenprogramma':['examenprogramma_domein_id','examenprogramma_kop1_id'],
             'examenprogramma_domein':['examenprogramma_eindterm_id', 'examenprogramma_subdomein_id'],
@@ -34,11 +40,11 @@
             'kerndoel_vakleergebied' : ['kerndoel_uitstroomprofiel_id', 'kerndoel_id', 'kerndoel_domein_id']
         },
         'inhoudslijnen': {
-        	'inh_vakleergebied': ['inh_inhoudslijn_id','doelniveau_id'],
-        	'inh_inhoudslijn': ['inh_cluster_id','doelniveau_id'],
-        	'inh_cluster': ['inh_subcluster_id','doelniveau_id'],
-        	'inh_subcluster': ['doelniveau_id'],
-        	'doelniveau': ['doel_id']
+            'inh_vakleergebied': ['inh_inhoudslijn_id','doelniveau_id'],
+            'inh_inhoudslijn': ['inh_cluster_id','doelniveau_id'],
+            'inh_cluster': ['inh_subcluster_id','doelniveau_id'],
+            'inh_subcluster': ['doelniveau_id'],
+            'doelniveau': ['doel_id']
         },
         'referentiekader': {
             'ref_vakleergebied': ['ref_domein_id','doelniveau_id'],
@@ -778,12 +784,13 @@
                 var schemas = {
                     'curriculum-basis': 'slonl/curriculum-basis',
                     'curriculum-kerndoelen': 'slonl/curriculum-kerndoelen',
+                    'curriculum-erk': 'slonl/curriculum-erk',
                     'curriculum-examenprogramma': 'slonl/curriculum-examenprogramma',
                     'curriculum-examenprogramma-bg': 'slonl/curriculum-examenprogramma-bg',
                     'curriculum-syllabus': 'slonl/curriculum-syllabus',
                     'curriculum-doelgroepteksten': 'slonl/curriculum-doelgroepteksten',
                     'curriculum-leerdoelenkaarten': 'slonl/curriculum-leerdoelenkaarten',
-					'curriculum-inhoudslijnen': 'slonl/curriculum-inhoudslijnen',
+                    'curriculum-inhoudslijnen': 'slonl/curriculum-inhoudslijnen',
                     'curriculum-referentiekader': 'slonl/curriculum-referentiekader'
                 };
                 var branch = 'editor';
@@ -919,6 +926,7 @@
                     console.log('Children filled');
                     
                     var parentInfo = {
+                        'erk_categorie': 'erk',
                         'examenprogramma' : 'examenprogramma',
                         'kerndoel_vakleergebied': 'kerndoelen',
                         'examenprogramma_bg_profiel': 'examenprogramma_bg',
