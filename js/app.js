@@ -22,7 +22,7 @@ let curriculum = new Curriculum();
             'erk_gebied': ['erk_categorie_id', 'erk_schaal_id'],
             'erk_schaal': ['erk_candobeschrijving_id'],
             'erk_taalactiviteit': ['erk_schaal_id'],
-	},
+    	},
         'examenprogramma': {
             'examenprogramma':['examenprogramma_domein_id','examenprogramma_kop1_id'],
             'examenprogramma_domein':['examenprogramma_eindterm_id', 'examenprogramma_subdomein_id'],
@@ -665,7 +665,9 @@ let curriculum = new Curriculum();
                     'curriculum-doelgroepteksten': 'slonl/curriculum-doelgroepteksten',
                     'curriculum-leerdoelenkaarten': 'slonl/curriculum-leerdoelenkaarten',
                     'curriculum-inhoudslijnen': 'slonl/curriculum-inhoudslijnen',
-                    'curriculum-referentiekader': 'slonl/curriculum-referentiekader'
+                    'curriculum-referentiekader': 'slonl/curriculum-referentiekader',
+                    'curriculum-fo': 'slonl/curriculum-fo',
+                    'curriculum-samenhang': 'slonl/curriculum-samenhang'
                 };
                 var branch = 'editor';
                 var loading = [];
@@ -812,7 +814,10 @@ let curriculum = new Curriculum();
                         'examenprogramma_bg_profiel': 'examenprogramma_bg',
                     	'ldk_vakleergebied': 'leerdoelenkaarten',
                     	'inh_vakleergebied': 'inhoudslijnen',
-                        'ref_vakleergebied': 'referentiekader'
+                        'ref_vakleergebied': 'referentiekader',
+                        'tag': 'samenhang',
+                        'relatie': 'samenhang',
+                        'fo_domein': 'fo'
                     };
                     Object.keys(parentInfo).forEach(function(section) {
                         curriculum.data[section].forEach(function(vakEntity) {
