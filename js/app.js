@@ -67,7 +67,7 @@ let curriculum = new Curriculum();
         callback(node, parents);
         var childParents = parents.slice();
         childParents.push(node);
-        if (hier[type]) {
+        if (typeof hier[type] != 'undefined') {
             hier[type].forEach(function(prop) {
                 if (node[prop]) {
                     node[prop].forEach(function(childId) {
