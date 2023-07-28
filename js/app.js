@@ -59,7 +59,12 @@ let curriculum = new Curriculum();
             'ref_onderwerp': ['ref_deelonderwerp_id','doelniveau_id'],
             'ref_tekstkenmerk': ['doelniveau_id'],
             'doelniveau': ['doel_id']
-        }
+        },
+		'fo': {
+			'fo_domein': ['fo_subdomein_id'],
+			'fo_subdomein': ['fo_doelzin_id'],
+			'fo_doelzin': ['fo_toelichting_id','fo_uitwerking_id']
+		}
     };
     function walk(hierarchy, node, parents, callback) {
         var hier = hierarchies[hierarchy];
@@ -67,7 +72,7 @@ let curriculum = new Curriculum();
         callback(node, parents);
         var childParents = parents.slice();
         childParents.push(node);
-        if (typeof hier[type] != 'undefined') {
+        if (hier && typeof hier[type] != 'undefined') {
             hier[type].forEach(function(prop) {
                 if (node[prop]) {
                     node[prop].forEach(function(childId) {
