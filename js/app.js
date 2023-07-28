@@ -1,5 +1,6 @@
 import getExportTree from './export-tree.js'
-import { Octokit } from 'https://cdn.skypack.dev/octokit'
+//import { Octokit } from 'https://cdn.skypack.dev/octokit'
+import { Octokit, App } from "https://esm.sh/octokit";
 
 let curriculum = new Curriculum();
 
